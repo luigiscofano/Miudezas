@@ -135,81 +135,147 @@ const breadOutline = [
   '.bbbbbbbbb.', '.bbbbbbbbb.', '.bbbbbbbbb.', '..bbbbbbb..'
 ];
 
+// Tempos em segundos: preparo, janela no ponto e aviso tostado antes de queimar.
+const ritmosChapa = [
+  {preparo: 4.6, ponto: 2.8, tostado: 1.2, meta: 5},
+  {preparo: 3.5, ponto: 1.9, tostado: 0.9, meta: 7},
+  {preparo: 2.6, ponto: 1.3, tostado: 0.7, meta: 9}
+];
+
 function pao(level, api) {
-  const round = roundEnd(api);
-  const goals = [5, 7, 9];
-  const target = goals[level - 1];
-  const window = [3.4, 2.6, 1.9][level - 1];
-  const age = [0, 1.65];
-  const ready = [4.4, 3.65];
-  let served = 0, baked = 0, remaining = 60, flash = 0, spatulaSide = 1;
-  let last = '';
-  function stage(i) {
-    if (age[i] < ready[i]) return 0;
-    return age[i] < ready[i] + window ? 1 : 2;
+  const round = roundEnd(api), ritmo = ritmosChapa[level - 1];
+  // A identidade e o relógio pertencem ao alimento, nunca ao lado da chapa.
+  const alimentos = [
+    {tipo: 'ovo', idade: 0, reposicao: 0},
+    {tipo: 'pao', idade: 1.2, reposicao: 0}
+  ];
+  let lados = [0, 1], utensilio = 'espatula';
+  let servidos = 0, erros = 0, reposicoes = 0, restante = 60;
+  let troca = 0, aviso = '', avisoTempo = 0;
+  function estado(alimento) {
+    const preparo = ritmo.preparo + (alimento.tipo === 'ovo' ? 0.35 : 0);
+    if (alimento.idade < preparo) return 0;
+    if (alimento.idade < preparo + ritmo.ponto) return 1;
+    if (alimento.idade < preparo + ritmo.ponto + ritmo.tostado) return 2;
+    return 3;
   }
-  function serve(i) {
-    if (round.done) return;
-    const current = stage(i);
-    if (current === 1) served++;
-    last = ['Ainda cru', 'No ponto!', 'Passou do ponto'][current];
-    flash = 0.78;
-    spatulaSide = i;
-    age[i] = 0;
-    baked++;
-    ready[i] = 3.2 + ((baked * 7 + i * 3) % 8) * 0.25;
-    api.tone?.(current === 1 ? 540 : 155, 0.09);
+  function informar(texto) { aviso = texto; avisoTempo = 1.2; }
+  function errar(texto) {
+    erros++;
+    informar(texto);
+    api.tone?.(155, 0.09);
+    if (erros >= 3) round.finish(false, 'Três erros na chapa. Tente novamente!');
+  }
+  function repor(alimento) {
+    alimento.idade = 0;
+    alimento.reposicao = 0;
+    reposicoes++;
+    // A cada duas reposições, mudam os lados, não as identidades/idades.
+    // A pausa sinalizada dá tempo de perceber a troca sem perder o ponto.
+    if (reposicoes % 2 === 0) { lados.reverse(); troca = 0.75; }
+  }
+  function servir(lado) {
+    if (round.done || troca > 0) return;
+    const alimento = alimentos[lados[lado]], ponto = estado(alimento);
+    if (alimento.reposicao > 0) return;
+    if (utensilio !== (alimento.tipo === 'ovo' ? 'espatula' : 'pinca')) {
+      errar('Utensílio errado!');
+      if (!round.done) repor(alimento);
+      return;
+    }
+    // Retirar cru não cria um terceiro tipo de erro: apenas aguarda o ponto.
+    if (ponto === 0) { informar('Ainda cru: espere dourar.'); return; }
+    if (ponto === 3) return;
+    servidos++;
+    informar(ponto === 1 ? 'No ponto!' : 'Tostado, a tempo!');
+    api.tone?.(540, 0.09);
+    if (servidos >= ritmo.meta) {
+      round.finish(true, servidos + ' alimentos servidos antes de queimar!');
+      return;
+    }
+    repor(alimento);
+  }
+  function avancar(dt) {
+    if (troca > 0) { troca = Math.max(0, troca - dt); return; }
+    restante = Math.max(0, restante - dt);
+    avisoTempo = Math.max(0, avisoTempo - dt);
+    for (const alimento of alimentos) {
+      if (alimento.reposicao > 0) {
+        alimento.reposicao = Math.max(0, alimento.reposicao - dt);
+        if (alimento.reposicao === 0) repor(alimento);
+      } else {
+        alimento.idade += dt;
+        if (estado(alimento) === 3) {
+          // Marca o queimado antes de contar: uma atualização não cobra de novo.
+          alimento.reposicao = 0.85;
+          errar(alimento.tipo === 'ovo' ? 'O ovo queimou!' : 'O pão queimou!');
+          if (round.done) return;
+        }
+      }
+    }
+    if (restante === 0) round.finish(false, 'O minuto acabou. Sirva ' + ritmo.meta + ' alimentos para vencer.');
   }
   function update(dt) {
-    if (round.done) return;
-    age[0] += dt;
-    age[1] += dt;
-    remaining = Math.max(0, remaining - dt);
-    flash = Math.max(0, flash - dt);
-    if (remaining === 0) round.finish(served >= target, served + ' alimentos no ponto em um minuto.');
+    if (round.done || !Number.isFinite(dt) || dt <= 0) return;
+    // Passos pequenos mantêm reposições e erros consistentes mesmo em testes longos.
+    while (dt > 0 && !round.done) { const passo = Math.min(dt, 0.05); avancar(passo); dt -= passo; }
+  }
+  function snapshot() {
+    return {utensilio, servidos, erros, restantes: 3 - erros, troca: troca > 0, fim: round.done,
+      alimentos: lados.map(i => ({tipo: alimentos[i].tipo, estado: estado(alimentos[i]), reposicao: alimentos[i].reposicao > 0}))};
   }
   function draw(ctx) {
-    const iron = '#242034', gold = '#e8ad43', crust = '#a9512f', counter = '#b75a40';
-    rect(ctx, counter, 0, 0, 96, 96);
+    const iron = '#242034', gold = '#e8ad43', crust = '#a9512f';
+    rect(ctx, '#b75a40', 0, 0, 96, 96);
     rect(ctx, gold, 43, 8, 11, 3); rect(ctx, gold, 42, 10, 3, 4); rect(ctx, gold, 52, 10, 3, 4);
     rect(ctx, iron, 10, 13, 76, 62); rect(ctx, iron, 8, 16, 80, 56);
-    for (let i = 0; i < 2; i++) {
-      const state = stage(i), x = 17 + i * 36, y = 29 + i;
-      // A identidade pertence ao lado da chapa, não ao estágio de cozimento.
-      if (i === 0) {
-        const white = ['#fff2d7', '#eed8a0', '#906343'][state];
-        sprite(ctx, eggOutline, {b: white}, x, y, 2);
-        const yolk = ['#f7c647', '#e8ad43', '#ad682d'][state];
-        rect(ctx, yolk, x + 8, y + 9, 8, 8);
-        rect(ctx, yolk, x + 6, y + 11, 12, 4);
+    lados.forEach((indice, lado) => {
+      const alimento = alimentos[indice], state = estado(alimento), x = 17 + lado * 36, y = 29;
+      if (alimento.tipo === 'ovo') {
+        sprite(ctx, eggOutline, {b: ['#fff2d7', '#eed8a0', '#d2ad6e', '#906343'][state]}, x, y, 2);
+        const yolk = ['#f7c647', gold, '#d59132', '#ad682d'][state];
+        rect(ctx, yolk, x + 8, y + 9, 8, 8); rect(ctx, yolk, x + 6, y + 11, 12, 4);
         rect(ctx, '#ffe19a', x + 9, y + 10, 3, 2);
       } else {
-        const surface = ['#f9e1b0', gold, '#75402d'][state];
         sprite(ctx, breadOutline, {b: crust}, x, y, 2);
-        rect(ctx, surface, x + 4, y + 4, 14, 17);
-        const line = state === 2 ? iron : '#c48343';
-        rect(ctx, line, x + 5, y + 8, 5, 2);
-        rect(ctx, line, x + 11, y + 14, 5, 2);
+        rect(ctx, ['#f9e1b0', gold, '#c88a35', '#75402d'][state], x + 4, y + 4, 14, 17);
+        const line = state === 3 ? iron : '#c48343';
+        rect(ctx, line, x + 5, y + 8, 5, 2); rect(ctx, line, x + 11, y + 14, 5, 2);
       }
+      // Barras segmentadas mostram o ponto além da cor; nomes ficam no painel HTML.
+      for (let k = 0; k < 3; k++) rect(ctx, state > k ? gold : '#554653', x + k * 7, 62, 5, 3);
       if (state > 0) {
-        const lift = Math.floor(age[i] * 2) % 3;
+        const lift = Math.floor(alimento.idade * 2) % 3;
         rect(ctx, '#d7c6b7', x + 9, y - 5 - lift, 2, 3);
         rect(ctx, '#d7c6b7', x + 11, y - 8 - lift, 2, 3);
       }
+    });
+    // Utensílios em pixel art ao lado da chapa; a seleção também tem contorno.
+    for (let i = 0; i < 2; i++) {
+      const x = 20 + i * 39;
+      if (utensilio === (i === 0 ? 'espatula' : 'pinca')) {
+        rect(ctx, '#fff2d7', x - 5, 77, 30, 18); rect(ctx, '#b75a40', x - 3, 79, 26, 14);
+      }
+      if (i === 0) {
+        rect(ctx, gold, x, 86, 10, 3); rect(ctx, '#b9bdc8', x + 9, 82, 12, 8);
+        rect(ctx, iron, x + 13, 83, 1, 5); rect(ctx, iron, x + 17, 83, 1, 5);
+      } else {
+        rect(ctx, gold, x, 85, 6, 4); rect(ctx, '#b9bdc8', x + 5, 82, 15, 2);
+        rect(ctx, '#b9bdc8', x + 5, 90, 15, 2); rect(ctx, '#b9bdc8', x + 4, 83, 2, 8);
+      }
     }
-    const x = flash > 0 ? 18 + spatulaSide * 36 : 59;
-    const y = flash > 0 ? 55 : 77;
-    rect(ctx, gold, x - 9, y + 6, 13, 3);
-    rect(ctx, '#a5a3a7', x + 4, y + 3, 8, 4);
-    rect(ctx, '#a5a3a7', x + 11, y, 11, 8);
-    rect(ctx, '#656271', x + 14, y + 2, 1, 4); rect(ctx, '#656271', x + 18, y + 2, 1, 4);
   }
   return {
-    draw, update,
-    press(dir) { if (dir === 'left' || dir === 'right') serve(dir === 'left' ? 0 : 1); },
+    draw, update, snapshot,
+    selectTool(valor) { if (!round.done && ['espatula', 'pinca'].includes(valor)) utensilio = valor; },
+    press(dir) { if (dir === 'left' || dir === 'right') servir(dir === 'left' ? 0 : 1); },
     release() {},
-    point(x, y, phase) { if (phase === 'down' && y >= 13 && y <= 75) serve(x < 48 ? 0 : 1); },
-    hud() { return (flash > 0 ? last + ' · ' : '') + served + '/' + target + ' · ' + Math.ceil(remaining) + 's'; }
+    point(x, y, phase) {
+      if (phase !== 'down' || x < 8 || x > 88) return;
+      if (y >= 77 && y <= 96) this.selectTool(x < 48 ? 'espatula' : 'pinca');
+      else if (y >= 13 && y <= 75) servir(x < 48 ? 0 : 1);
+    },
+    hud() { return (troca > 0 ? 'Troca de lados! · ' : avisoTempo > 0 ? aviso + ' · ' : '') + servidos + '/' + ritmo.meta + ' · ' + (3 - erros) + ' erros restantes · ' + Math.ceil(restante) + 's'; }
   };
 }
 
