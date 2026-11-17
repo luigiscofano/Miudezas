@@ -261,87 +261,6 @@ function gude(level, api) {
   };
 }
 
-const feira = {
-  banana:{ nome:'Banana',peso:1,desenho:['y......','.y....y','.yy..yy','..yyyy.','...yy..'],cor:'#edb839' },
-  abacate:{ nome:'Abacate',peso:2,desenho:['...c...','..cyc..','..yyy..','.yyyyy.','.yyyyy.','.yyyyy.','..yyy..'],cor:'#53683c' },
-  laranja:{ nome:'Laranja',peso:3,desenho:['....c..','..yyyy.','.yyyyyy','.yyyyyy','.yyyyyy','..yyyy.'],cor:'#e58738' },
-  coco:{ nome:'Coco',peso:4,desenho:['...yy..','.yyyyy.','yyyyyyy','yycycyy','yyycyyy','.yyyyy.','..yyy..'],cor:'#956849' }
-};
-const sacolas = [
-  ['banana','abacate','banana'],
-  ['abacate','banana','laranja','banana','banana'],
-  ['laranja','abacate','banana','coco','laranja','banana']
-];
-
-function pratos(level,api) {
-  const frutas=sacolas[level-1], pratosFruta=[[],[]];
-  let indice=0, angulo=0, tempoFinal=null, acabou=false;
-  if (level===1) {
-    pratosFruta[0].push(frutas[0]); pratosFruta[1].push(frutas[1]); indice=2;
-  }
-  const peso=lado=>pratosFruta[lado].reduce((soma,tipo)=>soma+feira[tipo].peso,0);
-  const diferenca=()=>peso(1)-peso(0);
-  angulo=limitar(diferenca()*2.3,-9,9);
-  function colocar(dir) {
-    if (acabou || tempoFinal!==null || (dir!=='left'&&dir!=='right')) return;
-    pratosFruta[dir==='left'?0:1].push(frutas[indice]); indice++;
-    api.tone(dir==='left'?330:410,0.085);
-    if (indice===frutas.length) tempoFinal=0.65;
-  }
-  function fruta(ctx,tipo,x,y,escala=1) {
-    const f=feira[tipo]; sprite(ctx,x,y,f.desenho,{y:f.cor,c:'#344638'},escala);
-  }
-  return {
-    press:colocar, release:semAcao,
-    point(x,y,phase){if(phase==='down') colocar(x<48?'left':'right');},
-    hud(){
-      if (tempoFinal!==null) return diferenca()===0 ? 'Em equilíbrio!' : 'Um prato ficou mais pesado';
-      return feira[frutas[indice]].nome+' · Fruta '+(indice+1)+'/'+frutas.length;
-    },
-    update(dt) {
-      if (acabou) return;
-      const destino=limitar(diferenca()*2.3,-9,9);
-      angulo+=(destino-angulo)*Math.min(1,dt*9);
-      if (tempoFinal===null) return;
-      tempoFinal-=dt;
-      if (tempoFinal<=0) {
-        acabou=true;
-        const ok=diferenca()===0;
-        api.finish(ok,ok?'A balança ficou no ponto.':'As frutas pesaram mais '+(diferenca()>0?'à direita.':'à esquerda.'));
-      }
-    },
-    draw(ctx) {
-      const metal='#58724d', escuro='#344c3c';
-      fundo(ctx,'#f4e4b9');
-      bloco(ctx,0,77,96,19,'#ab6343'); bloco(ctx,0,77,96,1,'#794833');
-      bloco(ctx,30,72,36,4,metal); bloco(ctx,33,69,30,3,metal);
-      for(let i=0;i<13;i++) bloco(ctx,47-Math.floor(i/2),58+i,2+Math.floor(i/2)*2,1,metal);
-      const esquerda=Math.round(55-angulo), direita=Math.round(55+angulo);
-      linha(ctx,[17,esquerda],[78,direita],escuro,2);
-      [esquerda,direita].forEach((altura,lado)=>{
-        const centro=lado?79:17;
-        bloco(ctx,centro-1,altura-7,3,8,metal);
-        bloco(ctx,centro-10,altura-8,21,2,metal);
-        bloco(ctx,centro-13,altura-10,27,2,metal);
-        const grupo=pratosFruta[lado];
-        grupo.forEach((tipo,i)=>{
-          const col=i%3, camada=Math.floor(i/3);
-          const larguraFila=Math.min(3,grupo.length-camada*3)*7;
-          fruta(ctx,tipo,centro-Math.floor(larguraFila/2)+col*7,altura-17-camada*6);
-        });
-      });
-      if(indice<frutas.length){
-        const restante=frutas.slice(indice);
-        const largura=restante.length*10;
-        restante.forEach((tipo,i)=>fruta(ctx,tipo,48-Math.floor(largura/2)+i*10,82));
-        const px=48-Math.floor(largura/2)+3;
-        bloco(ctx,px,91,1,1,'#ffedc5'); bloco(ctx,px-1,92,3,1,'#ffedc5');
-      }
-    }
-  };
-}
-
-const corpoVaga=['....ww.....','...ww.w....','......w....','..ggggggg..','.lggggggkg.','.lggggggg..','...g..g....'];
 function pisca(level,api) {
   const meta=level+2, duracao=0.58-0.055*level;
   const sorteio=()=>Math.random()<0.5?'left':'right';
@@ -414,4 +333,5 @@ function pisca(level,api) {
   };
 }
 
-export const varanda = {luz, gude, pratos, pisca};
+export const varanda = {luz, gude, pisca};
+

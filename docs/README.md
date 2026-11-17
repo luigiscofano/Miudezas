@@ -1,11 +1,7 @@
 # Imagens da documentação
 
-[inicio.jpg](inicio.jpg) é uma captura da aplicação aprovada. Mostra a capa, a assinatura do autor e as duas entradas de navegação. O cenário de telhados isolado usado pelo jogo está em [bairro.png](../dist/arte/bairro.png).
+As capturas inicio.jpg e pracinha.jpg registravam o catálogo anterior e foram retiradas para não mostrar jogos indisponíveis. O README apresenta a capa e as miniaturas atuais em [dist/arte](../dist/arte/README.md).
 
-![Janela inicial com as opções Jogo avulso e Volta no Bairro](inicio.jpg)
-
-As ilustrações individuais no manual são os arquivos de galeria de [dist/arte](../dist/arte/README.md). A captura da janela registra a interface em execução, enquanto as miniaturas identificam cada parada. Se a interface mudar, a captura e o texto de navegação podem ser revisados juntos.
+A versão atual contém 12 jogos, distribuídos em duas páginas de seis. Novas capturas devem mostrar esta versão, sem cursor.
 
 [Voltar ao README principal](../README.md)
-
-[pracinha.jpg](pracinha.jpg) mostra a terceira página da galeria com os quatro novos jogos. A captura de início foi atualizada para 16 jogos.
