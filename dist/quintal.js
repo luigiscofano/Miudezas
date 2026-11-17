@@ -161,20 +161,65 @@ export function resolverMare(grid) {
   return null;
 }
 
-export function gerarMare(seed=1) {
-  const original=Number(seed)>>>0; let state=original;
-  const random=()=>{state=(Math.imul(state,1664525)+1013904223)>>>0;return state/4294967296;};
-  for(let attempt=0;attempt<24;attempt++) {
-    const grid=Array.from({length:8},()=>Array.from({length:8},()=>random()<.48?'~':random()<.2?'#':'.'));
-    // Um corredor monotônico garante distância; baixios ainda exigem validar a maré.
-    let x=0,y=7; grid[y][x]='S';
-    while(x<7 || y>0){if(x<7 && (y===0 || random()<.5))x++;else y--;grid[y][x]=random()<.22?'=':'.';}
-    grid[0][7]='C';
-    const rows=grid.map(r=>r.join('')), solution=resolverMare(rows);
-    if(solution && solution.length>=14) return {seed:original,grid:rows,solution,fallback:false};
+// A fase autoral Puxado é a referência verificável, não apenas o tamanho do mapa.
+export function analisarMare(grid) {
+  const solution = resolverMare(grid);
+  if (!solution) return null;
+  const semMare = resolverMare(grid.map(row => row.replaceAll('=', '.')));
+  const semPedras = resolverMare(grid.map(row => row.replaceAll('#', '.')));
+  let baixiosObrigatorios = 0;
+  grid.forEach((row, y) => [...row].forEach((cell, x) => {
+    if (cell !== '=') return;
+    const bloqueado = [...grid];
+    bloqueado[y] = row.slice(0, x) + '~' + row.slice(x + 1);
+    if (!resolverMare(bloqueado)) baixiosObrigatorios++;
+  }));
+  return {solution, passos: solution.length, passosSemMare: semMare?.length ?? Infinity,
+    passosSemPedras: semPedras?.length ?? Infinity, baixiosObrigatorios};
+}
+const referenciaMare = analisarMare(shores[2]);
+export const criteriosMare = Object.freeze({
+  passosMinimos: referenciaMare.passos,
+  passosMaximos: referenciaMare.passos + 10,
+  custoMinimoMare: referenciaMare.passos - referenciaMare.passosSemMare,
+  baixiosObrigatorios: referenciaMare.baixiosObrigatorios
+});
+function mareDesafiadora(analise) {
+  return analise && analise.passos >= criteriosMare.passosMinimos &&
+    analise.passos <= criteriosMare.passosMaximos &&
+    analise.passos - analise.passosSemMare >= criteriosMare.custoMinimoMare &&
+    analise.baixiosObrigatorios >= criteriosMare.baixiosObrigatorios &&
+    analise.passosSemPedras < analise.passos;
+}
+function orientarMare(grid, orientation) {
+  let cells = grid.map(row => [...row]);
+  if (orientation >= 4) cells = cells.map(row => row.reverse());
+  for (let turn = 0; turn < orientation % 4; turn++) {
+    cells = cells[0].map((_, x) => cells.map(row => row[x]).reverse());
   }
-  const grid=['.......C','.~~~~~~~','........','~~~~~~~.','........','.~~~~~~~','........','S~~~~~~~'];
-  return {seed:original,grid,solution:resolverMare(grid),fallback:true};
+  return cells.map(row => row.join(''));
+}
+export function gerarMare(seed = 1) {
+  const original = Number(seed) >>> 0;
+  let state = original;
+  const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
+  const orientation = Math.floor(random() * 8);
+  for (let attempt = 0; attempt < 48; attempt++) {
+    const cells = shores[2].map(row => [...row]);
+    // Mutações locais preservam a escala autoral, mas alteram os acessos às travessias.
+    for (let edit = 0; edit < 6; edit++) {
+      const x = Math.floor(random() * 8), y = Math.floor(random() * 8);
+      if (!'SC='.includes(cells[y][x])) cells[y][x] = ['~', '.', '#'][Math.floor(random() * 3)];
+    }
+    const grid = orientarMare(cells.map(row => row.join('')), orientation);
+    const analise = analisarMare(grid);
+    if (mareDesafiadora(analise)) return {seed: original, grid, solution: analise.solution, metrics: analise, fallback: false};
+  }
+  // Este corredor reserva travessias obrigatórias e um desvio causado por pedra.
+  const grid = orientarMare(['.~~~~..C','~~~~~#..','~~~..=..','~~~#..~~','~..=.~~~','~..#~~~~','.#=.~~~~','S..~~~~~'], orientation);
+  const analise = analisarMare(grid);
+  if (!mareDesafiadora(analise)) throw new Error('Configuração de segurança da maré inválida.');
+  return {seed: original, grid, solution: analise.solution, metrics: analise, fallback: true};
 }
 
 const crab = ['r...r...r','rr.rr..rr','..rrrrrr.','.rwwwwr..','..wkwkw..','.rrrrrrr.','r.r..r..r'];
