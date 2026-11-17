@@ -398,3 +398,9 @@ A [documentação da marca](dist/artes/marca/README.md) apresenta o logotipo pri
 <img src="dist/artes/marca/janela-original.png" alt="Janela original de quatro vidraças" width="64" height="64">
 
 A janela original permanece ao lado da marca na barra superior. O ícone verde aprovado continua sendo o favicon. Veja [arquivos e aplicações](dist/artes/marca/README.md).
+
+## GitHub Pages e transferência de progresso
+
+A migração preserva os arquivos do jogo e acrescenta um workflow manual de publicação. Consulte o [guia completo de GitHub Pages](docs/github-pages.md) para ativação, verificação, reversão e transferência de progresso. O endereço novo só deve ser considerado disponível quando o deployment estiver confirmado.
+
+O progresso não atravessa domínios automaticamente. Use a [página de backup](dist/backup.html) no endereço antigo para exportar e depois no novo para importar. O armazenamento antigo permanece intacto. Essa ferramenta é independente da interface dos jogos.
