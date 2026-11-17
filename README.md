@@ -10,7 +10,7 @@
 |---|---|---|---|
 | 12 minigames | 3 níveis por jogo, 36 combinações | Canvas de 96 × 96 pixels lógicos | Navegador de computador ou celular |
 
-**Autor:** Luigi Scofano de Araujo · [Versão hospedada com acesso privado](https://miudezas-de-luigi.luigiscofano.chatgpt.site) · [Licença MIT](LICENSE)
+**Autor:** Luigi Scofano de Araujo · [Jogar no GitHub Pages](https://luigiscofano.github.io/Miudezas/) · [Licença MIT](LICENSE)
 
 [Executar](#executar) · [Modos e telas](#modos-e-telas) · [Identidade visual](#identidade-visual) · [Jogos e level design](#jogos-e-level-design) · [Arquitetura](#arquitetura) · [Dados e som](#dados-e-som) · [Manutenção e testes](#manutenção-e-testes) · [Referências](#referências)
 
@@ -34,7 +34,7 @@ No Windows com o inicializador Python:
 py -m http.server 8000 --bind 127.0.0.1 --directory dist
 ```
 
-Para experimentar no celular, conecte os dois aparelhos à mesma rede local, execute o servidor com `--bind 0.0.0.0` e abra no celular o endereço IP local do computador na porta 8000. Para hospedar uma cópia, use o conteúdo de `dist/` como raiz do servidor estático. O acesso privado do endereço oficial pertence à hospedagem. A cópia local roda diretamente.
+Para experimentar no celular, conecte os dois aparelhos à mesma rede local, execute o servidor com `--bind 0.0.0.0` e abra no celular o endereço IP local do computador na porta 8000. Para hospedar uma cópia, use o conteúdo de `dist/` como raiz do servidor estático. O endereço oficial no GitHub Pages é público e pode ser aberto em outros computadores ou celulares. A cópia local roda diretamente.
 
 ## Modos e telas
 
@@ -401,6 +401,6 @@ A janela original permanece ao lado da marca na barra superior. O ícone verde a
 
 ## GitHub Pages e transferência de progresso
 
-A migração preserva os arquivos do jogo e acrescenta um workflow manual de publicação. Consulte o [guia completo de GitHub Pages](docs/github-pages.md) para ativação, verificação, reversão e transferência de progresso. O endereço novo só deve ser considerado disponível quando o deployment estiver confirmado.
+A migração preserva os arquivos do jogo e acrescenta um workflow manual de publicação. Consulte o [guia completo de GitHub Pages](docs/github-pages.md) para ativação, verificação, reversão e transferência de progresso. A publicação foi confirmada em **17 de novembro de 2026**: [abrir Miudezas](https://luigiscofano.github.io/Miudezas/). O [workflow de publicação](https://github.com/luigiscofano/Miudezas/actions/runs/44140728469) terminou com sucesso.
 
-O progresso não atravessa domínios automaticamente. Use a [página de backup](dist/backup.html) no endereço antigo para exportar e depois no novo para importar. O armazenamento antigo permanece intacto. Essa ferramenta é independente da interface dos jogos.
+O progresso não atravessa domínios automaticamente. Use a [página de backup no endereço antigo](https://miudezas-de-luigi.luigiscofano.chatgpt.site/backup.html) para exportar e a [página de backup no GitHub Pages](https://luigiscofano.github.io/Miudezas/backup.html) para importar. O armazenamento antigo permanece intacto. Essa ferramenta é independente da interface dos jogos.
