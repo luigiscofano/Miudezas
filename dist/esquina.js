@@ -85,12 +85,18 @@ function radio(level, api) {
   function draw(ctx) {
     const plum = '#342137', ink = '#411c31', ochre = '#d99424', trim = '#ad442b', ivory = '#f8e7bc';
     rect(ctx, plum, 0, 0, 96, 96);
+    // Madeira e sombra discretas mantêm o rádio como foco da cena.
+    rect(ctx, '#2b1c30', 0, 79, 96, 17);
+    rect(ctx, '#654049', 0, 79, 96, 2);
+    rect(ctx, '#402638', 16, 81, 68, 3);
     for (let s = 0; s < 13; s++) rect(ctx, ivory, 23 + s, 28 - s, 2, 2);
     rect(ctx, ivory, 23, 28, 2, 6);
     rect(ctx, trim, 13, 33, 70, 44);
     rect(ctx, trim, 11, 36, 74, 38);
     rect(ctx, ochre, 15, 37, 66, 35);
     rect(ctx, ochre, 13, 39, 70, 30);
+    rect(ctx, '#f2bb55', 16, 37, 64, 2);
+    rect(ctx, '#743329', 14, 70, 68, 3);
     rect(ctx, ivory, 18, 40, 60, 11);
     for (let k = 0; k <= 10; k++) {
       const h = k % 2 === 0 ? 5 : 3;
@@ -103,7 +109,11 @@ function radio(level, api) {
     const blink = distance < 0.15 && Math.floor(clock * (4 + 14 * (1 - distance / 0.15))) % 2 === 0;
     const lit = captionTime > 0 || distance <= radius || blink;
     rect(ctx, lit ? '#ff6539' : trim, 74, 41, 3, 2);
-    for (let k = 0; k < 4; k++) rect(ctx, ink, 18, 55 + k * 4, 27, 2);
+    for (let k = 0; k < 4; k++) {
+      rect(ctx, ink, 18, 55 + k * 4, 27, 2);
+      for (let j = 0; j < 6; j++) rect(ctx, '#bb722d', 20 + j * 4, 55 + k * 4, 1, 1);
+    }
+    rect(ctx, ivory, 62, 56, 6, 1);
     rect(ctx, ink, 61, 56, 9, 13);
     rect(ctx, ink, 59, 58, 13, 9);
     rect(ctx, ochre, 60 + Math.round(dial * 9), 59, 2, 2);
@@ -234,6 +244,12 @@ function pao(level, api, options = {}) {
     rect(ctx, '#b75a40', 0, 0, 96, 96);
     rect(ctx, gold, 43, 8, 11, 3); rect(ctx, gold, 42, 10, 3, 4); rect(ctx, gold, 52, 10, 3, 4);
     rect(ctx, iron, 10, 13, 76, 62); rect(ctx, iron, 8, 16, 80, 56);
+    // Borda metálica em degraus e brilho curto, sem mudar a área útil.
+    rect(ctx, '#70605c', 12, 14, 72, 1);
+    rect(ctx, '#49404b', 9, 18, 1, 51);
+    rect(ctx, '#151826', 12, 72, 72, 2);
+    rect(ctx, '#3b3440', 15, 61, 20, 1);
+    rect(ctx, '#3b3440', 58, 61, 21, 1);
     lados.forEach((indice, lado) => {
       const alimento = alimentos[indice], state = estado(alimento), x = 17 + lado * 36, y = 29;
       if (alimento.tipo === 'ovo') {
@@ -246,6 +262,8 @@ function pao(level, api, options = {}) {
         rect(ctx, ['#f9e1b0', gold, '#c88a35', '#75402d'][state], x + 4, y + 4, 14, 17);
         const line = state === 3 ? iron : '#c48343';
         rect(ctx, line, x + 5, y + 8, 5, 2); rect(ctx, line, x + 11, y + 14, 5, 2);
+        rect(ctx, '#e8bb7b', x + 5, y + 5, 11, 1);
+        rect(ctx, line, x + 6, y + 17, 2, 1);
       }
       if (state > 0) {
         const lift = Math.floor(alimento.idade * 2) % 3;

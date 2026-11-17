@@ -48,3 +48,7 @@ A arte do caranguejo em `quintal.js` é desenhada na grade nativa, sem arquivos 
 ### Arte aprovada em `quintal.js`
 
 Goteira, Último Fio e Pipa de Laje: detalhes discretos no cenário, sem alterar a jogabilidade. A arte aprovada de Maré já estava incorporada. A resolução lógica permanece 96 × 96, sem suavização ou nova dependência.
+
+### Arte aprovada em `esquina.js`
+
+Rádio de Pilha e Pão na Chapa: acabamento discreto em pixels, preservando todos os controles e objetivos. A resolução lógica permanece 96 × 96, sem suavização ou nova dependência.
