@@ -3,10 +3,9 @@ import {catalogo,nomesNiveis} from './catalogo.js';
 import {quintal} from './quintal.js';
 import {esquina} from './esquina.js';
 import {varanda} from './varanda.js';
-import {pracinha} from './pracinha.js';
 import {icone,escapar,ler,salvar} from './interface.js';
 
-const jogos={...quintal,...esquina,...varanda,...pracinha};
+const jogos={...quintal,...esquina,...varanda};
 const area=document.querySelector('#screen'),rodape=document.querySelector('#foot');
 const barra=document.querySelector('#bar-title'), somBotao=document.querySelector('#sound'), janelaBotao=document.querySelector('#popup');
 const parametros=new URLSearchParams(location.search), pequena=parametros.get('janela')==='1';
@@ -280,5 +279,6 @@ modo=parametros.get('modo')==='circuito'?'circuito':'avulso';
 nivel=Math.max(1,Math.min(3,Number(parametros.get('nivel'))||1));
 selecionado=Math.max(0,Math.min(ids.length-1,Number(parametros.get('jogo'))||0));
 pagina=Math.max(0,Math.min(totalPaginas-1,Math.floor(Number(parametros.get('pag')))||0));
-if(inicial==='galeria')galeria();else if(inicial==='roteiro')roteiro();else if(inicial==='nivel')niveis();else inicio();
+if (parametros.has('jogo') && !catalogo[Number(parametros.get('jogo'))]) galeria();
+else if(inicial==='galeria')galeria();else if(inicial==='roteiro')roteiro();else if(inicial==='nivel')niveis();else inicio();
 
