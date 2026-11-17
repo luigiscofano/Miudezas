@@ -433,3 +433,7 @@ Rádio de Pilha e Pão na Chapa: acabamento discreto em pixels, preservando todo
 ### Refinamento visual: varanda
 
 Luz de Varanda e Três Petelecos: luz, texturas e sprites refinados sem mudar obstáculos ou física. Consulte o [guia visual e técnico](docs/jogos/varanda/README.md#acabamento-visual-aprovado).
+
+### Refinamento de Pisca e Rastro
+
+Pisca no Mato usa o capim baixo aprovado, com asas e antenas em poucos pixels; só as piscadas sinalizam a sequência. Rastro de Prata apresenta três folhas finas com silhuetas distintas, na mesma paleta e escala. São mudanças de desenho: regras, controles, mapas e saves permanecem iguais.
