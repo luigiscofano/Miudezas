@@ -55,3 +55,5 @@ Rastro preserva a família estreita e acrescenta a aberta. Mil sementes resultar
 ### Pipa: movimento obrigatório nas fases
 
 Os testes comparam as três dificuldades: nenhuma vence sem comandos, e uma trajetória com correções para cima e para baixo atravessa todas as passagens a 30, 60 e 120 Hz. A progressão de velocidade e margem é verificada explicitamente. A regressão de quatro minutos do Sem Parar permanece, pois sua configuração não foi alterada. Esses testes executam a simulação e os controles do jogo, mas não substituem avaliação de conforto por uma pessoa no celular.
+
+`quintal-arte.test.mjs` verifica cores características da arte aprovada, coordenadas finitas e ausência de mutação de estado/HUD durante o desenho. São testes de renderização isolada, não testes de aparelho físico.
