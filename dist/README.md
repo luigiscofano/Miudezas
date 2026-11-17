@@ -26,3 +26,7 @@ Uma fábrica recebe o nível de 1 a 3 e uma API com callbacks de som e conclusã
 ![Capa aprovada](artes/capas/miudezas-tijuca.png)
 
 A [pasta artes](artes/README.md) guarda a composição oficial. A capa é exibida inteira, sem esticamento; regras e progresso não foram alterados.
+
+## Marca da interface
+
+[Logotipo e ícone verde](artes/marca/README.md) são usados na barra e no favicon. A partida mantém o título textual do jogo.

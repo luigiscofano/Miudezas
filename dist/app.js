@@ -62,6 +62,9 @@ function mudar(nome){
   if(tela==='jogo'&&nome!=='jogo')desligarEntrada();
   tela=nome;area.scrollTop=0;
   barra.textContent=tela==='jogo'?atual().nome:'Miudezas';
+  // A marca identifica os menus; durante a partida o nome do jogo continua visível.
+  barra.classList.toggle('sr-only',tela!=='jogo');
+  document.querySelector('.brand-logo').hidden=tela==='jogo';
   janelaBotao.hidden=pequena||!['inicio','galeria','roteiro','nivel'].includes(tela);
   document.title=(tela==='jogo'?atual().nome+' · ':'')+'Miudezas';
 }
