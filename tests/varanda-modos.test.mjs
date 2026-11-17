@@ -42,3 +42,36 @@ test('Gude reinício reconstrói mapa; dificuldades clássicas mantêm alvos',()
  for(const level of [1,2,3])assert.deepEqual(varanda.gude(level,api()).snapshot().terreno.alvo,[[77,20],[78,19],[78,18]][level-1]);
  assert.deepEqual(varanda.gude(1,api(),{mode:'generated',seed:77}).snapshot().terreno,varanda.gude(1,api(),{mode:'generated',seed:77}).snapshot().terreno);
 });
+
+test('Luz Sem Parar permite recorde longo, limita velocidade e perde no terceiro bote errado',()=>{
+ const a=api(),j=varanda.luz(1,a,{mode:'endless'});
+ for(let n=0;n<30;n++){
+  for(let f=0;f<3000&&Math.abs(j.snapshot().desvio)>.10;f++)j.update(.005);
+  j.press();j.update(.45);assert.equal(j.score(),n+1);
+ }
+ assert.equal(a.resultados.length,0);assert.ok(j.snapshot().velocidade<=3.8);
+ for(let n=0;n<3;n++){
+  for(let f=0;f<3000&&Math.abs(j.snapshot().desvio)<.3;f++)j.update(.005);
+  j.point(30,30,'down');j.update(.45);assert.equal(j.snapshot().erros,n+1);
+ }
+ assert.equal(a.resultados.length,1);assert.equal(a.resultados[0].ok,false);
+ for(let i=0;i<100;i++)j.update(1);assert.equal(a.resultados.length,1);assert.equal(j.score(),30);
+});
+test('Luz clássica mantém vitória por meta e derrota por prazo',()=>{
+ const a=api(),j=varanda.luz(1,a);
+ for(let n=0;n<2;n++){while(Math.abs(j.snapshot().desvio)>.1)j.update(.005);j.press();j.update(.45);}
+ assert.equal(a.resultados[0].ok,true);
+ const b=api(),k=varanda.luz(3,b);k.update(24);assert.equal(b.resultados[0].ok,false);
+});
+test('Gude arrasto exige início na bola; cancelar não lança, força longa percorre mais',()=>{
+ const simular=(distancia)=>{const j=varanda.gude(1,api());j.point(16,80,'down');j.point(16-distancia,80,'move');assert.equal(j.snapshot().jogadas,0);j.point(16-distancia,80,'up');while(j.moving)j.update(1/60);return j.snapshot();};
+ assert.ok(simular(10).x>simular(3).x+20);
+ const j=varanda.gude(1,api());j.point(80,10,'down');j.point(0,0,'up');assert.equal(j.snapshot().jogadas,0);
+ j.point(16,80,'down');j.point(0,80,'cancel');j.point(0,80,'up');assert.equal(j.snapshot().jogadas,0);
+ j.point(16,80,'down');j.cancelInput();j.point(0,80,'up');assert.equal(j.snapshot().jogadas,0);
+});
+test('Certificado rejeita mapa trivial e área inferior às pedras do Puxado',()=>{
+ const t=criarTerrenoGude(88);assert.ok(t.pedras.reduce((s,[,,w,h])=>s+w*h,0)>=360);
+ assert.equal(validarTerrenoGude({...t,pedras:[]}),false);
+ assert.equal(validarTerrenoGude({...t,pedras:[[2,2,15,12],[70,70,15,12]],alvo:[40,80]}),false);
+});

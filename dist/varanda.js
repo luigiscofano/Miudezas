@@ -63,7 +63,10 @@ function lagartixa(ctx, x, y, angulo) {
   }
 }
 
-function luz(level, api) {
+function luz(level, api, options={}) {
+  const infinito=options.mode==='endless';
+  let erros=0;
+  const velocidade=()=>infinito?Math.min(3.8,1.98+capturas*.07):(1.55+.43*level);
   const meta = level + 1;
   const limite = 26 - level;
   const base = [27, 70];
@@ -82,7 +85,7 @@ function luz(level, api) {
   function terminar() {
     if (acabou) return;
     acabou = true;
-    api.finish(capturas >= meta, capturas + (capturas === 1 ? ' mosquito capturado.' : ' mosquitos capturados.'));
+    api.finish(!infinito && capturas >= meta, capturas + (capturas === 1 ? ' mosquito capturado.' : ' mosquitos capturados.'));
   }
   function atacar() {
     if (acabou || bote) return;
@@ -94,9 +97,11 @@ function luz(level, api) {
     api.tone(acerto ? 605 : 148, 0.10);
   }
   return {
+    score(){return capturas;},
+    snapshot(){return {capturas,erros,acabou,desvio:desvio(),velocidade:velocidade(),emBote:Boolean(bote)};},
     press: atacar, release: semAcao,
     point(x,y,phase) { if (phase === 'down') atacar(); },
-    hud() { return capturas + '/' + meta + ' mosquitos · ' + Math.max(0, Math.ceil(limite - tempo)) + ' s'; },
+    hud() { if(infinito)return capturas+' mosquitos · '+(3-erros)+' erros restantes'; return capturas + '/' + meta + ' mosquitos · ' + Math.max(0, Math.ceil(limite - tempo)) + ' s'; },
     update(dt) {
       if (acabou) return;
       tempo += dt;
@@ -106,15 +111,16 @@ function luz(level, api) {
           if (bote.acerto) {
             capturas++;
             indice = (indice+1) % pousos.length;
-            if (capturas === meta) { terminar(); return; }
+            if (!infinito && capturas === meta) { terminar(); return; }
           }
+          if(infinito&&!bote.acerto&&++erros===3){terminar();return;}
           bote = null;
           mira = -1.3;
         }
       } else {
-        mira += dt * (1.55 + 0.43 * level);
+        mira += dt * velocidade();
       }
-      if (tempo >= limite) terminar();
+      if (!infinito && tempo >= limite) terminar();
     },
     draw(ctx) {
       fundo(ctx, '#33245e');
@@ -122,7 +128,7 @@ function luz(level, api) {
       linha(ctx,[4,19],[7,19],'#4d3976');
       linha(ctx,[87,85],[91,81],'#4d3976');
       linha(ctx,[91,81],[95,81],'#4d3976');
-      const tempoRestante = limite-tempo;
+      const tempoRestante = infinito?Infinity:limite-tempo;
       const apagada = (tempoRestante < 2.2 && tempoRestante > 1.98) || (tempoRestante < 1.02 && tempoRestante > 0.80);
       const brilho = apagada ? '#847e83' : '#ffe682';
       linha(ctx,[78,0],[78,7],'#161a33',2);
@@ -164,6 +170,16 @@ function aleatorioComSemente(seed) {
 // O certificado usa os controles públicos e a física real, não apenas conectividade.
 export function validarTerrenoGude(terreno) {
   if (!terreno.solucao || terreno.solucao.length > 3) return false;
+  // Puxado tem duas pedras de 15×12: a área bloqueada não deve ficar menor.
+  if(terreno.pedras.length<2 || terreno.pedras.reduce((s,[,,w,h])=>s+w*h,0)<360)return false;
+  const dx=terreno.alvo[0]-16,dy=terreno.alvo[1]-80,norma=Math.hypot(dx,dy);
+  // Rejeita mapas resolvidos apontando diretamente ao buraco, inclusive ricochetes.
+  for(let forca=3;forca<=94;forca++){
+    let venceu=false;const jogo=gude(3,{tone(){},finish(ok){venceu=ok;}},{terrenoValidado:terreno});
+    jogo.point(16,80,'down');jogo.point(16-dx/norma*forca/3.6,80-dy/norma*forca/3.6,'up');
+    for(let q=0;q<600&&jogo.moving;q++)jogo.update(1/60);
+    if(venceu)return false;
+  }
   for (const dt of [1/30,1/60,1/120]) {
     for (let combinacao=0; combinacao<8; combinacao++) {
       let venceu=false;
@@ -176,6 +192,19 @@ export function validarTerrenoGude(terreno) {
         for(let quadro=0;quadro<600 && jogo.moving;quadro++) jogo.update(dt);
       }
       if(!venceu) return false;
+      // Repete pelo arrasto real: erros de 0,25 pixel lógico em ambos os eixos.
+      let toqueVenceu=false;
+      const toque=gude(3,{tone(){},finish(ok){toqueVenceu=ok;}},{terrenoValidado:terreno});
+      for(const [indice,passo] of terreno.solucao.entries()){
+        const {x,y}=toque.snapshot(),[dx,dy]=direcoes[passo.direcao];
+        const distancia=(5+68*passo.duracao)/3.6;
+        const erro=((combinacao>>indice)&1)?.25:-.25;
+        const px=x-dx*distancia+erro,py=y-dy*distancia-erro;
+        if(px<0||px>96||py<0||py>96)return false;
+        toque.point(x,y,'down');toque.point(px,py,'up');
+        for(let q=0;q<600&&toque.moving;q++)toque.update(dt);
+      }
+      if(!toqueVenceu)return false;
     }
   }
   return true;
@@ -194,12 +223,12 @@ export function criarTerrenoGude(seed=1) {
   for(let tentativa=0;tentativa<32;tentativa++) {
     const virada=inteiro(34,49),altura=inteiro(27,40),final=inteiro(75,83);
     // Uma pedra entre a origem e o buraco impede que todos os mapas sejam um tiro direto.
-    const pedras=[[virada+9,altura+13,inteiro(8,12),inteiro(9,14)],
-      [inteiro(8,17),inteiro(28,47),inteiro(7,10),inteiro(7,11)]];
+    const pedras=[[virada+9,altura+13,inteiro(14,18),inteiro(15,19)],
+      [inteiro(7,13),inteiro(29,43),14,13]];
     const terreno=candidato(virada,altura,final,pedras);
     if(validarTerrenoGude(terreno)) return terreno;
   }
-  const seguro=candidato(40,25,80,[[52,41,10,12],[12,35,8,9]]);
+  const seguro=candidato(40,25,80,[[49,38,16,18],[10,36,14,13]]);
   if(!validarTerrenoGude(seguro)) throw new Error('O percurso de segurança não passou pela física do jogo.');
   return seguro;
 }
