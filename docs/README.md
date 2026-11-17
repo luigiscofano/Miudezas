@@ -1,13 +1,18 @@
-# Imagens da documentação
+# Documentação de Miudezas
 
-As capturas inicio.jpg e pracinha.jpg registravam o catálogo anterior e foram retiradas para não mostrar jogos indisponíveis. O README apresenta a capa e as miniaturas atuais em [dist/arte](../dist/arte/README.md).
+O catálogo ativo contém **dez jogos**, em duas páginas de até seis miniaturas. Peteca e Gato na Sombra estão fora da seleção, das partidas e da sequência. Recursos legados não representam conteúdo atualmente disponível.
 
-A versão atual contém 12 jogos, distribuídos em duas páginas de seis. Novas capturas devem mostrar esta versão, sem cursor.
+## Guias
 
-[Voltar ao README principal](../README.md)
+- [README principal](../README.md): identidade visual, catálogo, modos, arquitetura, dados e testes.
+- [Publicação no GitHub Pages](github-pages.md): hospedagem, verificação e transferência de progresso.
+- [Quintal](jogos/quintal/README.md): Goteira, Maré Miúda, Último Fio e Pipa.
+- [Esquina](jogos/esquina/README.md): Rádio, Pão e Rastro.
+- [Varanda](jogos/varanda/README.md): Luz, Três Petelecos e Pisca.
+- [Testes](../tests/README.md): cobertura automática e roteiro manual.
 
-## Capa atual
+## Referências visuais
 
 ![Capa Miudezas](../dist/artes/capas/miudezas-tijuca.png)
 
-Esta é a arte original aprovada, não uma captura da interface. Veja [organização das artes](../dist/artes/README.md).
+Esta é a arte aprovada, não uma captura da interface. Consulte [artes](../dist/artes/README.md) e [miniaturas](../dist/arte/README.md). Capturas antigas `inicio.jpg` e `pracinha.jpg` foram retiradas para não representar jogos indisponíveis. Novas capturas devem mostrar a versão efetivamente publicada, sem cursor e sem dados privados.
