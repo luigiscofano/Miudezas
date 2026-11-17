@@ -1,10 +1,14 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {quintal,gerarMare,resolverMare} from '../dist/quintal.js';
+import {quintal,gerarMare,resolverMare,criteriosMare,analisarMare} from '../dist/quintal.js';
 function criar(id,level=1,options={}){const results=[];const game=quintal[id](level,{tone(){},finish(...r){results.push(r);}},options);return {game,results};}
 test('Maré: 300 sementes reproduzíveis, solução executada com maré real',()=>{
  for(let seed=0;seed<300;seed++){
-  const map=gerarMare(seed); assert.deepEqual(map,gerarMare(seed));assert.ok(map.solution.length>=14);
+  const map=gerarMare(seed); assert.deepEqual(map,gerarMare(seed));
+  assert.ok(map.metrics.passos>=criteriosMare.passosMinimos && map.metrics.passos<=criteriosMare.passosMaximos);
+  assert.ok(map.metrics.passos-map.metrics.passosSemMare>=criteriosMare.custoMinimoMare);
+  assert.ok(map.metrics.baixiosObrigatorios>=criteriosMare.baixiosObrigatorios);
+  assert.ok(map.metrics.passosSemPedras<map.metrics.passos, 'pedras devem impedir atalhos');
   const {game,results}=criar('mare',1,{mode:'generated',seed});
   for(const dir of map.solution)game.press(dir);
   assert.equal(results.length,1);assert.equal(results[0][0],true);
@@ -48,4 +52,14 @@ test('Fio: cinco mariposas não encerram Sem Parar, rajada encerra',()=>{
  assert.equal(game.score(),15);assert.equal(results.length,0);
  for(let i=0;i<200;i++)game.update(.05);
  assert.equal(results.length,1);assert.equal(results[0][0],false);
+});
+
+test('Maré: referência Puxado e fallback exigem maré; novas fases variam',()=>{
+ assert.deepEqual(criteriosMare,{passosMinimos:17,passosMaximos:27,custoMinimoMare:3,baixiosObrigatorios:2});
+ const grid=['.~~~~..C','~~~~~#..','~~~..=..','~~~#..~~','~..=.~~~','~..#~~~~','.#=.~~~~','S..~~~~~'];
+ const a=analisarMare(grid);assert.ok(a.passos>=17&&a.passos<=27);assert.ok(a.passos-a.passosSemMare>=3);
+ assert.ok(a.baixiosObrigatorios>=2);assert.ok(a.passosSemPedras<a.passos);
+ const maps=new Set(),solutions=new Set();
+ for(let seed=0;seed<60;seed++){const m=gerarMare(seed);maps.add(m.grid.join(''));solutions.add(m.solution.join(','));}
+ assert.ok(maps.size>=50);assert.ok(solutions.size>=10);
 });
