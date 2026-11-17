@@ -74,3 +74,13 @@ test('Tostado continua válido e a troca não cozinha nem aceita coleta',()=>{
   const antes=jogo.snapshot();assert.equal(antes.troca,true);
   jogo.press('left');jogo.update(.5);assert.deepEqual(jogo.snapshot(),antes);
 });
+
+test('Chapa sem quadradinhos de estado conserva alimentos e fumaça',()=>{
+  const {jogo}=criar(1);
+  jogo.update(5);
+  const pixels=[];
+  jogo.draw({fillStyle:'',fillRect(x,y,w,h){pixels.push({cor:this.fillStyle,x,y,w,h});}});
+  assert.ok(!pixels.some(p=>p.y===62&&p.w===5&&p.h===3));
+  assert.ok(pixels.some(p=>p.cor==='#d7c6b7'),'fumaça preservada');
+  conferirIdentidades(jogo);
+});

@@ -242,8 +242,6 @@ function pao(level, api) {
         const line = state === 3 ? iron : '#c48343';
         rect(ctx, line, x + 5, y + 8, 5, 2); rect(ctx, line, x + 11, y + 14, 5, 2);
       }
-      // Barras segmentadas mostram o ponto além da cor; nomes ficam no painel HTML.
-      for (let k = 0; k < 3; k++) rect(ctx, state > k ? gold : '#554653', x + k * 7, 62, 5, 3);
       if (state > 0) {
         const lift = Math.floor(alimento.idade * 2) % 3;
         rect(ctx, '#d7c6b7', x + 9, y - 5 - lift, 2, 3);
