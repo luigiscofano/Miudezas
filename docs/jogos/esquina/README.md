@@ -67,3 +67,7 @@ A suíte verifica identidades, utensílios, toque, trocas, queimas únicas, trê
 Rádio de Pilha ganhou relevo de um pixel, grade e apoio; Pão na Chapa ganhou acabamento metálico e detalhe no miolo do pão. Utensílios, estados, fumaça, metas e três erros permanecem iguais. Rastro de Prata não foi alterado: sua proposta ainda depende de aprovação.
 
 Os detalhes usam a grade nativa de 96 × 96, cores chapadas e bordas sem suavização. São apenas desenho: não representam novos obstáculos nem mudam colisões, controles, fases ou saves. As propostas foram comparadas com renderizações do próprio `draw()` antes da aplicação.
+
+## Folhas aprovadas de Rastro
+
+As três folhas finas têm silhuetas levemente diferentes e a mesma paleta. A ordem das folhas no mapa define sua variante, calculada uma vez ao iniciar a fase; reiniciar mantém a aparência. A diferença é decorativa: todas são recolhidas pelas mesmas regras e mantêm o mesmo valor.

@@ -401,7 +401,7 @@ function gude(level, api, options={}) {
   };
 }
 
-const corpoVaga = ['....kk....','..wwggww..','.wwggggww.','llggggggkk','llggggggkk','..kk..kk..'];
+const corpoVaga = [".....k.k..","...ww.k...","..wwwgkk..","llgggggkk.","llggggg...","..k..k...."];
 
 function pisca(level,api,options={}) {
   const infinito=options.mode==='endless';
@@ -464,6 +464,13 @@ function pisca(level,api,options={}) {
     },
     draw(ctx){
       fundo(ctx,'#0b3439');
+      // Capim baixo em três grupos: nada disputa atenção com as piscadas.
+      bloco(ctx,0,93,96,3,'#173e38');
+      for(const [x,y] of [[7,88],[20,91],[44,90],[76,89],[90,86]]) {
+        linha(ctx,[x,y+5],[x-2,y-3],'#315f47');
+        linha(ctx,[x,y+5],[x+3,y-1],'#315f47');
+        linha(ctx,[x,y+5],[x,y-5],'#49764d');
+      }
       sprite(ctx,0,86,['g.....','g....g','.g..g.','.g.gg.','..gg..','..gg..','..gg..','..gg..','..gg..','..gg..'],{g:'#48764d'});
       sprite(ctx,89,89,['...g..','...g.g','..ggg.','..gg..','.gg...','.gg...','.gg...'],{g:'#48764d'});
       for(const [dir,x] of [['left',16],['right',62]]){

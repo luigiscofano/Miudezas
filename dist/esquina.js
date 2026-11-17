@@ -307,7 +307,7 @@ const gardens = [
   ['..#...P', 'L...#..', '.#.#L..', '...#...', '.#...#.', '...#L..', 'S....#.']
 ];
 const directions = {left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1]};
-const leaf = ['...gg', '..ggg', '.ggig', 'ggigg', 'gigg.', 'gg...'];
+const leaf = [["....gg.","...ghgg","..ghigg",".ghigg.","ghigg..","gig....","i......"],["...g...","..ghg..",".ghigg.","ghiggg.",".gigg..","..ig...","..i...."],[".....g.","...gghg","..ghigg",".ghigg.","ghigg..",".ig....","i......"]];
 const rock = ['..rr..', '.rrrr.', 'rrrrrr', '.rrrr.'];
 const snail = [
   '..sss....e.e', '.saaas...e.e', 'saassas.eeee', 'sas.saseeeee', 'saassaseeee.',
@@ -446,6 +446,8 @@ export function gerarRastro(seed = 1, familia = (Number(seed) >>> 0) % 3 === 1 ?
 function rastro(level, api, options = {}) {
   const gerado = options.mode === 'generated' ? gerarRastro(options.seed, options.family) : null;
   const maze = gerado ? gerado.mapa : gardens[level - 1], side = maze.length, tiles = maze.join('');
+  // Define a variação uma vez por fase, sem trabalho extra a cada quadro.
+  const variantesFolhas = new Map([...tiles].flatMap((tipo, indice) => tipo === 'L' ? [indice] : []).map((indice, ordem) => [indice, ordem % leaf.length]));
   const round = roundEnd(api);
   const path = [tiles.indexOf('S')], walked = new Set(path), leaves = new Set();
   let held = '', repeatIn = 0;
@@ -521,7 +523,7 @@ function rastro(level, api, options = {}) {
       const col = i % side, row = Math.floor(i / side);
       rect(ctx, (col + row) % 2 ? clay : peach, border + col * size, border + row * size, size - 1, size - 1);
       const [x,y] = tileCenter(i);
-      if (tiles[i] === 'L' && !leaves.has(i)) sprite(ctx, leaf, {g: green, i: deep}, x - 3, y - 3);
+      if (tiles[i] === 'L' && !leaves.has(i)) sprite(ctx, leaf[variantesFolhas.get(i)], {g: '#72a364', h: '#b7cb85', i: '#3f634b'}, x - 3, y - 3);
       if (tiles[i] === '#') sprite(ctx, rock, {r: '#526463'}, x - 3, y - 2);
       if (tiles[i] === 'P') {
         sprite(ctx, ['..rrr...', '.rrbbbb.', 'arrbbbbb','aaarrbbb','aaaarrb.', '.aaar...','..aa....'],

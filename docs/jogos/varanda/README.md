@@ -54,3 +54,7 @@ Testes automatizados não substituem inspeção visual em navegador nem teste f�
 Luz de Varanda recebeu iluminação quadriculada, parede discreta e dorso legível; Três Petelecos ganhou grãos de terra, faces de pedras e reflexo da bolinha. Pisca no Mato não foi alterado: sua proposta ainda depende de aprovação.
 
 Os detalhes usam a grade nativa de 96 × 96, cores chapadas e bordas sem suavização. São apenas desenho: não representam novos obstáculos nem mudam colisões, controles, fases ou saves. As propostas foram comparadas com renderizações do próprio `draw()` antes da aplicação.
+
+## Arte aprovada de Pisca
+
+Capim baixo em grupos deixa o centro livre para observar as piscadas. Asas e antenas distinguem os vaga-lumes sem mudar suas posições, toque, sequência ou duração da luz. A arte usa a grade nativa e não suaviza pixels.
