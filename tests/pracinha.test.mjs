@@ -24,9 +24,9 @@ function corrigir(jogo, distancia) {
   if (Math.abs(distancia) > 0.6) jogo.press(distancia < 0 ? 'left' : 'right');
 }
 
-test('Os 12 jogos têm IDs únicos, três níveis e miniatura disponível', () => {
-  assert.equal(catalogo.length, 12);
-  assert.equal(new Set(catalogo.map(j=>j.id)).size, 12);
+test('Os 10 jogos têm IDs únicos, três níveis e miniatura disponível', () => {
+  assert.equal(catalogo.length, 10);
+  assert.equal(new Set(catalogo.map(j=>j.id)).size, 10);
   for (const j of catalogo) {
     assert.equal(j.niveis.length, 3);
     assert.ok(existsSync(new URL('../dist/arte/' + (j.imagem || j.id+'.png'), import.meta.url)));
