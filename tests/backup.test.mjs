@@ -28,3 +28,9 @@ test('falha de escrita restaura os dados anteriores',()=>{
  const incoming=criarBackup(memoria());incoming.dados[chaves[0]]='false';incoming.dados[chaves[1]]='null';
  assert.throws(()=>importarBackup(store,incoming));assert.equal(JSON.stringify(criarBackup(store)),initial);
 });
+test('recorde da lagartixa viaja no backup sem perder recordes anteriores',()=>{
+ const origem=memoria(),destino=memoria();
+ origem.setItem(chaves[2],JSON.stringify({luz:14,pao:7}));destino.setItem(chaves[2],JSON.stringify({pisca:8,luz:19}));
+ importarBackup(destino,validarBackup(JSON.stringify(criarBackup(origem))));
+ assert.deepEqual(JSON.parse(destino.getItem(chaves[2])),{pisca:8,luz:19,pao:7});
+});

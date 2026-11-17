@@ -1,5 +1,5 @@
 // Recordes independentes das dificuldades autorais e sem dados pessoais.
-export const idsRecordes = Object.freeze(['goteira', 'pipa', 'fio', 'pao', 'pisca']);
+export const idsRecordes = Object.freeze(['goteira', 'pipa', 'fio', 'pao', 'pisca', 'luz']);
 const objeto = valor => valor !== null && typeof valor === 'object' && !Array.isArray(valor);
 const pontuacaoValida = valor => Number.isSafeInteger(valor) && valor >= 0;
 

@@ -9,12 +9,13 @@ node --test tests/*.test.mjs
 | Arquivo | Cobertura |
 |---|---|
 | `navegacao.test.mjs` | Galeria, catálogo ativo, migração por IDs, sequência e resumo das dez paradas em navegador simulado. |
+| `recordes.test.mjs` | IDs elegíveis, inteiros seguros e atualização somente ao superar o melhor resultado. |
 | `backup.test.mjs` | Exportação/importação, validação de entradas e compatibilidade do progresso. |
 | `capa.test.mjs` | Dimensões do PNG, proporção preservada e título acessível sem sobreposição. |
 | `pao.test.mjs` | Três dificuldades em 30/60/120 atualizações/s, identidades, utensílios, toque, reposições, troca, erro único, derrota e reinício. |
-| `esquina-modos.test.mjs` | Metas separadas e vitória imediata; 20 minutos de Sem Parar; 1.000 sementes de Rastro resolvidas pelos controles reais. |
-| `quintal-modos.test.mjs` | Quarta/quinta gotas, alagamento, limites, Pipa contínua e colisão, Último Fio contínuo, 300 sementes de Maré com estados de maré. |
-| `varanda-modos.test.mjs` | Pisca contínuo, pontuação por sequência completa, Gude com 200 sementes validadas por controles e física. |
+| `esquina-modos.test.mjs` | Metas separadas e vitória imediata; 20 minutos de Sem Parar; geração de Rastro e execução de soluções pelos controles reais; consulte os testes para o lote e os critérios atuais. |
+| `quintal-modos.test.mjs` | Quarta/quinta gotas, alagamento, limites, Pipa contínua e colisão, Último Fio contínuo, 300 sementes de Maré com estados reais: 17–27 passos, custo de maré mínimo 3, dois baixios obrigatórios e pedras que bloqueiam atalhos. |
+| `varanda-modos.test.mjs` | Pisca contínuo; Luz contínua com derrota no terceiro bote errado; Gude com soluções executadas pelos controles e física. Consulte o arquivo para os lotes e critérios atuais. |
 | `pracinha.test.mjs` | Regressões do código legado e integridade do catálogo. Peteca/Gato não voltam ao aplicativo por esses testes. |
 
 Os geradores são testados pela execução da solução no jogo, não só por verificar conectividade abstrata. Sementes determinísticas permitem reproduzir uma falha. Testes de partidas longas conferem continuidade e encerramento único; não equivalem a um benchmark em todos os celulares.
@@ -22,7 +23,12 @@ Os geradores são testados pela execução da solução no jogo, não só por ve
 ## Verificação manual complementar
 
 - Abrir o catálogo e completar a volta sem entradas para jogos removidos.
-- Usar teclado e toque, incluindo escolha de utensílio e arrasto da bolinha.
+- Usar teclado, botões acessíveis e toque, incluindo escolha de utensílio.
+- Iniciar o traçado de Rastro no caracol; começar fora dele não deve mover.
+- Iniciar o arrasto de Gude na bola; testar fora dela, soltura válida, `pointercancel` e perda de foco. Cancelamento não lança.
+- Confirmar que somente o tabuleiro captura os gestos necessários; fora dele a página continua rolável.
+- Na pausa, Voltar às fases conserva seleção, saves e recordes.
+- Em Luz Sem Parar, sobreviver além dos tempos autorais e perder somente no terceiro bote errado.
 - Conferir pausa ao ocultar aba, reinício, resultado, recorde e recarregamento.
 - Repetir fase gerada e depois pedir outra, observando a semente.
 - Exportar e importar backup antigo e novo sem trocar resultados entre jogos.
@@ -31,3 +37,9 @@ Os geradores são testados pela execução da solução no jogo, não só por ve
 A suíte automatizada não substitui inspeção visual, teste em aparelho real nem verificação da versão publicada. Registre no PR quais verificações foram de fato executadas.
 
 [Manual principal](../README.md)
+
+## Verificação integrada de gestos e pausa
+
+A suíte desta revisão tem 88 testes aprovados. `navegacao.test.mjs` liga o Gude real ao canvas instrumentado e despacha ponteiros: puxar mantém a partida, cancelamento não lança, soltar lança. Eventos de foco transitório, perda real de foco, aba oculta, captura perdida e retorno às fases são verificados separadamente. Isso é automação DOM, não sessão em navegador móvel físico. O cancelamento do pad também solta direções contínuas sem disparar um peteleco.
+
+Medição Node de 100 sementes, sem aquecimento: p95 de geração Rastro 7,56 ms, Maré 12,89 ms e Gude 10,99 ms. O máximo observado em Gude foi 71,14 ms; a mesma semente repetida ficou entre 2,86 e 24,08 ms. São amostras deste ambiente, não garantias para celulares. A validação ocorre ao criar a fase, nunca a cada quadro.

@@ -46,13 +46,13 @@ Para experimentar no celular, conecte os dois aparelhos à mesma rede local, exe
 | Seleção de nível | Escolher **Sossegado**, **Animado** ou **Puxado**, além do modo adicional nos jogos elegíveis. As fases autorais permanecem disponíveis. |
 | Próxima parada | Ler o objetivo e os comandos antes de iniciar o relógio do jogo. |
 | Partida | Ver a cena, a meta ou o tempo no indicador e os botões correspondentes àquela mecânica. |
-| Pausa | Consultar regras, continuar ou sair ao menu. Perder o foco ou ocultar a aba também pausa a partida. |
+| Pausa | Consultar regras, continuar, **Voltar às fases** ou sair ao menu. Voltar às fases preserva o jogo selecionado e os dados salvos, sem registrar uma derrota artificial. Perder o foco ou ocultar a aba também pausa a partida. |
 | Resultado | No avulso, repetir ou voltar à galeria. Na volta, repetir a parada ou avançar mesmo depois de uma derrota. |
 | Resumo | Após a 10ª parada, ver os desafios vencidos e as dez miniaturas com seus resultados. |
 
 ### Modos adicionais por jogo
 
-Os modos adicionais são partidas avulsas; a Volta no Bairro continua nas três dificuldades autorais. **Sem Parar** não tem meta final nem cronômetro de encerramento: superar o recorde não encerra a partida. **Caminho Novo** gera uma fase completa; repetir mantém a semente e gerar outra cria um percurso novo.
+São **seis jogos com Sem Parar e três com Caminho Novo**, além do Rádio com fases autorais. Os modos adicionais são partidas avulsas; a Volta no Bairro continua nas três dificuldades autorais. **Sem Parar** não tem meta final nem cronômetro de encerramento: superar o recorde não encerra a partida. **Caminho Novo** gera uma fase completa; repetir mantém a semente e gerar outra cria um percurso novo.
 
 | Jogo | Modo adicional | Métrica ou razão |
 |---|---|---|
@@ -63,13 +63,19 @@ Os modos adicionais são partidas avulsas; a Volta no Bairro continua nas três 
 | Rádio de Pilha | Clássico | História finita em três transmissões; repetição arbitrária não melhora a proposta. |
 | Pão na Chapa | Sem Parar | Alimentos corretos até o terceiro erro. |
 | Rastro de Prata | Caminho Novo | Trilha sem cruzar o próprio rastro, com três folhas antes do vaso. |
-| Luz de Varanda | Clássico | Desafio curto de mira com lâmpada e meta; preserva seu ritmo autoral. |
+| Luz de Varanda | Sem Parar | Mosquitos capturados pela lagartixa; o terceiro bote errado encerra, sem prazo final. |
 | Três Petelecos | Caminho Novo | Percurso validado com a física e os controles de lançamento reais. |
 | Pisca no Mato | Sem Parar | Maior sequência concluída; errar encerra. |
 
-Os geradores usam sementes reproduzíveis, tentativas limitadas e configurações de reserva validadas. A prova de solução é executada antes da entrega da fase, não presumida apenas pela aparência do mapa. Consulte [Quintal](docs/jogos/quintal/README.md), [Esquina](docs/jogos/esquina/README.md) e [Varanda](docs/jogos/varanda/README.md) para regras, limites e verificações.
+Caminho Novo toma a dificuldade **Puxado** como referência de desafio, preservando as três fases autorais. Os geradores usam sementes reproduzíveis, tentativas limitadas e configurações de reserva validadas. A prova de solução é executada antes da entrega da fase, não presumida apenas pela aparência do mapa. Consulte [Quintal](docs/jogos/quintal/README.md), [Esquina](docs/jogos/esquina/README.md) e [Varanda](docs/jogos/varanda/README.md) para regras, limites e verificações.
 
 **Uma volta de exemplo.** Escolha Animado, jogue Goteira e avance. O próximo cartão é Maré Miúda no mesmo nível. Fechar o navegador nesse cartão permite retomar na segunda parada. Se sair no meio da partida, ela recomeça naquela parada. O avanço registra um resultado por jogo.
+
+### Controles diretos e alternativa acessível
+
+O gesto principal atua sobre o objeto do jogo: em **Rastro de Prata**, comece no caracol e trace pelas casas vizinhas; em **Três Petelecos**, comece sobre a bolinha, puxe e solte para lançar. Começar fora desses objetos não inicia um arrasto válido. Interrupções como `pointercancel` ou perda de foco cancelam o lançamento parcial: não equivalem a soltar voluntariamente a bolinha.
+
+Teclado e botões direcionais continuam sendo alternativas acessíveis; não é necessário dominar o arrasto para jogar. A restrição de gestos nativos (`touch-action`) fica limitada ao tabuleiro interativo, sem bloquear a rolagem da página inteira. Confira também foco visível, leitura das instruções e funcionamento em telas estreitas.
 
 **Comandos gerais.** Setas e WASD têm a mesma função nas partidas. Nos menus, use setas para navegar e Enter para selecionar. Esc volta ou pausa. No celular, os botões sob a cena complementam os gestos próprios de cada jogo. O computador solicita uma janela de 492 × 492 quando a área tem ao menos 700 px de largura e o dispositivo aponta com precisão. Se o navegador bloquear a abertura, o jogo segue na página.
 
@@ -131,7 +137,7 @@ Leve o caranguejo até a concha. A maré muda a cada três passos. Se ela cobrir
 |---|---|---|
 | **Enseada** · Mapa 8 × 8 com banco raso contínuo | **Dois baixios** · Mapa 8 × 8 com dois baixios separados | **Canal estreito** · Mapa 8 × 8 com passagens rasas estreitas |
 
-Apenas um passo válido avança a maré. No terceiro, se a água subir sobre uma casa rasa, o caranguejo retorna à última casa firme. Um passo lateral na areia pode preparar o momento da travessia.
+Apenas um passo válido avança a maré. No terceiro, se a água subir sobre uma casa rasa, o caranguejo retorna à última casa firme. Um passo lateral na areia pode preparar o momento da travessia. Em Caminho Novo, o Puxado fornece a referência: 17 comandos mínimos e três comandos de custo da maré. Os mapas aceitos exigem 17 a 27 comandos, dois baixios indispensáveis e pedras cuja remoção encurtaria a solução. A busca considera o ciclo da maré e a última areia segura. [Critérios completos](docs/jogos/quintal/README.md#maré-miúda-prova-executável-de-solução).
 
 Palco `#205E60` · [Implementação de Maré Miúda](dist/quintal.js)
 
@@ -206,13 +212,13 @@ Palco `#A25843` · [Implementação de Pão na Chapa](dist/esquina.js)
 
 <img src="dist/arte/rastro.png" width="128" alt="Miniatura de Rastro de Prata na galeria">
 
-Pegue três folhas e entre no vaso. Seu rastro bloqueia o caminho. Volte pela última casa para desfazer o passo. **Comandos.** Use as quatro direções ou deslize o dedo para mover o caracol.
+Pegue três folhas e entre no vaso. Seu rastro bloqueia o caminho. Volte pela última casa para desfazer o passo. **Comandos.** Use as quatro direções como alternativa ou inicie no caracol e trace o percurso pelas casas vizinhas com mouse ou toque.
 
 | Sossegado | Animado | Puxado |
 |---|---|---|
 | **Quintal 5 × 5** · Tabuleiro de 5 × 5 | **Quintal 6 × 6** · Tabuleiro de 6 × 6 | **Quintal 7 × 7** · Tabuleiro de 7 × 7 |
 
-O caminho ocupa as casas percorridas. Refazer o último passo desfaz também a coleta realizada naquela casa. Para entrar no vaso, recolha todas as três folhas no caminho atual.
+O caminho ocupa as casas percorridas. Refazer o último passo desfaz também a coleta realizada naquela casa. Para entrar no vaso, recolha todas as três folhas no caminho atual. Caminho Novo usa o Puxado como referência e valida as restrições do rastro, não apenas a conectividade do tabuleiro. [Geração e testes](docs/jogos/esquina/README.md).
 
 Palco `#C18E86` · [Implementação de Rastro de Prata](dist/esquina.js)
 
@@ -226,7 +232,7 @@ Espere a lagartixa apontar para um mosquito e dê o bote. Alcance a meta antes d
 |---|---|---|
 | **2 mosquitos** · 2 capturas em 25 s | **3 mosquitos** · 3 capturas em 24 s | **4 mosquitos** · 4 capturas em 23 s |
 
-A cabeça da lagartixa varre um arco. O jogador decide o instante do bote. Em níveis altos, a mira gira mais depressa e o ângulo de acerto também fica menor.
+A cabeça da lagartixa varre um arco. O jogador decide o instante do bote. Em níveis altos, a mira gira mais depressa e o ângulo de acerto também fica menor. Em **Sem Parar**, não há prazo de encerramento: cada mosquito capturado soma um ponto e o terceiro bote errado encerra a partida. As fases autorais mantêm suas metas e tempos.
 
 Palco `#30234B` · [Implementação de Luz de Varanda](dist/varanda.js)
 
@@ -234,13 +240,13 @@ Palco `#30234B` · [Implementação de Luz de Varanda](dist/varanda.js)
 
 <img src="dist/arte/gude.png" width="128" alt="Miniatura de Três Petelecos na galeria">
 
-Acerte o buraco em até três petelecos. Quanto mais tempo segurar a direção, mais longe a bolinha vai. **Comandos.** Segure uma seta e solte. No celular, puxe a bolinha para trás e solte.
+Acerte o buraco em até três petelecos. Quanto mais tempo segurar a direção, mais longe a bolinha vai. **Comandos.** Segure uma seta e solte. Com mouse ou toque, inicie na bolinha, puxe para trás e solte; cancelar o gesto não lança.
 
 | Sossegado | Animado | Puxado |
 |---|---|---|
 | **Terra batida** · Alvo (77,20), uma pedra | **Entre pedras** · Alvo (78,19), duas pedras | **Caminho torto** · Alvo (78,18), duas pedras em novas posições |
 
-A bolinha parte de (16,80), com origem no canto superior esquerdo. Segurar define alcance no teclado e puxar define direção e alcance no toque. As pedras e limites desviam a trajetória. O buraco precisa ser alcançado até o terceiro tiro.
+A bolinha parte de (16,80), com origem no canto superior esquerdo. Segurar define alcance no teclado e puxar define direção e alcance no toque. As pedras e limites desviam a trajetória. O buraco precisa ser alcançado até o terceiro tiro. Caminho Novo compara seu desafio com Puxado e valida uma solução executável na física real. [Critérios e limitações](docs/jogos/varanda/README.md).
 
 Palco `#BE7749` · [Implementação de Três Petelecos](dist/varanda.js)
 
@@ -340,7 +346,7 @@ console.log(rodada.hud());
 | miudezas.v1.som | Booleano. O padrão é desligado. | Ao alternar o som na barra superior. |
 | miudezas.v1.volta | Objeto com nivel, ids e resultados booleanos, migrado por IDs. | No começo da volta e ao avançar de parada. Ao completar a última, o valor passa a null. |
 
-Os recordes ficam em `miudezas.v1.recordes`, por ID de jogo, separados da volta e dos resultados autorais. O backup versão 2 inclui esse campo e aceita arquivos anteriores. Importar um backup antigo não deve apagar recordes já existentes. Os dados são locais ao navegador: limpar armazenamento ou trocar de dispositivo pode removê-los; use exportação/importação explícita. Não há conta, sincronização ou ranking inviolável.
+Os seis recordes de Sem Parar, incluindo Luz de Varanda (`luz`), ficam em `miudezas.v1.recordes`, por ID de jogo, separados da volta e dos resultados autorais. O backup versão 2 inclui esse campo e aceita arquivos anteriores. Importar um backup antigo não deve apagar recordes já existentes. Os dados são locais ao navegador: limpar armazenamento ou trocar de dispositivo pode removê-los; use exportação/importação explícita. Não há conta, sincronização ou ranking inviolável.
 
 Com `{"nivel":2,"resultados":[true,false]}`, a próxima parada é Último Fio em Animado. O resultado mais recente só entra no histórico ao escolher avançar. Repetir permite substituir a tentativa antes desse registro. A retomada depende da origem e do navegador. Outra cópia do site tem seu próprio histórico. Se o armazenamento estiver indisponível, a rodada segue em memória.
 
@@ -357,7 +363,10 @@ O áudio usa um oscilador de onda quadrada com envelope curto. O contexto de áu
 | Avulso → segunda página → Pisca no Mato → Sossegado | O jogo inicia normalmente e aceita a sequência. |
 | Em Goteira, ficar fora do ralo depois de recolher quatro gotas | O indicador para em 4/4; a quinta gota transborda e molha o chão. Voltar ao ralo libera espaço. |
 | Em Rastro de Prata, colher uma folha e voltar à casa anterior | O último segmento é desfeito e a folha volta à casa. |
-| Em Três Petelecos, começar a carregar um tiro e pausar | Ao continuar, a bolinha fica à espera de um novo comando. |
+| Em Três Petelecos, começar a carregar um tiro e pausar ou cancelar o ponteiro | Nenhum tiro involuntário; ao continuar, a bolinha espera um novo comando. |
+| Na pausa, escolher Voltar às fases | A seleção do jogo é conservada, sem apagar saves ou recordes. |
+| Em Luz de Varanda Sem Parar, errar três botes | Uma única derrota, sem encerramento por tempo antes dela. |
+| Em Rastro, iniciar um arrasto fora do caracol | O gesto não move o caracol; teclado e botões continuam disponíveis. |
 | Alternar para outra aba durante uma rodada | A tela de pausa interrompe o avanço do jogo. |
 | Na Volta, avançar após Goteira, sair e retomar no mesmo navegador | A segunda parada é Maré Miúda no nível escolhido. |
 | Completar o percurso, inclusive com uma tentativa perdida | O resumo distingue vitórias e tentativas nas 10 miniaturas. |
