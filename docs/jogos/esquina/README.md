@@ -20,11 +20,19 @@ No **Sem Parar**, não existem metas de vitória nem prazo final. Cada alimento 
 
 ## Rastro de Prata: solução demonstrável
 
-`gerarRastro(seed)` usa um gerador pseudoaleatório determinístico e produz um tabuleiro 6 × 6. Constrói primeiro uma trilha simples de 17 a 24 casas, coloca três folhas em pontos distintos e só então distribui pedras fora dessa trilha. O vaso fica no fim. O jogador pode explorar alternativas abertas, mas sempre existe o percurso testemunha.
+`gerarRastro(seed)` usa uma grade **7 × 7**, como Puxado, e um gerador pseudoaleatório determinístico. Constrói candidatos com trilha simples de 27 a 34 casas, três folhas em pontos distintos e pedras fora do certificado. Exige pelo menos **seis bifurcações** (casas com três ou mais saídas), para que a solução não seja apenas seguir um corredor. Casas abertas adjacentes criam escolhas de percurso; entrar cedo no vaso continua bloqueado e cruzar o próprio rastro continua impossível.
 
-São no máximo 32 tentativas de caminhada limitada. Se nenhuma atingir o comprimento pretendido, utiliza-se um percurso serpenteado conhecido. Nenhuma busca ilimitada ocorre durante renderização. A validação anterior à apresentação confere limites, pedras, casas já ocupadas pelo próprio rastro, três folhas e chegada ao vaso somente ao fim. A solução não depende de atravessar a própria trilha nem de voltar através de folhas coletadas. Os testes executam todos os comandos da solução pela mesma interface `press`/`release` usada pelo jogo.
+Um certificado longo sozinho poderia esconder um atalho. Por isso, uma busca adicional testa todas as possibilidades de vitória com até **21 comandos**: acompanha posição, casas usadas, folhas restantes e entrada no vaso. O limite inferior de distância considera todas as ordens das folhas restantes e só elimina ramos que não podem caber nesse comprimento. Um candidato com solução curta é rejeitado. Se a busca atingir seu orçamento de 30.000 estados, ela é inconclusiva e o candidato também é rejeitado, nunca anunciado como validado. Como desfazer passos apaga o sufixo e devolve suas folhas, qualquer vitória pode ser representada pelo caminho simples que esse solver examina.
 
-A mesma semente reconstrói a mesma fase ao reiniciar. A interface principal é responsável por trocar a semente apenas quando o jogador solicita outra fase. As três fases autorais e os sprites foram recuperados sem alteração do histórico do projeto: suas constantes tinham sido removidas por uma regressão anterior.
+São no máximo **96 candidatos**, cada caminhada com tamanho limitado. Se nenhum passar, o gerador utiliza uma configuração previamente verificada, refletida/rotacionada conforme a semente, mantendo as mesmas restrições e o certificado de solução. A configuração de reserva também é coberta nos testes de ausência de atalho. Uma fase aceita tem solução executável e nenhuma vitória com menos de 22 comandos. Isso é um critério objetivo de complexidade, não uma garantia de dificuldade subjetiva idêntica entre jogadores.
+
+A mesma semente reconstrói a mesma fase ao reiniciar. A interface principal troca a semente apenas quando o jogador solicita outra fase. As três fases autorais e os sprites continuam intactos.
+
+### Traçar o rastro com mouse ou toque
+
+Pressione sobre a célula atual do caracol e arraste pelo tabuleiro. O método `point(x, y, phase)` recebe coordenadas lógicas 96 × 96 e fases `down`, `move`, `up` ou `cancel`. Um percurso iniciado fora do caracol é ignorado. Soltar conserva o caminho; um novo gesto pode começar da posição atual.
+
+A travessia de grade **DDA** processa, na ordem geométrica, cada fronteira de célula entre dois eventos. Um movimento rápido que cruza três casas não pula as duas intermediárias. Cada passagem chama a mesma função de movimento do teclado: pedras, rastro ocupado, vaso sem folhas e desfazer o último passo obedecem às mesmas regras. Ao encontrar um bloqueio, o gesto termina na última casa válida; para continuar é preciso pressionar novamente o caracol, evitando saltos através de obstáculos. Em um cruzamento exato de canto, a fronteira horizontal é processada antes da vertical, sem movimento diagonal instantâneo. Cancelamento ou pausa encerra somente a entrada, não apaga a trilha. Teclado e repetição por tecla continuam disponíveis.
 
 ## Contrato e verificações
 
@@ -36,4 +44,4 @@ Execute:
 node --test tests/pao.test.mjs tests/esquina-modos.test.mjs
 ```
 
-A suíte verifica identidades, utensílios, toque, trocas, queimas únicas, três erros, metas separadas e vitória imediata nos três níveis; simula 20 minutos de Sem Parar; percorre **1.000 sementes** por controles reais, valida repetibilidade e variedade; e desenha os mapas autorais com os sprites restaurados. Testes automatizados não substituem a inspeção visual final no navegador e em dispositivos reais.
+A suíte verifica identidades, utensílios, toque, trocas, queimas únicas, três erros, metas separadas e vitória imediata nos três níveis; simula 20 minutos de Sem Parar; percorre **1.000 sementes** por controles reais, valida repetibilidade e variedade; desenha os mapas autorais; resolve os três autorais e 100 gerados com gestos de eventos espaçados; verifica bloqueio, início no caracol, cancelamento, preservação ao soltar e devolução de folha ao desfazer; e rejeita atalhos em 150 sementes, incluindo a reserva. Testes automatizados não substituem a inspeção visual final no navegador e em dispositivos reais.
