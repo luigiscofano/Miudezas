@@ -131,6 +131,9 @@ Palco `#172244` · [Implementação de Goteira](dist/quintal.js)
 
 ### 02 · Maré Miúda
 
+O caranguejo jogável usa a arte aprovada em pixel art: pinças simétricas, olhos definidos e destaque discreto na carapaça, dentro da célula original. A mudança é exclusivamente visual; regras, fases e saves permanecem iguais.
+
+
 <img src="dist/arte/mare.png" width="128" alt="Miniatura de Maré Miúda na galeria">
 
 Leve o caranguejo até a concha. A maré muda a cada três passos. Se ela cobrir seus pés, você volta à areia. **Comandos.** Use as quatro direções ou deslize o dedo na cena.

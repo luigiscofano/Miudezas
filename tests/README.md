@@ -49,3 +49,5 @@ Medição Node de 100 sementes, sem aquecimento: p95 de geração Rastro 7,56 ms
 Gude é verificado por posições iniciais, quadrantes, famílias de rota, orientações e sequências de direção, além do certificado físico. Em 400 sementes desta revisão: 229 origens, quatro quadrantes, 16 sequências e nenhum fallback. Isso evita considerar simples deslocamentos de pedras como diversidade suficiente.
 
 Rastro preserva a família estreita e acrescenta a aberta. Mil sementes resultaram em 667 mapas da família estreita e 333 da aberta, com 985 mapas únicos; 16 das abertas usaram fallback próprio (4,8%). O banco aberto possui dois modelos e oito orientações. A suíte inclui execução por gesto de 200 mapas abertos e regressão de 100 sementes estreitas. A área livre e as bifurcações são critérios verificáveis; dificuldade subjetiva ainda depende de teste humano.
+
+`mare-arte.test.mjs` confere os pixels da arte aprovada e que desenhar não modifica o estado da partida.
