@@ -26,11 +26,14 @@ test('Rastro: três folhas finas aprovadas preservam o estado e a escala', () =>
   });
   assert.deepEqual(jogo.snapshot(), antes);
 });
-test('Pisca: capim baixo aprovado não altera sequência ou pontuação', () => {
+test('Pisca: visual original restaurado preserva sequência e pontuação', () => {
   const jogo = varanda.pisca(1, api, {seed: 1}), antes = jogo.snapshot(), ctx = tela();
   jogo.draw(ctx);
-  assert.equal(ctx.pixels.get('50,94'), '#173e38');
-  assert.equal(ctx.pixels.get('44,85'), '#49764d');
+  assert.equal(ctx.pixels.get('50,94'), '#0b3439');
+  assert.equal(ctx.pixels.get('44,85'), '#0b3439');
   assert.deepEqual(jogo.snapshot(), antes);
   assert.equal(jogo.score(), 0);
+  // Amostras da asa original e da vegetação lateral, sem o capim adicional.
+  assert.equal(ctx.pixels.get('20,45'), '#a1d8ab');
+  assert.equal(ctx.pixels.get('0,86'), '#48764d');
 });
