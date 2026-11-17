@@ -246,7 +246,7 @@ Acerte o buraco em até três petelecos. Quanto mais tempo segurar a direção, 
 |---|---|---|
 | **Terra batida** · Alvo (77,20), uma pedra | **Entre pedras** · Alvo (78,19), duas pedras | **Caminho torto** · Alvo (78,18), duas pedras em novas posições |
 
-A bolinha parte de (16,80), com origem no canto superior esquerdo. Segurar define alcance no teclado e puxar define direção e alcance no toque. As pedras e limites desviam a trajetória. O buraco precisa ser alcançado até o terceiro tiro. Caminho Novo compara seu desafio com Puxado e valida uma solução executável na física real. [Critérios e limitações](docs/jogos/varanda/README.md).
+Nas três fases autorais, a bolinha parte de (16,80), com as coordenadas medidas a partir do canto superior esquerdo. No Caminho Novo, posição inicial, alvo, disposição das pedras e família do percurso variam: há travessias e retornos, oito orientações e duas a quatro pedras. O validador usa a origem real de cada fase e testa a mesma física com teclado e toque; a variação não se limita a mover o buraco alguns pixels. Segurar define alcance no teclado e puxar define direção e alcance no toque. As pedras e limites desviam a trajetória. O buraco precisa ser alcançado até o terceiro tiro. Caminho Novo compara seu desafio com Puxado e valida uma solução executável na física real. [Critérios e limitações](docs/jogos/varanda/README.md).
 
 Palco `#BE7749` · [Implementação de Três Petelecos](dist/varanda.js)
 

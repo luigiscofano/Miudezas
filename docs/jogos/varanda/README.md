@@ -24,7 +24,7 @@ Cada mosquito capturado vale um ponto. Um bote desalinhado consome uma das três
 
 O certificado não é apenas conectividade: `validarTerrenoGude()` instancia **o mesmo jogo**, pressiona e solta controles públicos e executa a física real, incluindo alcance carregado, desaceleração, ricochetes, colisões e raio do buraco. Verifica 30, 60 e 120 atualizações/s e oito combinações de erro de ±15 ms ao soltar os três gestos. Também repete o certificado por arrasto com perturbação de ±0,25 pixel lógico em ambos os eixos, nas mesmas frequências, verificando que o gesto cabe no tabuleiro. Geração limitada a 32 tentativas, seguida de percurso seguro também validado. Se até ele falhar, lança erro em vez de apresentar mapa sem certificado.
 
-Como referência mensurável do Puxado, exige pelo menos duas pedras e área total de obstáculos de 360 pixels quadrados (duas pedras autorais de 15 × 12). Rejeita mapas em que mirar diretamente no buraco vence com qualquer alcance inteiro de 3 a 94, incluindo os ricochetes dessa tentativa. Isso exige trabalhar direção e força; não prova equivalência subjetiva de dificuldade. O trajeto de referência contorna pedras em três segmentos. O jogador pode encontrar outra solução; não há autopiloto. A variedade limita-se deliberadamente a esta família de trajetos validáveis. A prova garante a existência de uma sequência executável, não a vitória com qualquer força ou caminho.
+Como referência mensurável do Puxado, exige pelo menos duas pedras e área total de obstáculos de 360 pixels quadrados (duas pedras autorais de 15 × 12). Rejeita mapas em que mirar diretamente no buraco vence com qualquer alcance inteiro de 3 a 94, incluindo os ricochetes dessa tentativa. Isso exige trabalhar direção e força; não prova equivalência subjetiva de dificuldade. O certificado usa duas famílias distintas: travessia (continua ao outro lado após contornar) e retorno (contorna uma barreira e volta para um alvo do lado inicial). Cada uma admite oito rotações/reflexões, alterando também posições, controles e pedras. A origem varia nos quatro quadrantes; não fica mais presa em [16,80]. Duas a quatro pedras variam em posição, proporção e composição. O jogador pode encontrar outra solução; não há autopiloto. A variedade limita-se deliberadamente a estas duas famílias de trajetos validáveis, não a qualquer labirinto arbitrário. A prova garante a existência de uma sequência executável, não a vitória com qualquer força ou caminho.
 
 ### Controles
 
@@ -38,9 +38,11 @@ node --test tests/varanda-modos.test.mjs
 
 - Luz: 30 capturas sem encerrar, teto de velocidade, três erros e regras clássicas;
 - Gude: gesto inválido, cancelamento, força curta/longa e rejeição de mapas triviais;
-- 200 sementes, reconstrução idêntica e mais de 190 layouts distintos;
+- 400 sementes consecutivas: 229 origens distintas, quatro quadrantes, 16 sequências de direções e oito orientações;
+- 210 travessias e 190 retornos; 127 mapas com duas pedras, 138 com três e 135 com quatro; nenhum fallback nessa amostra;
+- geração p95 de aproximadamente 16 ms nas primeiras 100 sementes no ambiente de teste (não é promessa de desempenho em celular);
 - validação pelo motor real com três frequências e perturbações de tempo;
-- 200 certificados repetidos por arrasto/toque, sem sair do canvas;
+- 400 certificados repetidos por arrasto/toque, sem sair do canvas;
 - Pisca ultrapassa 12 rodadas sem vitória artificial e mantém último resultado completo ao errar;
 - metas clássicas e alvos autorais preservados;
 - renderizadores exercitados com contexto instrumentado.
