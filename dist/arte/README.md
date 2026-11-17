@@ -1,0 +1,24 @@
+# Acervo visual de Miudezas
+
+A capa estabelece o bairro; as miniaturas apresentam o recorte de cada parada. O código de jogo desenha os personagens em movimento no Canvas. Assim, trocar uma miniatura altera a seleção e os cartões de resultado, enquanto uma mudança no sprite jogável pertence à fábrica correspondente.
+
+| Arquivo | Formato | Uso |
+|---|---|---|
+| [bairro.png](bairro.png) | PNG, 192 × 88 | Paisagem de capa com fachadas, pipa e bem-te-vi. |
+| [janela.png](janela.png) | PNG, 16 × 16 | Favicon e símbolo da barra de título. |
+| [miudezas.ttf](miudezas.ttf) | TrueType | Títulos, níveis, controles e indicadores pixelados, com caracteres acentuados em português. |
+
+## Miniaturas
+
+Cada arquivo abaixo mede 128 × 120. O nome-base corresponde ao ID usado no catálogo.
+
+| Quintal | Esquina | Varanda |
+|---|---|---|
+| [Goteira](goteira.png) | [Rádio de Pilha](radio.png) | [Luz de Varanda](luz.png) |
+| [Maré Miúda](mare.png) | [Pão na Chapa](pao.png) | [Três Petelecos](gude.png) |
+| [Último Fio](fio.png) | [Balsa de Cabo](balsa.png) | [Dois Pratos](pratos.png) |
+| [Pipa de Laje](pipa.png) | [Rastro de Prata](rastro.png) | [Pisca no Mato](pisca.png) |
+
+O fundo contínuo, o contorno em degraus e os poucos pontos de destaque permitem reconhecer a cena em miniatura. A fonte é registrada por @font-face no CSS. A ampliação do desenho usa renderização pixelada. O controle fino das cores fica em [style.css](../style.css), nos campos de palco de [catalogo.js](../catalogo.js) e nas funções de desenho.
+
+[Identidade visual e fichas dos jogos](../../README.md#identidade-visual)
