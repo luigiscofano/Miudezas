@@ -172,11 +172,12 @@ export function validarTerrenoGude(terreno) {
   if (!terreno.solucao || terreno.solucao.length > 3) return false;
   // Puxado tem duas pedras de 15×12: a área bloqueada não deve ficar menor.
   if(terreno.pedras.length<2 || terreno.pedras.reduce((s,[,,w,h])=>s+w*h,0)<360)return false;
-  const dx=terreno.alvo[0]-16,dy=terreno.alvo[1]-80,norma=Math.hypot(dx,dy);
+  const [ix,iy]=terreno.inicio || [16,80];
+  const dx=terreno.alvo[0]-ix,dy=terreno.alvo[1]-iy,norma=Math.hypot(dx,dy);
   // Rejeita mapas resolvidos apontando diretamente ao buraco, inclusive ricochetes.
   for(let forca=3;forca<=94;forca++){
     let venceu=false;const jogo=gude(3,{tone(){},finish(ok){venceu=ok;}},{terrenoValidado:terreno});
-    jogo.point(16,80,'down');jogo.point(16-dx/norma*forca/3.6,80-dy/norma*forca/3.6,'up');
+    jogo.point(ix,iy,'down');jogo.point(ix-dx/norma*forca/3.6,iy-dy/norma*forca/3.6,'up');
     for(let q=0;q<600&&jogo.moving;q++)jogo.update(1/60);
     if(venceu)return false;
   }
@@ -210,32 +211,69 @@ export function validarTerrenoGude(terreno) {
   return true;
 }
 
+// Rotação/reflexão transforma também obstáculos e certificado, não só a decoração.
+function orientarTerrenoGude(pontos,pedras,orientacao,seed,familia) {
+  function transformar([x,y]) {
+    if(orientacao>=4)x=96-x;
+    for(let n=0;n<orientacao%4;n++)[x,y]=[96-y,x];
+    return [x,y];
+  }
+  const caminho=pontos.map(transformar);
+  const solucao=caminho.slice(1).map(([x,y],i)=>{
+    const dx=x-caminho[i][0],dy=y-caminho[i][1];
+    return {direcao:dx>0?'right':dx<0?'left':dy>0?'down':'up',duracao:(Math.hypot(dx,dy)-5)/68};
+  });
+  const transformadas=pedras.map(([x,y,w,h])=>{
+    const cantos=[[x,y],[x+w,y],[x,y+h],[x+w,y+h]].map(transformar);
+    const xs=cantos.map(p=>p[0]),ys=cantos.map(p=>p[1]);
+    return [Math.min(...xs),Math.min(...ys),Math.max(...xs)-Math.min(...xs),Math.max(...ys)-Math.min(...ys)];
+  });
+  return {inicio:caminho[0],alvo:caminho.at(-1),pedras:transformadas,solucao,
+    semente:Number(seed)>>>0,familia,orientacao};
+}
+
 export function criarTerrenoGude(seed=1) {
-  const random=aleatorioComSemente(seed);
+  // Avalanche da semente: sementes vizinhas não escolhem sempre a mesma região.
+  let mistura=(Number(seed)>>>0)^0x9e3779b9;
+  mistura=Math.imul(mistura^(mistura>>>16),0x21f0aaad);
+  mistura=Math.imul(mistura^(mistura>>>15),0x735a2d97);
+  const random=aleatorioComSemente(mistura^(mistura>>>15));
   const inteiro=(a,b)=>a+Math.floor(random()*(b-a+1));
-  function candidato(virada,altura,final,pedras) {
-    return {alvo:[final,altura],pedras,semente:Number(seed)>>>0,solucao:[
-      {direcao:'right',duracao:(virada-16-5)/68},
-      {direcao:'up',duracao:(80-altura-5)/68},
-      {direcao:'right',duracao:(final-virada-5)/68}
-    ]};
-  }
+  const familia=inteiro(0,1)===0?'travessia':'retorno',orientacao=inteiro(0,7);
   for(let tentativa=0;tentativa<32;tentativa++) {
-    const virada=inteiro(34,49),altura=inteiro(27,40),final=inteiro(75,83);
-    // Uma pedra entre a origem e o buraco impede que todos os mapas sejam um tiro direto.
-    const pedras=[[virada+9,altura+13,inteiro(14,18),inteiro(15,19)],
-      [inteiro(7,13),inteiro(29,43),14,13]];
-    const terreno=candidato(virada,altura,final,pedras);
-    if(validarTerrenoGude(terreno)) return terreno;
+    const sx=inteiro(18,25),sy=inteiro(70,78),ty=inteiro(25,34);
+    let pontos,pedras;
+    if(familia==='travessia') {
+      const virada=inteiro(40,50),final=inteiro(75,82);
+      pontos=[[sx,sy],[virada,sy],[virada,ty],[final,ty]];
+      pedras=[[virada+8,ty+11,inteiro(14,18),inteiro(15,19)],
+        [inteiro(7,12),inteiro(30,40),14,13]];
+    }else{
+      const virada=inteiro(73,80),final=inteiro(24,37);
+      pontos=[[sx,sy],[virada,sy],[virada,ty],[final,ty]];
+      // A parede central exige contornar pelo lado oposto e voltar ao alvo.
+      pedras=[[sx-5,ty+11,virada-sx-9,sy-ty-23],[7,8,12,13]];
+    }
+    // Fragmenta uma barreira com diferentes volumes, mantendo o corredor certificado.
+    const quantidade=inteiro(2,4);
+    while(pedras.length<quantidade){
+      const [x,y,w,h]=pedras.shift();
+      if(w>=h)pedras.push([x,y,Math.floor(w/2),h],[x+Math.floor(w/2)+1,y,w-Math.floor(w/2)-1,h]);
+      else pedras.push([x,y,w,Math.floor(h/2)],[x,y+Math.floor(h/2)+1,w,h-Math.floor(h/2)-1]);
+    }
+    const terreno=orientarTerrenoGude(pontos,pedras,orientacao,seed,familia);
+    if(validarTerrenoGude(terreno))return terreno;
   }
-  const seguro=candidato(40,25,80,[[49,38,16,18],[10,36,14,13]]);
-  if(!validarTerrenoGude(seguro)) throw new Error('O percurso de segurança não passou pela física do jogo.');
+  // Saída conhecida ainda é certificada, inclusive após orientar seus controles.
+  const seguro=orientarTerrenoGude([[20,76],[44,76],[44,28],[80,28]],
+    [[52,40,16,18],[10,36,14,13]],orientacao,seed,'seguranca');
+  if(!validarTerrenoGude(seguro))throw new Error('O percurso de segurança não passou pela física do jogo.');
   return seguro;
 }
 
 function gude(level, api, options={}) {
   const terreno = options.terrenoValidado || (options.mode==='generated' ? criarTerrenoGude(options.seed) : terrenos[level-1]);
-  const inicio = [16,80], alvo = terreno.alvo;
+  const inicio = terreno.inicio || [16,80], alvo = terreno.alvo;
   let x = inicio[0], y = inicio[1], jogadas = 0, acabou = false;
   let tecla = null, carga = 0, arrasto = null, tiro = null;
   const alcance = () => Math.min(94, 5 + 68*carga);

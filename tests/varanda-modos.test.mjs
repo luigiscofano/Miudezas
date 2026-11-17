@@ -19,16 +19,19 @@ test('Pisca clássico preserva as três metas autorais',()=>{
  for(let r=0;r<level+2;r++){aguardarResposta(jogo);for(const dir of jogo.snapshot().sequencia)jogo.press(dir);}
  jogo.update(1);assert.equal(a.resultados[0].ok,true);}
 });
-test('Gude valida 200 sementes usando controles, colisões e física reais',()=>{
- const layouts=new Set();
- for(let seed=0;seed<200;seed++){
+test('Gude valida 400 sementes usando controles, colisões e física reais',()=>{
+ const layouts=new Set(),origens=new Set(),quadrantes=new Set(),rotas=new Set(),familias=new Set(),orientacoes=new Set(),quantidades=new Set();
+ for(let seed=0;seed<400;seed++){
   const terreno=criarTerrenoGude(seed);assert.ok(validarTerrenoGude(terreno));
   assert.deepEqual(criarTerrenoGude(seed),terreno);
-  layouts.add(JSON.stringify([terreno.alvo,terreno.pedras]));
+  layouts.add(JSON.stringify([terreno.inicio,terreno.alvo,terreno.pedras]));
+  origens.add(terreno.inicio.join(','));quadrantes.add(terreno.inicio.map(v=>v<48?0:1).join(','));
+  rotas.add(terreno.solucao.map(p=>p.direcao).join(','));familias.add(terreno.familia);
+  orientacoes.add(terreno.orientacao);quantidades.add(terreno.pedras.length);
   const a=api(),jogo=varanda.gude(1,a,{mode:'generated',seed});
   for(const passo of terreno.solucao){
    const {x,y}=jogo.snapshot(),distancia=5+68*passo.duracao;
-   const [dx,dy]=passo.direcao==='right'?[1,0]:[0,-1];
+   const [dx,dy]={right:[1,0],left:[-1,0],up:[0,-1],down:[0,1]}[passo.direcao];
    const px=x-dx*distancia/3.6,py=y-dy*distancia/3.6;
    assert.ok(px>=0&&px<=96&&py>=0&&py<=96,'arrasto cabe na área de toque');
    jogo.point(x,y,'down');jogo.point(px,py,'up');
@@ -36,7 +39,9 @@ test('Gude valida 200 sementes usando controles, colisões e física reais',()=>
   }
   assert.equal(a.resultados.length,1);assert.equal(a.resultados[0].ok,true);jogo.draw(quadro);
  }
- assert.ok(layouts.size>190);
+ assert.ok(layouts.size>390);assert.ok(origens.size>200);assert.equal(quadrantes.size,4);
+ assert.equal(rotas.size,16);assert.equal(orientacoes.size,8);
+ assert.deepEqual([...familias].sort(),['retorno','travessia']);assert.deepEqual([...quantidades].sort(),[2,3,4]);
 });
 test('Gude reinício reconstrói mapa; dificuldades clássicas mantêm alvos',()=>{
  for(const level of [1,2,3])assert.deepEqual(varanda.gude(level,api()).snapshot().terreno.alvo,[[77,20],[78,19],[78,18]][level-1]);
