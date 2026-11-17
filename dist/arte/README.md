@@ -38,4 +38,4 @@ A abertura usa a [capa Tijuca](../artes/capas/README.md). Este diretório manté
 
 ## Ícone atual
 
-O antigo `janela.png` é legado. O favicon atual é o [ícone verde aprovado](../artes/marca/miudezas-icone-verde.png), documentado na [marca](../artes/marca/README.md).
+A janela original `janela.png` continua ativa na barra superior, com uma cópia documentada em [artes/marca](../artes/marca/README.md). O favicon atual é o [ícone verde aprovado](../artes/marca/miudezas-icone-verde.png), documentado na [marca](../artes/marca/README.md).

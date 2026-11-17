@@ -18,3 +18,9 @@
 ![Logo aprovada](marca/miudezas-logo.png)
 
 [Logotipo principal e ícone verde](marca/README.md), com arquivos separados e orientação de uso.
+
+## Janela original da barra superior
+
+<img src="marca/janela-original.png" alt="Ícone original de janela" width="96" height="96">
+
+A janela de quatro vidraças foi preservada e restaurada no canto esquerdo da barra. O [manual da marca](marca/README.md) distingue essa aplicação do favicon verde e do logotipo principal.

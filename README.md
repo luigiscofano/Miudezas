@@ -392,3 +392,9 @@ A aplicação exibe a composição inteira com `object-fit: contain`, sem estica
 ![Ícone verde aprovado](dist/artes/marca/miudezas-icone-verde.png)
 
 A [documentação da marca](dist/artes/marca/README.md) apresenta o logotipo principal, a janela verde e suas aplicações. Os PNGs são recortes fiéis da prancha aprovada, não redesenhos. A marca aparece na barra dos menus e o nome do jogo continua visível durante cada partida.
+
+### Janela original da interface
+
+<img src="dist/artes/marca/janela-original.png" alt="Janela original de quatro vidraças" width="64" height="64">
+
+A janela original permanece ao lado da marca na barra superior. O ícone verde aprovado continua sendo o favicon. Veja [arquivos e aplicações](dist/artes/marca/README.md).

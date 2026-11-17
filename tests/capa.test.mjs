@@ -17,3 +17,10 @@ test('Abertura preserva composição e título acessível', () => {
   assert.doesNotMatch(app,/class="brand"/);
   assert.match(css,/\.hero img\{[^}]*object-fit:contain/);
 });
+
+test('Janela original na barra não substitui o favicon verde', () => {
+  const html=readFileSync(new URL('../dist/index.html',import.meta.url),'utf8');
+  assert.match(html,/<header class="bar"><img src=".\/artes\/marca\/janela-original.png"/);
+  assert.match(html,/<link rel="icon" href=".\/artes\/marca\/miudezas-icone-verde.png"/);
+  assert.deepEqual(readFileSync(new URL('../dist/artes/marca/janela-original.png',import.meta.url)),readFileSync(new URL('../dist/arte/janela.png',import.meta.url)));
+});
