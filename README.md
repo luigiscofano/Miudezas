@@ -425,3 +425,7 @@ Peteca e Gato na Sombra foram retirados. Os dez jogos ativos, na ordem da Volta 
 ### Refinamento visual: quintal
 
 Goteira, Último Fio e Pipa de Laje: detalhes discretos no cenário, sem alterar a jogabilidade. A arte aprovada de Maré já estava incorporada. Consulte o [guia visual e técnico](docs/jogos/quintal/README.md#acabamento-visual-aprovado).
+
+### Refinamento visual: esquina
+
+Rádio de Pilha e Pão na Chapa: acabamento discreto em pixels, preservando todos os controles e objetivos. Consulte o [guia visual e técnico](docs/jogos/esquina/README.md#acabamento-visual-aprovado).

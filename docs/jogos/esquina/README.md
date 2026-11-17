@@ -61,3 +61,9 @@ node --test tests/pao.test.mjs tests/esquina-modos.test.mjs
 ```
 
 A suíte verifica identidades, utensílios, toque, trocas, queimas únicas, três erros, metas separadas e vitória imediata nos três níveis; simula 20 minutos de Sem Parar; percorre **1.000 sementes** por controles reais, valida repetibilidade e variedade; desenha os mapas autorais; resolve os três autorais e 100 gerados com gestos de eventos espaçados; verifica bloqueio, início no caracol, cancelamento, preservação ao soltar e devolução de folha ao desfazer; e rejeita atalhos em 150 sementes, incluindo a reserva. A família aberta é testada separadamente em 200 sementes, incluindo execução por gesto, áreas livres, bifurcações, ausência de atalhos e reserva da mesma família. Testes automatizados não substituem a inspeção visual final no navegador e em dispositivos reais.
+
+## Acabamento visual aprovado
+
+Rádio de Pilha ganhou relevo de um pixel, grade e apoio; Pão na Chapa ganhou acabamento metálico e detalhe no miolo do pão. Utensílios, estados, fumaça, metas e três erros permanecem iguais. Rastro de Prata não foi alterado: sua proposta ainda depende de aprovação.
+
+Os detalhes usam a grade nativa de 96 × 96, cores chapadas e bordas sem suavização. São apenas desenho: não representam novos obstáculos nem mudam colisões, controles, fases ou saves. As propostas foram comparadas com renderizações do próprio `draw()` antes da aplicação.
