@@ -57,6 +57,8 @@ function lagartixa(ctx, x, y, angulo) {
   traco(-5, -2, 1, -2, pele, 5);
   traco(1, -2, 6, -2, pele, 5);
   traco(6, -1, 8, -1, pele, 3);
+  // Pequenos pixels no dorso mantêm a silhueta e deixam o corpo mais legível.
+  traco(-4, -1, 1, -1, '#c9edb6', 1);
   for (const lado of [-1,1]) {
     const [ox, oy] = ponto(5, lado*1.8);
     bloco(ctx, ox, oy, 1, 1, olho);
@@ -124,6 +126,16 @@ function luz(level, api, options={}) {
     },
     draw(ctx) {
       fundo(ctx, '#33245e');
+      // Relevo discreto da parede, sem interferir com a mira ou os mosquitos.
+      linha(ctx,[0,34],[17,34],'#3a2a65');
+      linha(ctx,[9,34],[9,43],'#3a2a65');
+      linha(ctx,[80,66],[95,66],'#3a2a65');
+      linha(ctx,[88,66],[88,77],'#3a2a65');
+      bloco(ctx,0,91,96,5,'#2a204d');
+      bloco(ctx,0,90,96,1,'#4b386c');
+      bloco(ctx,69,12,17,11,'#44345f');
+      bloco(ctx,71,10,13,15,'#44345f');
+      bloco(ctx,72,13,11,9,'#61506b');
       linha(ctx,[0,22],[4,19],'#4d3976');
       linha(ctx,[4,19],[7,19],'#4d3976');
       linha(ctx,[87,85],[91,81],'#4d3976');
@@ -346,6 +358,11 @@ function gude(level, api, options={}) {
     },
     draw(ctx) {
       fundo(ctx,'#ca733d');
+      // Grãos nas bordas sugerem terra batida; não representam obstáculos.
+      for (const [gx,gy] of [[7,7],[21,10],[55,5],[88,28],[6,63],[19,89],[61,88],[87,76],[35,7]]) {
+        bloco(ctx,gx,gy,2,1,'#b76235');
+        bloco(ctx,gx+2,gy+2,1,1,'#df9553');
+      }
       bloco(ctx,8,48,1,1,'#aa522f'); bloco(ctx,74,79,1,1,'#aa522f');
       sprite(ctx,1,15,['.g...g','..g.g.','..gg..','...g..'],{g:'#858041'});
       const [a,b]=alvo;
@@ -355,6 +372,9 @@ function gude(level, api, options={}) {
         bloco(ctx,px+2,py,w-4,h,'#8d8170');
         bloco(ctx,px,py+2,w,h-4,'#8d8170');
         bloco(ctx,px+w-4,py+2,2,2,'#685d55');
+        bloco(ctx,px+3,py+1,Math.max(2,w-7),1,'#b4a48a');
+        bloco(ctx,px+1,py+3,2,2,'#a69a83');
+        bloco(ctx,px+3,py+h-2,Math.max(2,w-6),1,'#70645a');
       }
       let vec,dist;
       if (tecla) { vec=direcoes[tecla]; dist=alcance(); }
@@ -375,6 +395,8 @@ function gude(level, api, options={}) {
       }
       bloco(ctx,x-2,y+3,6,2,'#a95130');
       sprite(ctx,x-3,y-3,desenhoBolinha,{b:'#173a73',w:'#fff4cb'},1,Boolean(tiro && Math.floor(tiro.rodado/5)%2));
+      bloco(ctx,x-1,y-2,1,1,'#ffffff');
+      bloco(ctx,x+2,y+1,1,1,'#397ca5');
     }
   };
 }

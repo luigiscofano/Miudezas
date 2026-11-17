@@ -52,3 +52,7 @@ Goteira, Último Fio e Pipa de Laje: detalhes discretos no cenário, sem alterar
 ### Arte aprovada em `esquina.js`
 
 Rádio de Pilha e Pão na Chapa: acabamento discreto em pixels, preservando todos os controles e objetivos. A resolução lógica permanece 96 × 96, sem suavização ou nova dependência.
+
+### Arte aprovada em `varanda.js`
+
+Luz de Varanda e Três Petelecos: luz, texturas e sprites refinados sem mudar obstáculos ou física. A resolução lógica permanece 96 × 96, sem suavização ou nova dependência.
