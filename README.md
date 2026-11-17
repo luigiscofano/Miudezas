@@ -8,7 +8,7 @@
 
 | Coleção | Desafios | Tela de jogo | Plataforma |
 |---|---|---|---|
-| 12 minigames | 3 níveis por jogo, 36 combinações | Canvas de 96 × 96 pixels lógicos | Navegador de computador ou celular |
+| 10 minigames | 3 níveis por jogo, 30 combinações | Canvas de 96 × 96 pixels lógicos | Navegador de computador ou celular |
 
 **Autor:** Luigi Scofano de Araujo · [Jogar no GitHub Pages](https://luigiscofano.github.io/Miudezas/) · [Licença MIT](LICENSE)
 
@@ -48,7 +48,7 @@ Para experimentar no celular, conecte os dois aparelhos à mesma rede local, exe
 | Partida | Ver a cena, a meta ou o tempo no indicador e os botões correspondentes àquela mecânica. |
 | Pausa | Consultar regras, continuar ou sair ao menu. Perder o foco ou ocultar a aba também pausa a partida. |
 | Resultado | No avulso, repetir ou voltar à galeria. Na volta, repetir a parada ou avançar mesmo depois de uma derrota. |
-| Resumo | Após a 12ª parada, ver os desafios vencidos e as doze miniaturas com seus resultados. |
+| Resumo | Após a 10ª parada, ver os desafios vencidos e as dez miniaturas com seus resultados. |
 
 **Uma volta de exemplo.** Escolha Animado, jogue Goteira e avance. O próximo cartão é Maré Miúda no mesmo nível. Fechar o navegador nesse cartão permite retomar na segunda parada. Se sair no meio da partida, ela recomeça naquela parada. O avanço registra um resultado por jogo.
 
@@ -62,7 +62,7 @@ O nome **Miudezas** reúne acontecimentos pequenos o bastante para caber numa ja
 |---|---|
 | Moldura | Contorno escuro, barra clara e sombra deslocada lembram uma janela de computador. A moldura separa a interface persistente das cores próprias de cada cena. |
 | Tipografia | **Miudezas Pixel**, fonte local com acentos, identifica títulos, níveis e comandos. Verdana, Arial e a fonte sem serifa do sistema sustentam regras e textos corridos. |
-| Escala | A cena ativa é desenhada em 96 × 96 e ampliada com pixels aparentes. As doze miniaturas originais têm 128 × 120; as duas da Pracinha usam SVG com grade de 96 × 96, a capa aprovada 1672 × 941 e o ícone verde aprovado 390 × 390. |
+| Escala | A cena ativa é desenhada em 96 × 96 e ampliada com pixels aparentes. As dez miniaturas originais têm 128 × 120; as duas da Pracinha usam SVG com grade de 96 × 96, a capa aprovada 1672 × 941 e o ícone verde aprovado 390 × 390. |
 | Silhueta | Asa curta e peito amarelo identificam o pássaro. Um retângulo de água sob a rachadura avisa onde a gota vai cair. Cada detalhe precisa continuar legível no tamanho da janela. |
 | Pequenas irregularidades | A alça do balde cai de lado, a antena do rádio dobra e as fachadas variam um pixel. A irregularidade pertence ao objeto. As áreas de toque e as regras continuam previsíveis. |
 | Sinais de jogo | O fio treme antes da rajada, o pão muda de cor e solta vapor, a luz do rádio indica sintonia. Sons curtos confirmam ações, enquanto o indicador escrito conserva a informação principal. |
@@ -241,37 +241,6 @@ Palco `#1A393B` · [Implementação de Pisca no Mato](dist/varanda.js)
 
 
 
-### 11 · Peteca
-
-<img src="dist/arte/peteca.svg" width="128" alt="Peteca acima de uma mão">
-
-Rebata **10 vezes** sem deixar cair. Pressione **↑ ou W**, ou toque na cena, quando ela estiver descendo perto da palma. Segurar não gera novas rebatidas. Ao cair no chão, a rodada termina e o botão permite recomeçar.
-
-| Sossegado | Animado | Puxado |
-|---|---|---|
-| Queda leve · gravidade 58 px/s²; acerto entre y=65 e 82 | Queda firme · 66 px/s²; y=68 a 82 | Queda rápida · 74 px/s²; y=71 a 82 |
-
-A altura inicial é 27, o ápice após uma rebatida fica próximo de 23 e a queda encerra em y=86. Uma ação anima a mão por 0,18 s. A janela de acerto continua utilizável com o passo máximo de 0,08 s. A meta é sempre dez.
-
-Palco `#94CDEA` · penas `#FFF0CC` · base `#A52F32` · chão `#C5664D` · mão `#A65F38` · [Implementação](dist/pracinha.js)
-
-### 12 · Gato na Sombra
-
-<img src="dist/arte/sombra.svg" width="128" alt="Gatinho laranja numa faixa de sombra">
-
-Use **← → ou A/D** para acompanhar a sombra por **20 segundos**. No celular, segure o lado desejado. Sair da faixa encerra a rodada; ao vencer, o gato se deita por um segundo antes do resultado.
-
-| Sossegado | Animado | Puxado |
-|---|---|---|
-| Sombra larga · 34 px, deslocamento 7 px/s | Sombra andando · 28 px, 10 px/s | Sombra estreita · 24 px, 13 px/s |
-
-O centro da sombra percorre x=20 a x=76 e retorna pelas bordas. O gato anda a 32 px/s. Seu corpo, com margem de quatro pixels de cada lado, deve permanecer dentro da faixa. O recorte irregular do topo é decorativo; a faixa na altura do gato representa a área válida.
-
-Palco `#F5B08B` · sombra `#6B587E` · gato `#EFA32E` · listras `#BD6127` · [Implementação](dist/pracinha.js)
-
-
-
----
 
 ## Arquitetura
 
@@ -301,10 +270,10 @@ flowchart TD
 | [quintal.js](dist/quintal.js) | Goteira, Maré Miúda, Último Fio e Pipa de Laje. |
 | [esquina.js](dist/esquina.js) | Rádio de Pilha, Pão na Chapa, Rastro de Prata. |
 | [varanda.js](dist/varanda.js) | Luz de Varanda, Três Petelecos, Pisca no Mato. |
-| [pracinha.js](dist/pracinha.js) | Peteca e Gato na Sombra. |
+| [pracinha.js](dist/pracinha.js) | Código legado fora do catálogo e sem entrada pelo aplicativo. |
 | [scripts/](scripts/README.md) | Geração de miniaturas a partir dos desenhos jogáveis. |
 | [tests/](tests/README.md) | Verificação automática das regras, entradas e progressão. |
-| [arte/](dist/arte/README.md) | Fonte, ícone, capa e 12 miniaturas. Os sprites durante as partidas são desenhados pelos módulos de jogo. |
+| [arte/](dist/arte/README.md) | Fonte, ícone, capa e 10 miniaturas. Os sprites durante as partidas são desenhados pelos módulos de jogo. |
 | [docs/](docs/README.md) | Captura da tela inicial usada nesta documentação. |
 | [.openai/](.openai/README.md) | Manifesto da instalação hospedada de referência. O servidor local só precisa de dist/. |
 
@@ -364,16 +333,16 @@ O áudio usa um oscilador de onda quadrada com envelope curto. O contexto de áu
 
 | Verificação reproduzível | Resultado esperado |
 |---|---|
-| Avulso → segunda página → Peteca → Sossegado | O jogo inicia normalmente e aceita rebatidas. |
+| Avulso → segunda página → Pisca no Mato → Sossegado | O jogo inicia normalmente e aceita a sequência. |
 | Em Goteira, ficar fora do ralo depois de recolher quatro gotas | O indicador para em 4/4. Voltar ao ralo libera espaço e conserva a pontuação. |
 | Em Rastro de Prata, colher uma folha e voltar à casa anterior | O último segmento é desfeito e a folha volta à casa. |
 | Em Três Petelecos, começar a carregar um tiro e pausar | Ao continuar, a bolinha fica à espera de um novo comando. |
 | Alternar para outra aba durante uma rodada | A tela de pausa interrompe o avanço do jogo. |
 | Na Volta, avançar após Goteira, sair e retomar no mesmo navegador | A segunda parada é Maré Miúda no nível escolhido. |
-| Completar o percurso, inclusive com uma tentativa perdida | O resumo distingue vitórias e tentativas nas 12 miniaturas. |
+| Completar o percurso, inclusive com uma tentativa perdida | O resumo distingue vitórias e tentativas nas 10 miniaturas. |
 | Em telefone, tocar no pão, deslizar no tabuleiro e arrastar o dial | Cada gesto atua na cena correspondente e os botões também ficam disponíveis. |
 
-Execute `node --test tests/*.test.mjs` para verificar catálogo, migração dos resultados, paginação, conclusão das 12 paradas e regras dos jogos da Pracinha nos três níveis.
+Execute `node --test tests/*.test.mjs` para verificar catálogo, migração dos resultados, paginação, conclusão das 10 paradas e regras dos jogos da Pracinha nos três níveis.
 
 O teste rápido de sintaxe pode ser feito com Node recente, por exemplo `node --check dist/app.js`. Os cenários acima verificam comportamento e interação. O repositório inclui os testes automáticos e este roteiro de verificação manual.
 
@@ -413,3 +382,7 @@ A janela original permanece ao lado da marca na barra superior. O ícone verde a
 A migração preserva os arquivos do jogo e acrescenta um workflow manual de publicação. Consulte o [guia completo de GitHub Pages](docs/github-pages.md) para ativação, verificação, reversão e transferência de progresso. A publicação foi confirmada em **17 de novembro de 2026**: [abrir Miudezas](https://luigiscofano.github.io/Miudezas/). O [workflow de publicação](https://github.com/luigiscofano/Miudezas/actions/runs/44140728469) terminou com sucesso.
 
 O progresso não atravessa domínios automaticamente. Use a [página de backup no endereço antigo](https://miudezas-de-luigi.luigiscofano.chatgpt.site/backup.html) para exportar e a [página de backup no GitHub Pages](https://luigiscofano.github.io/Miudezas/backup.html) para importar. O armazenamento antigo permanece intacto. Essa ferramenta é independente da interface dos jogos.
+
+## Catálogo atual e compatibilidade
+
+Peteca e Gato na Sombra foram retirados. Os dez jogos ativos, na ordem da Volta no Bairro, são Goteira, Maré Miúda, Último Fio, Pipa de Laje, Rádio de Pilha, Pão na Chapa, Rastro de Prata, Luz de Varanda, Três Petelecos e Pisca no Mato. IDs históricos continuam reconhecidos pela migração de saves; vitórias não são transferidas para outro jogo. Links numéricos dos jogos removidos retornam à galeria. Código/arte legados não são importados pelo aplicativo.

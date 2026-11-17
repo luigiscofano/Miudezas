@@ -23,30 +23,30 @@ function navegador(salvo=null) {
 }
 
 
-test('Galeria tem duas páginas e apenas os doze jogos mantidos',()=>{
+test('Galeria tem duas páginas e apenas os dez jogos mantidos',()=>{
  const n=navegador();n.executar("galeria();acao({dataset:{do:'seguinte'}})");
  assert.match(n.html(),/2 \/ 2/);
- assert.match(n.html(),/Peteca/);assert.match(n.html(),/Gato na Sombra/);
+ assert.ok(!n.html().includes('Peteca'));assert.ok(!n.html().includes('Gato na Sombra'));
  for(const nome of ['Pião','Balsa de Cabo','Pescaria de Lata','Dois Pratos'])assert.ok(!n.html().includes(nome));
- n.executar("acao({dataset:{do:'escolher',index:'10'}})");
- assert.match(n.html(),/Rebata/);
+ n.executar("acao({dataset:{do:'escolher',index:'9'}})");
+ assert.match(n.html(),/vaga-lumes/);
  n.executar('voltar()');assert.match(n.html(),/2 \/ 2/);
 });
 test('Retomada legada preserva resultados por ID e salta retirados',()=>{
  const n=navegador({nivel:2,resultados:[true,false,true,false,true,false,true]});
  n.executar("acao({dataset:{do:'retomar'}})");
- assert.match(n.html(),/Rastro de Prata/);assert.match(n.html(),/7 \/ 12/);
+ assert.match(n.html(),/Rastro de Prata/);assert.match(n.html(),/7 \/ 10/);
  assert.deepEqual(JSON.parse(n.executar('JSON.stringify(volta.resultados)')),[true,false,true,false,true,false]);
  n.executar("ultimo={venceu:true};acao({dataset:{do:'avancar'}})");
  assert.match(n.html(),/Luz de Varanda/);
- assert.equal(n.dados.volta.ids.length,12);
+ assert.equal(n.dados.volta.ids.length,10);
 });
-test('Conclusão encerra após o gato e não oferece paradas retiradas',()=>{
- const n=navegador({nivel:1,resultados:Array(13).fill(true)});
+test('Conclusão encerra no Pisca e não oferece paradas retiradas',()=>{
+ const n=navegador({nivel:1,ids:catalogo.map(j=>j.id),resultados:Array(9).fill(true)});
  n.executar("acao({dataset:{do:'retomar'}})");
- assert.match(n.html(),/Gato na Sombra/);
+ assert.match(n.html(),/Pisca no Mato/);
  n.executar("ultimo={venceu:false};acao({dataset:{do:'avancar'}})");
- assert.match(n.html(),/12 paradas visitadas · 11 desafios vencidos/);
+ assert.match(n.html(),/10 paradas visitadas · 9 desafios vencidos/);
  assert.equal(n.dados.volta,null);
 });
 test('Volta atual não é migrada duas vezes',()=>{

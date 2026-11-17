@@ -9,8 +9,6 @@ export const catalogo = [
   {id:'luz',nome:'Luz de Varanda',regra:'Espere a lagartixa apontar para um mosquito e dê o bote. Alcance a meta antes de a lâmpada apagar.',controle:'Aperte uma seta ou toque na cena para dar o bote.',niveis:['2 mosquitos','3 mosquitos','4 mosquitos'],eixo:'um',cor:'#30234b'},
   {id:'gude',nome:'Três Petelecos',regra:'Acerte o buraco em até três petelecos. Quanto mais tempo segurar a direção, mais longe a bolinha vai.',controle:'Segure uma seta e solte. No celular, puxe a bolinha para trás e solte.',niveis:['Terra batida','Entre pedras','Caminho torto'],eixo:'quatro',cor:'#be7749'},
   {id:'pisca',nome:'Pisca no Mato',regra:'Observe os vaga-lumes e repita as piscadas na ordem. A cada acerto a sequência ganha uma luz.',controle:'← acende o da esquerda e → o da direita. No celular, toque no vaga-lume.',niveis:['3 piscadas','4 piscadas','5 piscadas'],eixo:'horizontal',cor:'#1a393b'},
-  {id:'peteca',nome:'Peteca',regra:'Rebata quando a peteca estiver perto da mão. Faça 10 rebatidas sem deixá-la cair.',controle:'↑ ou W rebate. No celular, toque na cena.',niveis:['Queda leve','Queda firme','Queda rápida'],eixo:'um',acao:'Rebater ↑',direcaoAcao:'up',imagem:'peteca.svg',cor:'#94cdea'},
-  {id:'sombra',nome:'Gato na Sombra',regra:'Mantenha o gatinho dentro da sombra por 20 segundos. Se sair, a rodada termina. Ao vencer, ele dorme.',controle:'← e → ou A e D movem o gato. No celular, segure um lado da cena.',niveis:['Sombra larga','Sombra andando','Sombra estreita'],eixo:'horizontal',imagem:'sombra.svg',cor:'#f5b08b'},
 ];
 export const nomesNiveis=['Sossegado','Animado','Puxado'];
 
