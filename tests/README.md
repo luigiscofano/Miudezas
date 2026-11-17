@@ -11,3 +11,5 @@ Os testes não substituem a inspeção visual nem o teste de toque em aparelhos 
 
 
 - capa.test.mjs verifica dimensões do PNG, preservação da proporção e título acessível sem sobreposição.
+
+- pao.test.mjs verifica ovo e pão nos três estados, reposição por teclado/toque e metas dos três níveis sem alterar a duração da rodada.

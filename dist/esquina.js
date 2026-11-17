@@ -123,10 +123,16 @@ function radio(level, api) {
   };
 }
 
-const breadOutline = [
+const eggOutline = [
   '...bbbb....', '..bbbbbb...', '.bbbbbbbb..', 'bbbbbbbbbb.',
   'bbbbbbbbbb.', 'bbbbbbbbbbb', 'bbbbbbbbbbb', 'bbbbbbbbbb.',
   '.bbbbbbbbb.', '.bbbbbbbb..', '..bbbbbb...', '...bbbb....'
+];
+
+const breadOutline = [
+  '..bbbbbbb..', '.bbbbbbbbb.', 'bbbbbbbbbbb', 'bbbbbbbbbbb',
+  '.bbbbbbbbb.', '.bbbbbbbbb.', '.bbbbbbbbb.', '.bbbbbbbbb.',
+  '.bbbbbbbbb.', '.bbbbbbbbb.', '.bbbbbbbbb.', '..bbbbbbb..'
 ];
 
 function pao(level, api) {
@@ -160,7 +166,7 @@ function pao(level, api) {
     age[1] += dt;
     remaining = Math.max(0, remaining - dt);
     flash = Math.max(0, flash - dt);
-    if (remaining === 0) round.finish(served >= target, served + ' pães no ponto em um minuto.');
+    if (remaining === 0) round.finish(served >= target, served + ' alimentos no ponto em um minuto.');
   }
   function draw(ctx) {
     const iron = '#242034', gold = '#e8ad43', crust = '#a9512f', counter = '#b75a40';
@@ -169,15 +175,23 @@ function pao(level, api) {
     rect(ctx, iron, 10, 13, 76, 62); rect(ctx, iron, 8, 16, 80, 56);
     for (let i = 0; i < 2; i++) {
       const state = stage(i), x = 17 + i * 36, y = 29 + i;
-      const surface = ['#f9e1b0', gold, '#75402d'][state];
-      sprite(ctx, breadOutline, {b: surface}, x, y, 2);
-      if (state === 0) {
-        rect(ctx, '#f7c647', x + 9, y + 10, 5, 4);
-        rect(ctx, '#f7c647', x + 8, y + 12, 7, 2);
+      // A identidade pertence ao lado da chapa, não ao estágio de cozimento.
+      if (i === 0) {
+        const white = ['#fff2d7', '#eed8a0', '#906343'][state];
+        sprite(ctx, eggOutline, {b: white}, x, y, 2);
+        const yolk = ['#f7c647', '#e8ad43', '#ad682d'][state];
+        rect(ctx, yolk, x + 8, y + 9, 8, 8);
+        rect(ctx, yolk, x + 6, y + 11, 12, 4);
+        rect(ctx, '#ffe19a', x + 9, y + 10, 3, 2);
       } else {
-        const line = state === 1 ? crust : iron;
-        rect(ctx, line, x + 4, y + 9, 5, 2); rect(ctx, line, x + 8, y + 7, 4, 2);
-        rect(ctx, line, x + 10, y + 16, 4, 2); rect(ctx, line, x + 13, y + 14, 4, 2);
+        const surface = ['#f9e1b0', gold, '#75402d'][state];
+        sprite(ctx, breadOutline, {b: crust}, x, y, 2);
+        rect(ctx, surface, x + 4, y + 4, 14, 17);
+        const line = state === 2 ? iron : '#c48343';
+        rect(ctx, line, x + 5, y + 8, 5, 2);
+        rect(ctx, line, x + 11, y + 14, 5, 2);
+      }
+      if (state > 0) {
         const lift = Math.floor(age[i] * 2) % 3;
         rect(ctx, '#d7c6b7', x + 9, y - 5 - lift, 2, 3);
         rect(ctx, '#d7c6b7', x + 11, y - 8 - lift, 2, 3);

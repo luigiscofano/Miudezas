@@ -2,7 +2,7 @@
 
 <p align="center"><img src="dist/artes/marca/miudezas-logo.png" alt="Logotipo oficial de Miudezas" width="440"></p>
 
-**Doze jogos de bairro em uma janelinha.** Um balde quase cheio, uma mariposa no fio de cima, duas metades de pão que douram em tempos diferentes. Em Miudezas, cada uma dessas cenas vira uma partida que se aprende olhando e se joga com poucas teclas ou um gesto.
+**Doze jogos de bairro em uma janelinha.** Um balde quase cheio, uma mariposa no fio de cima, um ovo e um pão que douram em tempos diferentes. Em Miudezas, cada uma dessas cenas vira uma partida que se aprende olhando e se joga com poucas teclas ou um gesto.
 
 <p align="center"><img src="dist/artes/capas/miudezas-tijuca.png" alt="Capa aprovada de Miudezas: Tijuca, bem-te-vi, pipa e Ritual do Vento em pixel art" width="440"></p>
 
@@ -162,13 +162,13 @@ Palco `#4F2A48` · [Implementação de Rádio de Pilha](dist/esquina.js)
 
 <img src="dist/arte/pao.png" width="128" alt="Miniatura de Pão na Chapa na galeria">
 
-Tire cada metade da chapa quando dourar. Você tem um minuto para servir os pães no ponto. **Comandos.** ← serve a esquerda e → a direita. No celular, toque no pão.
+Sirva o ovo e o pão quando dourarem. Você tem um minuto para retirar os alimentos no ponto. **Comandos.** ← serve a esquerda e → a direita. No celular, toque no ovo ou no pão.
 
 | Sossegado | Animado | Puxado |
 |---|---|---|
-| **5 no ponto** · 5 pães, janela de 3,4 s para servir | **7 no ponto** · 7 pães, janela de 2,6 s | **9 no ponto** · 9 pães, janela de 1,9 s |
+| **5 no ponto** · 5 alimentos, janela de 3,4 s para servir | **7 no ponto** · 7 alimentos, janela de 2,6 s | **9 no ponto** · 9 alimentos, janela de 1,9 s |
 
-As duas metades começam em estágios diferentes. Cada lado pode ser servido separadamente. Retirar cedo ou tarde consome a tentativa daquele pão. O objetivo é atingir a meta ao final do minuto.
+O ovo à esquerda e o pão à direita começam em estágios diferentes e mantêm sua identidade ao cozinhar e ao serem repostos. Cada lado pode ser servido separadamente. Retirar cedo ou tarde consome a tentativa daquele alimento. O objetivo é atingir a meta ao final do minuto.
 
 Palco `#A25843` · [Implementação de Pão na Chapa](dist/esquina.js)
 
