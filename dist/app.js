@@ -15,11 +15,12 @@ const ids=catalogo.map(j=>j.id);
 const totalJogos=catalogo.length, porPagina=6, totalPaginas=Math.ceil(totalJogos/porPagina);
 let tela='inicio',modo='avulso',nivel=1,selecionado=0,pagina=0,volta=null,partida=null,ultimo=null;
 let quadro=0,observador=null,tempoAnterior=0,audio=null,comSom=ler('som',false)===true;
+let limparCena=null;
 const segurando=new Map();
 const teclas={ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right',ArrowUp:'up',w:'up',ArrowDown:'down',s:'down'};
 const setas={left:'←',right:'→',up:'↑',down:'↓',act:'Bote'};
 const nomesDir={left:'Esquerda',right:'Direita',up:'Cima',down:'Baixo',act:'Dar o bote'};
-const modosExtras={goteira:'endless',pipa:'endless',fio:'endless',pao:'endless',pisca:'endless',mare:'generated',rastro:'generated',gude:'generated'};
+const modosExtras={goteira:'endless',pipa:'endless',fio:'endless',pao:'endless',pisca:'endless',luz:'endless',mare:'generated',rastro:'generated',gude:'generated'};
 let tipoPartida='classic',semente=1,recordes=normalizarRecordes(ler('recordes',{}));
 const novoMapa=()=>{semente=(Math.random()*4294967296)>>>0;};
 const nomeModo=()=>tipoPartida==='endless'?'Sem Parar':tipoPartida==='generated'?'Caminho Novo':nomesNiveis[nivel-1];
@@ -54,6 +55,7 @@ function lerVolta(){
 }
 function manterVolta(){salvar('volta',volta?.resultados.length<totalJogos?volta:null);}
 function desligarEntrada(){
+  limparCena?.();limparCena=null;
   if(partida?.cancelInput)partida.cancelInput();
   if(partida)for(const d of new Set(segurando.values()))partida.release(d);
   segurando.clear();
@@ -122,6 +124,12 @@ function ativarDir(fonte,dir){
   const repetida=[...segurando.values()].includes(dir);segurando.set(fonte,dir);
   if(!repetida)partida.press(dir);
 }
+function cancelarDirecoes(){
+  // Petelecos precisam cancelar sem lançar; movimento contínuo precisa soltar.
+  if(partida?.cancelInput)partida.cancelInput();
+  else if(partida)for(const direcao of new Set(segurando.values()))partida.release(direcao);
+  segurando.clear();
+}
 function soltarDir(fonte){
   const dir=segurando.get(fonte);if(!dir)return;
   segurando.delete(fonte);
@@ -131,7 +139,8 @@ function ligarCena(canvas){
   const j=atual();let gesto=null;
   const coords=e=>{const r=canvas.getBoundingClientRect();return [(e.clientX-r.left)*96/r.width,(e.clientY-r.top)*96/r.height];};
   canvas.onpointerdown=e=>{
-    if(gesto||tela!=='jogo')return;e.preventDefault();ativarAudio();canvas.setPointerCapture(e.pointerId);
+    if(gesto||tela!=='jogo'||(e.button!==undefined&&e.button!==0))return;e.preventDefault();ativarAudio();
+    try{canvas.setPointerCapture(e.pointerId);}catch{}
     const [x,y]=coords(e);gesto={x,y,id:e.pointerId};
     if(partida.point)partida.point(x,y,'down');
     else if(j.eixo==='horizontal')ativarDir('cena',x<48?'left':'right');
@@ -149,6 +158,14 @@ function ligarCena(canvas){
     soltarDir('cena');
   }
   canvas.onpointerup=e=>fim(e,false);canvas.onpointercancel=e=>fim(e,true);
+  // Perder captura não é soltar um peteleco nem motivo para pausar a partida.
+  canvas.onlostpointercapture=e=>fim(e,true);
+  canvas.oncontextmenu=e=>e.preventDefault();
+  limparCena=()=>{
+    gesto=null;
+    canvas.onpointerdown=canvas.onpointermove=canvas.onpointerup=null;
+    canvas.onpointercancel=canvas.onlostpointercapture=canvas.oncontextmenu=null;
+  };
 }
 function mostrarJogo(){
   mudar('jogo');const j=atual();
@@ -191,14 +208,23 @@ function mostrarJogo(){
   for(const b of area.querySelectorAll('[data-dir]')){
     if(chapa){b.onclick=()=>{ativarAudio();esta.press(b.dataset.dir);};continue;}
     b.onpointerdown=e=>{e.preventDefault();ativarAudio();b.setPointerCapture(e.pointerId);ativarDir('pad'+e.pointerId,b.dataset.dir);};
-    b.onpointerup=b.onpointercancel=e=>soltarDir('pad'+e.pointerId);
+    b.onpointerup=e=>soltarDir('pad'+e.pointerId);
+    b.onpointercancel=b.onlostpointercapture=e=>{
+      const fonte='pad'+e.pointerId;
+      if(!segurando.has(fonte))return;
+      cancelarDirecoes();
+    };
     b.onclick=e=>{if(e.detail===0){ativarDir('acessivel',b.dataset.dir);soltarDir('acessivel');}};
   }
 }
 function pausar(){
   if(tela!=='jogo')return;mudar('pausa');
-  area.innerHTML=paginaHTML(topo('Pausa')+'<div class="modal-box">'+foto(atual())+'<h2>'+atual().nome+'</h2><p class="body-copy">'+atual().regra+'</p><p class="controls-copy">'+atual().controle+'</p></div><div class="result-actions">'+btn('continuar','Continuar')+btn('sair','Sair ao menu','action secondary')+'</div>');
+  area.innerHTML=paginaHTML(topo('Pausa')+'<div class="modal-box">'+foto(atual())+'<h2>'+atual().nome+'</h2><p class="body-copy">'+atual().regra+'</p><p class="controls-copy">'+atual().controle+'</p></div><div class="result-actions">'+btn('continuar','Continuar')+btn('voltar-fases','Voltar às fases','action secondary')+btn('sair','Voltar ao menu','action secondary')+'</div>');
   pfooter(modo==='circuito'?'Parada '+(selecionado+1)+' de '+totalJogos:'Jogo avulso','Partida pausada');
+}
+function voltarAsFases(){
+  // Abandona somente a tentativa: o histórico da volta e os recordes ficam intactos.
+  desligarEntrada();interromperQuadros();partida=null;ultimo=null;modo='avulso';niveis();
 }
 function finalizar(venceu,mensagem){
   if(tela!=='jogo')return;
@@ -242,12 +268,13 @@ function acao(el){
   if(a==='avulso'||a==='circuito'){entrar(a);return;}
   if(a==='voltar'){voltar();return;}
   if(a==='sair'){inicio();return;}
+  if(a==='voltar-fases'){voltarAsFases();return;}
   if(a==='lista'){galeria();return;}
   if(a==='seguinte'||a==='anterior'){pagina=Math.max(0,Math.min(totalPaginas-1,pagina+(a==='seguinte'?1:-1)));galeria();return;}
   if(a==='escolher'){tipoPartida='classic';selecionado=Number(el.dataset.index);nivel=1;niveis();return;}
   if(a==='escolher-nivel'){tipoPartida='classic';nivel=1;niveis();return;}
   if(a==='nivel'){tipoPartida='classic';nivel=Number(el.dataset.index);niveis();area.querySelector('.selected').focus({preventScroll:true});return;}
-  if(a==='modo-extra'){tipoPartida=modosExtras[atual().id]||'classic';nivel=1;novoMapa();niveis();return;}
+  if(a==='modo-extra'){tipoPartida=modosExtras[atual().id]||'classic';nivel=tipoPartida==='generated'?3:1;novoMapa();niveis();return;}
   if(a==='outra-fase'){novoMapa();criarPartida();return;}
   if(a==='comecar'){
     if(modo==='avulso'){criarPartida();return;}
@@ -293,7 +320,11 @@ document.addEventListener('keydown',e=>{
 });
 document.addEventListener('keyup',e=>soltarDir('key'+e.code));
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pausar();});
-window.addEventListener('blur',()=>{if(tela==='jogo')pausar();});
+window.addEventListener('blur',()=>{
+  // Alguns navegadores móveis emitem blur transitório durante interação.
+  // A perda real de foco e a aba oculta continuam pausando imediatamente.
+  if(tela==='jogo'&&(document.hidden||!document.hasFocus()))pausar();
+});
 const inicial=parametros.get('tela');
 modo=parametros.get('modo')==='circuito'?'circuito':'avulso';
 nivel=Math.max(1,Math.min(3,Number(parametros.get('nivel'))||1));

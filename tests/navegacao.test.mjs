@@ -4,26 +4,27 @@ import {readFileSync} from 'node:fs';
 import {createContext, runInContext} from 'node:vm';
 import {normalizarRecordes,registrarRecorde} from '../dist/recordes.js';
 import {normalizarVolta} from '../dist/progresso.js';
+import {varanda as jogosVaranda} from '../dist/varanda.js';
 import {catalogo, nomesNiveis} from '../dist/catalogo.js';
 
 const fonte=readFileSync(new URL('../dist/app.js',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
-function navegador(salvo=null, busca='?janela=1&tela=roteiro&modo=circuito') {
-  const chamadas=[],frames=new Map(),gravacoes=[];let proximoFrame=0;
+function navegador(salvo=null, busca='?janela=1&tela=roteiro&modo=circuito', reais={}) {
+  const eventos={},chamadas=[],frames=new Map(),gravacoes=[];let proximoFrame=0;
   const elementos=new Map();
   const dados={volta:salvo};
   function elemento(id) {
-    if(!elementos.has(id))elementos.set(id,{innerHTML:'',textContent:'',classList:{add(){},toggle(){}},setAttribute(){},addEventListener(){},style:{setProperty(){}},focus(){},querySelector:elemento,querySelectorAll(){return [];},getBoundingClientRect(){return {width:384,height:384};},getContext(){return {fillRect(){}};},get parentElement(){return elemento('stage');}});
+    if(!elementos.has(id))elementos.set(id,{innerHTML:'',textContent:'',classList:{add(){},toggle(){}},setAttribute(){},addEventListener(){},style:{setProperty(){}},focus(){},querySelector:elemento,querySelectorAll(){return [];},setPointerCapture(){},getBoundingClientRect(){return {left:0,top:0,width:384,height:384};},getContext(){return new Proxy({}, {get:(o,k)=>o[k]??(()=>{})});},get parentElement(){return elemento('stage');}});
     return elementos.get(id);
   }
   const fabricas=Object.fromEntries(catalogo.map(j=>[j.id,(nivel,api,opcoes)=>{chamadas.push({id:j.id,nivel,...opcoes});return {press(){},release(){},cancelInput(){},draw(){},hud(){return 'Jogando';},update(){},score(){return 0;}};}]));
-  const sandbox={normalizarRecordes,registrarRecorde,normalizarVolta,catalogo,nomesNiveis,quintal:fabricas,esquina:{},varanda:{},pracinha:{},
+  const sandbox={normalizarRecordes,registrarRecorde,normalizarVolta,catalogo,nomesNiveis,quintal:{...fabricas,...reais},esquina:{},varanda:{},pracinha:{},
     icone:()=>'',escapar:s=>s,ler:(k,v)=>dados[k]??v,salvar:(k,v)=>{dados[k]=v;gravacoes.push(k);},
     URLSearchParams,URL, location:{search:busca,href:'https://example.com/?'+busca},
     ResizeObserver:class {observe(){} disconnect(){}},requestAnimationFrame:f=>{frames.set(++proximoFrame,f);return proximoFrame;},
-    document:{querySelector:elemento,body:elemento('body'),addEventListener(){}},
-    window:{addEventListener(){}},cancelAnimationFrame(id){frames.delete(id);}};
+    document:{querySelector:elemento,body:elemento('body'),hidden:false,hasFocus:()=>true,addEventListener(n,f){eventos[n]=f;}},
+    window:{addEventListener(n,f){eventos[n]=f;}},cancelAnimationFrame(id){frames.delete(id);}};
   const contexto=createContext(sandbox);runInContext(fonte,contexto);
-  return {executar:s=>runInContext(s,contexto), html:()=>elemento('#screen').innerHTML,dados,chamadas,gravacoes,frames};
+  return {executar:s=>runInContext(s,contexto), html:()=>elemento('#screen').innerHTML,dados,chamadas,gravacoes,frames,eventos,elemento};
 }
 
 
@@ -103,4 +104,58 @@ test('URL da janela conserva modo e seed, e rejeita modo incompatível',()=>{
  assert.equal(circuito.executar('tipoPartida'),'classic');assert.ok(!circuito.html().includes('Caminho Novo'));
  const incorreto=navegador(null,`?janela=1&tela=nivel&jogo=${indice}&tipo=endless`);
  assert.equal(incorreto.executar('tipoPartida'),'classic');
+});
+
+
+test('Voltar às fases encerra tentativa e mantém seleção, recordes e volta salva',()=>{
+ const salvo={nivel:2,ids:catalogo.map(j=>j.id),resultados:[true,false]};
+ const n=navegador(salvo,'?janela=1&tela=galeria');
+ n.executar("selecionado=8;nivel=3;modo='avulso';tipoPartida='generated';semente=789;criarPartida();pausar()");
+ assert.match(n.html(),/Voltar às fases/);assert.match(n.html(),/Voltar ao menu/);
+ n.executar("acao({dataset:{do:'voltar-fases'}})");
+ assert.equal(n.executar('tela'),'nivel');assert.equal(n.executar('partida'),null);
+ assert.equal(n.executar('nivel'),3);assert.equal(n.executar('semente'),789);
+ assert.equal(n.executar('tipoPartida'),'generated');assert.deepEqual(n.dados.volta,salvo);assert.equal(n.frames.size,0);
+});
+test('Arrastar não pausa; cancelar captura não solta; blur real e aba oculta pausam',()=>{
+ const n=navegador(null,'?janela=1&tela=galeria');
+ n.executar("selecionado=8;modo='avulso';criarPartida();window.fases=[];partida.point=(x,y,f)=>window.fases.push(f)");
+ const c=n.elemento('canvas');const e={pointerId:1,button:0,clientX:100,clientY:100,preventDefault(){}};
+ c.onpointerdown(e);c.onpointermove({...e,clientX:170});
+ n.eventos.blur();assert.equal(n.executar('tela'),'jogo');
+ c.onlostpointercapture(e);assert.deepEqual(JSON.parse(n.executar('JSON.stringify(window.fases)')),['down','move','cancel']);
+ c.onpointerdown(e);c.onpointerup(e);assert.equal(n.executar('tela'),'jogo');
+ assert.equal(n.executar('window.fases.at(-1)'),'up');
+ n.executar('document.hasFocus=()=>false');n.eventos.blur();assert.equal(n.executar('tela'),'pausa');
+ assert.equal(c.onpointerdown,null);
+ n.executar("acao({dataset:{do:'continuar'}});document.hidden=true");n.eventos.visibilitychange();assert.equal(n.executar('tela'),'pausa');
+});
+test('Lagartixa oferece Sem Parar com recorde independente',()=>{
+ const n=navegador(null,'?janela=1&tela=galeria');
+ n.executar("acao({dataset:{do:'escolher',index:'7'}})");assert.match(n.html(),/Sem Parar/);
+ n.executar("acao({dataset:{do:'modo-extra'}});acao({dataset:{do:'comecar'}});partida.score=()=>4;finalizar(false,'Errou')");
+ assert.equal(n.dados.recordes.luz,4);
+});
+
+
+test('Gude real integrado ao canvas: puxar não pausa e cancelamento não lança',()=>{
+ const n=navegador(null,'?janela=1&tela=galeria',jogosVaranda);
+ n.executar("selecionado=8;modo='avulso';criarPartida()");
+ const c=n.elemento('canvas'),e={pointerId:8,button:0,clientX:64,clientY:320,preventDefault(){}};
+ c.onpointerdown(e);c.onpointermove({...e,clientX:28});n.eventos.blur();
+ assert.equal(n.executar('tela'),'jogo');assert.equal(n.executar('partida.snapshot().jogadas'),0);
+ c.onpointercancel(e);c.onpointerup({...e,clientX:28});
+ assert.equal(n.executar('partida.snapshot().jogadas'),0);
+ c.onpointerdown(e);c.onpointermove({...e,clientX:28});c.onpointerup({...e,clientX:28});
+ assert.equal(n.executar('partida.snapshot().jogadas'),1);assert.equal(n.executar('partida.moving'),true);
+ assert.equal(n.executar('tela'),'jogo');
+});
+
+
+test('Cancelar direções solta movimentos contínuos sem disparar petelecos',()=>{
+ const n=navegador(null,'?janela=1&tela=galeria');
+ n.executar("window.soltas=[];partida={release:d=>window.soltas.push(d)};segurando.set('pad1','left');cancelarDirecoes()");
+ assert.equal(n.executar("window.soltas.join(',')"),'left');assert.equal(n.executar('segurando.size'),0);
+ n.executar("window.cancelados=0;partida.cancelInput=()=>window.cancelados++;segurando.set('pad2','right');cancelarDirecoes()");
+ assert.equal(n.executar('window.cancelados'),1);assert.equal(n.executar("window.soltas.join(',')"),'left');
 });

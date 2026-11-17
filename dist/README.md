@@ -35,4 +35,10 @@ A [pasta artes](artes/README.md) guarda a composição oficial. A capa é exibid
 
 ## Regras por módulo
 
-O catálogo tem dez jogos. Sem Parar: Goteira, Último Fio, Pipa, Pão e Pisca. Caminho Novo: Maré, Rastro e Três Petelecos. Rádio e Luz preservam as fases autorais. Consulte os guias de [Quintal](../docs/jogos/quintal/README.md), [Esquina](../docs/jogos/esquina/README.md) e [Varanda](../docs/jogos/varanda/README.md). A Volta no Bairro permanece nas três dificuldades.
+O catálogo tem dez jogos. Sem Parar: Goteira, Último Fio, Pipa, Pão, Pisca e Luz de Varanda (três botes errados; sem prazo). Caminho Novo: Maré, Rastro e Três Petelecos. Rádio mantém somente fases autorais; Luz também conserva suas dificuldades originais. Os três geradores usam Puxado como referência e critérios próprios de solução e desafio. Consulte os guias de [Quintal](../docs/jogos/quintal/README.md), [Esquina](../docs/jogos/esquina/README.md) e [Varanda](../docs/jogos/varanda/README.md). A Volta no Bairro permanece nas três dificuldades.
+
+## Entrada e pausa
+
+Rastro aceita traçado iniciado no caracol, com avanço pelas casas vizinhas. Gude aceita arrasto iniciado sobre a bolinha; cancelar o ponteiro ou pausar não lança um peteleco. Controles de teclado e botões permanecem como alternativa acessível. `touch-action` é restrito ao tabuleiro, não à página inteira. A pausa oferece **Voltar às fases**, conservando a seleção atual, os saves e os recordes.
+
+Consulte [dados](../docs/dados/README.md) e [testes](../tests/README.md). Simular ponteiros no navegador não demonstra compatibilidade com todos os aparelhos físicos.
