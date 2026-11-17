@@ -5,3 +5,9 @@ As capturas inicio.jpg e pracinha.jpg registravam o catálogo anterior e foram r
 A versão atual contém 12 jogos, distribuídos em duas páginas de seis. Novas capturas devem mostrar esta versão, sem cursor.
 
 [Voltar ao README principal](../README.md)
+
+## Capa atual
+
+![Capa Miudezas](../dist/artes/capas/miudezas-tijuca.png)
+
+Esta é a arte original aprovada, não uma captura da interface. Veja [organização das artes](../dist/artes/README.md).

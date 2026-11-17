@@ -20,3 +20,9 @@ Uma fábrica recebe o nível de 1 a 3 e uma API com callbacks de som e conclusã
 
 [Manual completo do projeto](../README.md)
 
+
+## Capa da abertura
+
+![Capa aprovada](artes/capas/miudezas-tijuca.png)
+
+A [pasta artes](artes/README.md) guarda a composição oficial. A capa é exibida inteira, sem esticamento; regras e progresso não foram alterados.
