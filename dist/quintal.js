@@ -222,7 +222,8 @@ export function gerarMare(seed = 1) {
   return {seed: original, grid, solution: analise.solution, metrics: analise, fallback: true};
 }
 
-const crab = ['r...r...r','rr.rr..rr','..rrrrrr.','.rwwwwr..','..wkwkw..','.rrrrrrr.','r.r..r..r'];
+// A arte aprovada cabe na célula de 12 px; só o desenho muda, não as regras.
+const crab = ['r.r.....r.r','rrr.w.w.rrr','.r..k.k..r.','..rrrrrrr..','.rrhhhhhrr.','..rrrrrrr..','.r.rrrrr.r.','r.r.....r.r'];
 
 function mare(level, api, options = {}) {
   const generated = options.mode === 'generated' ? gerarMare(options.seed) : null;
@@ -270,7 +271,7 @@ function mare(level, api, options = {}) {
           sprite(ctx, ['..sss..','.s...s.','s.sss.s','s.s.s.s','.s..s.s','..sss..'], {s:'#bc805e'}, px + 2, py + 3);
         }
       }
-      sprite(ctx, crab, {r:flash > 0 ? '#fff5da' : '#cd4c3e', w:'#fff4c9', k:'#323b43'}, x * 12 + 2, y * 12 + 3, facing);
+      sprite(ctx, crab, {r:flash > 0 ? '#fff5da' : '#cd4c3e', w:'#fff4c9', k:'#323b43', h:'#ec8162'}, x * 12, y * 12 + 2, facing);
     },
     hud() { return (high ? 'Maré alta' : 'Maré baixa') + ' · Muda em ' + (3 - steps % 3) + (steps % 3 === 2 ? ' passo' : ' passos'); }
   };

@@ -42,3 +42,5 @@ O catálogo tem dez jogos. Sem Parar: Goteira, Último Fio, Pipa, Pão, Pisca e 
 Rastro aceita traçado iniciado no caracol, com avanço pelas casas vizinhas. Gude aceita arrasto iniciado sobre a bolinha; cancelar o ponteiro ou pausar não lança um peteleco. Controles de teclado e botões permanecem como alternativa acessível. `touch-action` é restrito ao tabuleiro, não à página inteira. A pausa oferece **Voltar às fases**, conservando a seleção atual, os saves e os recordes.
 
 Consulte [dados](../docs/dados/README.md) e [testes](../tests/README.md). Simular ponteiros no navegador não demonstra compatibilidade com todos os aparelhos físicos.
+
+A arte do caranguejo em `quintal.js` é desenhada na grade nativa, sem arquivos externos ou filtros. Consulte [a documentação do quintal](../docs/jogos/quintal/README.md#arte-do-caranguejo).

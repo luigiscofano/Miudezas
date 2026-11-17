@@ -42,3 +42,7 @@ O gerador faz mutações locais do mapa autoral, incluindo acessos e obstáculos
 - Quinze mariposas sem vitória automática; derrota por rajada.
 
 Esses são testes de lógica e simulação. Não substituem a inspeção visual de navegador e os testes manuais de toque do aplicativo completo.
+
+### Arte do caranguejo
+
+A matriz aprovada tem 11 × 8 pixels e fica dentro de cada casa de 12 × 12. Pinças, olhos e carapaça permanecem legíveis sem suavização. O espelhamento e o clarão de retorno à areia são preservados. Movimento, maré, mapas e persistência não dependem dessa matriz.
