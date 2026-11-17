@@ -1,3 +1,4 @@
+import {normalizarVolta} from './progresso.js';
 import {catalogo,nomesNiveis} from './catalogo.js';
 import {quintal} from './quintal.js';
 import {esquina} from './esquina.js';
@@ -45,10 +46,7 @@ somBotao.onclick=()=>{comSom=!comSom;salvar('som',comSom);somUI();ativarAudio();
 janelaBotao.innerHTML=icone('janela');somUI();
 
 function lerVolta(){
-  const v=ler('volta',null);
-  if(!v||![1,2,3].includes(v.nivel)||!Array.isArray(v.resultados)||v.resultados.length>=totalJogos||
-      !v.resultados.every(r=>typeof r==='boolean'))return null;
-  return v;
+  return normalizarVolta(ler('volta',null), ids);
 }
 function manterVolta(){salvar('volta',volta?.resultados.length<totalJogos?volta:null);}
 function desligarEntrada(){
@@ -213,7 +211,7 @@ function acao(el){
   if(a==='nivel'){nivel=Number(el.dataset.index);niveis();area.querySelector('.selected').focus({preventScroll:true});return;}
   if(a==='comecar'){
     if(modo==='avulso'){criarPartida();return;}
-    volta={nivel,resultados:[]};manterVolta();parada();return;
+    volta={nivel,ids:[...ids],resultados:[]};manterVolta();parada();return;
   }
   if(a==='retomar'){volta=lerVolta();if(volta)parada();else roteiro();return;}
   if(a==='partir'||a==='repetir'){criarPartida();return;}
@@ -259,3 +257,4 @@ nivel=Math.max(1,Math.min(3,Number(parametros.get('nivel'))||1));
 selecionado=Math.max(0,Math.min(ids.length-1,Number(parametros.get('jogo'))||0));
 pagina=Math.max(0,Math.min(totalPaginas-1,Math.floor(Number(parametros.get('pag')))||0));
 if(inicial==='galeria')galeria();else if(inicial==='roteiro')roteiro();else if(inicial==='nivel')niveis();else inicio();
+

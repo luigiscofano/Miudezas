@@ -199,85 +199,6 @@ function pao(level, api) {
   };
 }
 
-function balsa(level, api) {
-  const round = roundEnd(api);
-  const held = new Set();
-  const left = 11, right = 85, cable = 61;
-  let x = left, trips = 0, elapsed = 0, bump = 0;
-  const speed = [10, 13, 16][level - 1];
-  const logs = [
-    {x:36, phase:5}, {x:63, phase:64}, {x:46, phase:90}
-  ].slice(0, level === 1 ? 2 : 3);
-  const logY = log => ((elapsed * speed + log.phase) % 110) - 8;
-  const origin = () => trips % 2 === 0 ? left : right;
-  function update(dt) {
-    if (round.done) return;
-    elapsed += dt;
-    if (bump > 0) {
-      bump = Math.max(0, bump - dt);
-      return;
-    }
-    const direction = Number(held.has('right')) - Number(held.has('left'));
-    x = clamp(x + direction * 23 * dt, left, right);
-    if (logs.some(log => Math.abs(x - log.x) < 10 && Math.abs(cable - logY(log)) < 5)) {
-      x = origin();
-      bump = 0.65;
-      api.tone?.(110, 0.14);
-      return;
-    }
-    if ((trips % 2 === 0 && x === right) || (trips % 2 === 1 && x === left)) {
-      trips++;
-      api.tone?.(410, 0.12);
-      if (trips === 3) round.finish(true, 'Os três passageiros chegaram!');
-    }
-  }
-  const passenger = ['.hh.', '.hh.', 'ssss', '.ss.'];
-  function draw(ctx) {
-    const river = '#137e86', shore = '#9fb85e', wood = '#95542e', dark = '#412e29', cream = '#ffedc8';
-    rect(ctx, river, 0, 0, 96, 96);
-    rect(ctx, shore, 0, 0, 12, 96); rect(ctx, shore, 9, 22, 5, 31);
-    rect(ctx, shore, 84, 0, 12, 96); rect(ctx, shore, 82, 50, 3, 36);
-    rect(ctx, dark, 10, cable, 76, 1);
-    for (const dock of [4, 82]) {
-      rect(ctx, dark, dock + 2, cable, 2, 6); rect(ctx, dark, dock + 8, cable, 2, 6);
-      rect(ctx, wood, dock, cable - 2, 11, 5);
-    }
-    for (const log of logs) {
-      const y = Math.floor(logY(log)), lx = log.x - 5;
-      rect(ctx, dark, lx, y, 11, 3);
-      rect(ctx, dark, lx + 7, y - 2, 3, 2);
-      rect(ctx, cream, lx + 1, y - 2, 3, 1);
-    }
-    const riderX = x - 2;
-    sprite(ctx, passenger, {h: dark, s: cream}, origin() === left ? 86 : 5, cable - 7);
-    rect(ctx, dark, x - 6, cable - 1, 12, 6);
-    rect(ctx, wood, x - 5, cable, 10, 2); rect(ctx, wood, x - 6, cable + 3, 12, 2);
-    sprite(ctx, passenger, {h: dark, s: '#edb240'}, riderX, cable - 4);
-    for (const wave of [[24, 13], [62, 78], [73, 34]]) {
-      const y = (wave[1] + Math.floor(elapsed * 2)) % 96;
-      rect(ctx, '#82bfae', wave[0], y, 3, 1); rect(ctx, '#82bfae', wave[0] + 3, y + 1, 2, 1);
-    }
-  }
-  return {
-    draw, update,
-    press(dir) { if (dir === 'left' || dir === 'right') held.add(dir); },
-    release(dir) { held.delete(dir); },
-    hud() { return trips + '/3 travessias · ' + (bump > 0 ? 'Tronco! Volte ao cais' : trips % 2 === 0 ? 'Destino →' : 'Destino ←'); }
-  };
-}
-
-const gardens = [
-  ['....P', 'L.L.#', '.#L..', '....#', 'S....'],
-  ['..#..P', 'L...#.', '.##L..', '...#..', '.#..L.', 'S....#'],
-  ['..#...P', 'L...#..', '.#.#L..', '...#...', '.#...#.', '...#L..', 'S....#.']
-];
-const directions = {left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1]};
-const leaf = ['...gg', '..ggg', '.ggig', 'ggigg', 'gigg.', 'gg...'];
-const rock = ['..rr..', '.rrrr.', 'rrrrrr', '.rrrr.'];
-const snail = [
-  '..sss....e.e', '.saaas...e.e', 'saassas.eeee', 'sas.saseeeee', 'saassaseeee.',
-  '.saaassseee.', '..esssseee..', 'eeeeeeeee...'
-];
 function rastro(level, api) {
   const maze = gardens[level - 1], side = maze.length, tiles = maze.join('');
   const round = roundEnd(api);
@@ -348,4 +269,5 @@ function rastro(level, api) {
   };
 }
 
-export const esquina = {radio, pao, balsa, rastro};
+export const esquina = {radio, pao, rastro};
+

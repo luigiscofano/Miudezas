@@ -1,12 +1,12 @@
 # Miudezas
 
-**Dezesseis jogos de bairro em uma janelinha.** Um balde quase cheio, uma mariposa no fio de cima, duas metades de pão que douram em tempos diferentes. Em Miudezas, cada uma dessas cenas vira uma partida que se aprende olhando e se joga com poucas teclas ou um gesto.
+**Doze jogos de bairro em uma janelinha.** Um balde quase cheio, uma mariposa no fio de cima, duas metades de pão que douram em tempos diferentes. Em Miudezas, cada uma dessas cenas vira uma partida que se aprende olhando e se joga com poucas teclas ou um gesto.
 
-<p align="center"><img src="docs/inicio.jpg" alt="Tela inicial de Miudezas, com casas, pipa e bem-te-vi acima dos botões Jogo avulso e Volta no Bairro" width="440"></p>
+<p align="center"><img src="dist/arte/bairro.png" alt="Tela inicial de Miudezas, com casas, pipa e bem-te-vi acima dos botões Jogo avulso e Volta no Bairro" width="440"></p>
 
 | Coleção | Desafios | Tela de jogo | Plataforma |
 |---|---|---|---|
-| 16 minigames | 3 níveis por jogo, 48 combinações | Canvas de 96 × 96 pixels lógicos | Navegador de computador ou celular |
+| 12 minigames | 3 níveis por jogo, 36 combinações | Canvas de 96 × 96 pixels lógicos | Navegador de computador ou celular |
 
 **Autor:** Luigi Scofano de Araujo · [Versão hospedada com acesso privado](https://miudezas-de-luigi.luigiscofano.chatgpt.site) · [Licença MIT](LICENSE)
 
@@ -39,14 +39,14 @@ Para experimentar no celular, conecte os dois aparelhos à mesma rede local, exe
 | Tela | O que se faz nela |
 |---|---|
 | Início | Escolher entre uma partida avulsa e a sequência. A barra oferece som e abertura da janela no desktop. |
-| Galeria | Percorrer três páginas com até seis miniaturas cada. A ordem segue o percurso do bairro. |
-| Roteiro | Ver as dezesseis paradas. Com progresso salvo, escolher entre retomar e iniciar uma nova volta. |
+| Galeria | Percorrer duas páginas com até seis miniaturas cada. A ordem segue o percurso do bairro. |
+| Roteiro | Ver as doze paradas. Com progresso salvo, escolher entre retomar e iniciar uma nova volta. |
 | Seleção de nível | Escolher **Sossegado**, **Animado** ou **Puxado**. No avulso, a tela antecipa a regra e a mudança concreta de cada nível. |
 | Próxima parada | Ler o objetivo e os comandos antes de iniciar o relógio do jogo. |
 | Partida | Ver a cena, a meta ou o tempo no indicador e os botões correspondentes àquela mecânica. |
 | Pausa | Consultar regras, continuar ou sair ao menu. Perder o foco ou ocultar a aba também pausa a partida. |
 | Resultado | No avulso, repetir ou voltar à galeria. Na volta, repetir a parada ou avançar mesmo depois de uma derrota. |
-| Resumo | Após a 16ª parada, ver os desafios vencidos e as dezesseis miniaturas com seus resultados. |
+| Resumo | Após a 12ª parada, ver os desafios vencidos e as doze miniaturas com seus resultados. |
 
 **Uma volta de exemplo.** Escolha Animado, jogue Goteira e avance. O próximo cartão é Maré Miúda no mesmo nível. Fechar o navegador nesse cartão permite retomar na segunda parada. Se sair no meio da partida, ela recomeça naquela parada. O avanço registra um resultado por jogo.
 
@@ -60,7 +60,7 @@ O nome **Miudezas** reúne acontecimentos pequenos o bastante para caber numa ja
 |---|---|
 | Moldura | Contorno escuro, barra clara e sombra deslocada lembram uma janela de computador. A moldura separa a interface persistente das cores próprias de cada cena. |
 | Tipografia | **Miudezas Pixel**, fonte local com acentos, identifica títulos, níveis e comandos. Verdana, Arial e a fonte sem serifa do sistema sustentam regras e textos corridos. |
-| Escala | A cena ativa é desenhada em 96 × 96 e ampliada com pixels aparentes. As doze miniaturas originais têm 128 × 120; as quatro da Pracinha usam SVG com grade de 96 × 96, a paisagem da capa 192 × 88 e o ícone 16 × 16. |
+| Escala | A cena ativa é desenhada em 96 × 96 e ampliada com pixels aparentes. As doze miniaturas originais têm 128 × 120; as duas da Pracinha usam SVG com grade de 96 × 96, a paisagem da capa 192 × 88 e o ícone 16 × 16. |
 | Silhueta | Asa curta e peito amarelo identificam o pássaro. Um retângulo de água sob a rachadura avisa onde a gota vai cair. Cada detalhe precisa continuar legível no tamanho da janela. |
 | Pequenas irregularidades | A alça do balde cai de lado, a antena do rádio dobra e as fachadas variam um pixel. A irregularidade pertence ao objeto. As áreas de toque e as regras continuam previsíveis. |
 | Sinais de jogo | O fio treme antes da rajada, o pão muda de cor e solta vapor, a luz do rádio indica sintonia. Sons curtos confirmam ações, enquanto o indicador escrito conserva a informação principal. |
@@ -98,7 +98,7 @@ Pegue as gotas por um minuto. O balde comporta quatro. Encoste no ralo à esquer
 
 A gota espera 0,55 s na rachadura. O ponto entra ao captar a água. Ir ao ralo libera capacidade. Ao fim de 60 s, captar pelo menos uma gota conta como vitória.
 
-Palco `#172244` · [Implementação de Goteira](dist/quintal.js#L39)
+Palco `#172244` · [Implementação de Goteira](dist/quintal.js)
 
 ### 02 · Maré Miúda
 
@@ -112,7 +112,7 @@ Leve o caranguejo até a concha. A maré muda a cada três passos. Se ela cobrir
 
 Apenas um passo válido avança a maré. No terceiro, se a água subir sobre uma casa rasa, o caranguejo retorna à última casa firme. Um passo lateral na areia pode preparar o momento da travessia.
 
-Palco `#205E60` · [Implementação de Maré Miúda](dist/quintal.js#L130)
+Palco `#205E60` · [Implementação de Maré Miúda](dist/quintal.js)
 
 ### 03 · Último Fio
 
@@ -126,7 +126,7 @@ Pegue cinco mariposas. Quando um fio tremer, pule para outro antes da rajada. **
 
 Os três fios dividem a altura em linhas e cada uma tem nove posições. A mariposa indica o destino, mas o tremor muda a prioridade. Estar no fio ameaçado no fim do aviso encerra a rodada.
 
-Palco `#E9A17E` · [Implementação de Último Fio](dist/quintal.js#L186)
+Palco `#E9A17E` · [Implementação de Último Fio](dist/quintal.js)
 
 ### 04 · Pipa de Laje
 
@@ -140,7 +140,7 @@ Chegue à última laje com a rabiola inteira. Passe entre as antenas e os fios. 
 
 Antenas limitam a passagem por baixo e fios alternados limitam por cima. A pipa responde gradualmente e o vento varia. Antecipar a descida importa tanto quanto subir. Uma colisão prende a rabiola.
 
-Palco `#60C3BD` · [Implementação de Pipa de Laje](dist/quintal.js#L250)
+Palco `#60C3BD` · [Implementação de Pipa de Laje](dist/quintal.js)
 
 ### 05 · Rádio de Pilha
 
@@ -154,7 +154,7 @@ Encontre três estações antes que a pilha acabe. Quando a luz firmar, pare par
 
 As estações ficam em 18%, 54% e 83% do mostrador. Pare por 0,58 s na faixa. Cada transmissão dura 2,2 s e suspende o gasto da bateria. As três, do canário desaparecido ao estúdio, formam uma pequena história.
 
-Palco `#4F2A48` · [Implementação de Rádio de Pilha](dist/esquina.js#L32)
+Palco `#4F2A48` · [Implementação de Rádio de Pilha](dist/esquina.js)
 
 ### 06 · Pão na Chapa
 
@@ -168,23 +168,10 @@ Tire cada metade da chapa quando dourar. Você tem um minuto para servir os pãe
 
 As duas metades começam em estágios diferentes. Cada lado pode ser servido separadamente. Retirar cedo ou tarde consome a tentativa daquele pão. O objetivo é atingir a meta ao final do minuto.
 
-Palco `#A25843` · [Implementação de Pão na Chapa](dist/esquina.js#L132)
+Palco `#A25843` · [Implementação de Pão na Chapa](dist/esquina.js)
 
-### 07 · Balsa de Cabo
 
-<img src="dist/arte/balsa.png" width="128" alt="Miniatura de Balsa de Cabo na galeria">
-
-Faça três travessias. Solte o cabo para esperar os troncos passarem. Uma batida leva a balsa de volta ao cais. **Comandos.** Segure ← ou →. No celular, segure um lado da cena.
-
-| Sossegado | Animado | Puxado |
-|---|---|---|
-| **Rio calmo** · 2 troncos, corrente a 10 px/s | **Rio cheio** · 3 troncos, 13 px/s | **Correnteza** · 3 troncos, 16 px/s |
-
-O cabo restringe a balsa a uma linha. Soltar o comando segura a posição. Uma colisão reinicia apenas a travessia atual. A meta são três chegadas, alternando margens.
-
-Palco `#247D7F` · [Implementação de Balsa de Cabo](dist/esquina.js#L202)
-
-### 08 · Rastro de Prata
+### 07 · Rastro de Prata
 
 <img src="dist/arte/rastro.png" width="128" alt="Miniatura de Rastro de Prata na galeria">
 
@@ -196,9 +183,9 @@ Pegue três folhas e entre no vaso. Seu rastro bloqueia o caminho. Volte pela ú
 
 O caminho ocupa as casas percorridas. Refazer o último passo desfaz também a coleta realizada naquela casa. Para entrar no vaso, recolha todas as três folhas no caminho atual.
 
-Palco `#C18E86` · [Implementação de Rastro de Prata](dist/esquina.js#L281)
+Palco `#C18E86` · [Implementação de Rastro de Prata](dist/esquina.js)
 
-### 09 · Luz de Varanda
+### 08 · Luz de Varanda
 
 <img src="dist/arte/luz.png" width="128" alt="Miniatura de Luz de Varanda na galeria">
 
@@ -210,9 +197,9 @@ Espere a lagartixa apontar para um mosquito e dê o bote. Alcance a meta antes d
 
 A cabeça da lagartixa varre um arco. O jogador decide o instante do bote. Em níveis altos, a mira gira mais depressa e o ângulo de acerto também fica menor.
 
-Palco `#30234B` · [Implementação de Luz de Varanda](dist/varanda.js#L66)
+Palco `#30234B` · [Implementação de Luz de Varanda](dist/varanda.js)
 
-### 10 · Três Petelecos
+### 09 · Três Petelecos
 
 <img src="dist/arte/gude.png" width="128" alt="Miniatura de Três Petelecos na galeria">
 
@@ -224,23 +211,10 @@ Acerte o buraco em até três petelecos. Quanto mais tempo segurar a direção, 
 
 A bolinha parte de (16,80), com origem no canto superior esquerdo. Segurar define alcance no teclado e puxar define direção e alcance no toque. As pedras e limites desviam a trajetória. O buraco precisa ser alcançado até o terceiro tiro.
 
-Palco `#BE7749` · [Implementação de Três Petelecos](dist/varanda.js#L158)
+Palco `#BE7749` · [Implementação de Três Petelecos](dist/varanda.js)
 
-### 11 · Dois Pratos
 
-<img src="dist/arte/pratos.png" width="128" alt="Miniatura de Dois Pratos na galeria">
-
-Distribua todas as frutas. A balança precisa terminar com os dois pratos na mesma altura. **Comandos.** ← e → escolhem o prato. No celular, toque no lado desejado.
-
-| Sossegado | Animado | Puxado |
-|---|---|---|
-| **3 frutas** · 3 frutas, duas já nos pratos | **5 frutas** · 5 frutas, pratos vazios | **6 frutas** · 6 frutas, pratos vazios |
-
-Os pesos do jogo são banana 1, abacate 2, laranja 3 e coco 4. Na primeira fase há uma banana à esquerda e um abacate à direita. A banana restante vai à esquerda para produzir 2 contra 2.
-
-Palco `#D5BC88` · [Implementação de Dois Pratos](dist/varanda.js#L276)
-
-### 12 · Pisca no Mato
+### 10 · Pisca no Mato
 
 <img src="dist/arte/pisca.png" width="128" alt="Miniatura de Pisca no Mato na galeria">
 
@@ -252,11 +226,11 @@ Observe os vaga-lumes e repita as piscadas na ordem. A cada acerto a sequência 
 
 Uma piscada é acrescentada após cada sequência correta. O vaga-lume esquerdo soa a 392 Hz e o direito a 587 Hz. O jogador responde depois da demonstração. Trocar a ordem encerra a partida.
 
-Palco `#1A393B` · [Implementação de Pisca no Mato](dist/varanda.js#L345)
+Palco `#1A393B` · [Implementação de Pisca no Mato](dist/varanda.js)
 
-<p align="center"><img src="docs/pracinha.jpg" alt="Galeria com Peteca, Gato na Sombra, Pescaria de Lata e Pião" width="600"></p>
 
-### 13 · Peteca
+
+### 11 · Peteca
 
 <img src="dist/arte/peteca.svg" width="128" alt="Peteca acima de uma mão">
 
@@ -270,7 +244,7 @@ A altura inicial é 27, o ápice após uma rebatida fica próximo de 23 e a qued
 
 Palco `#94CDEA` · penas `#FFF0CC` · base `#A52F32` · chão `#C5664D` · mão `#A65F38` · [Implementação](dist/pracinha.js)
 
-### 14 · Gato na Sombra
+### 12 · Gato na Sombra
 
 <img src="dist/arte/sombra.svg" width="128" alt="Gatinho laranja numa faixa de sombra">
 
@@ -284,33 +258,7 @@ O centro da sombra percorre x=20 a x=76 e retorna pelas bordas. O gato anda a 32
 
 Palco `#F5B08B` · sombra `#6B587E` · gato `#EFA32E` · listras `#BD6127` · [Implementação](dist/pracinha.js)
 
-### 15 · Pescaria de Lata
 
-<img src="dist/arte/pescaria.svg" width="128" alt="Ímã e dois peixes numa bacia azul">
-
-Pressione **↓ ou S**, ou toque na cena, para baixar o ímã. Ele volta sozinho. Pegue **3 peixes**, sem cronômetro ou limite de tentativas. Um erro apenas devolve o ímã à posição inicial.
-
-| Sossegado | Animado | Puxado |
-|---|---|---|
-| Peixe tranquilo · 10 px/s; tolerância 6 px | Peixe ligeiro · 14 px/s; tolerância 5 px | Peixe apressado · 18 px/s; tolerância 4 px |
-
-O ímã fica em x=48, desce de y=45 a y=76 a 42 px/s e retorna a 36 px/s. Os peixes continuam andando durante a descida: vale antecipar a passagem. O peixe é recolhido ao retornar ao topo. Segurar a tecla não repete a tentativa; novas ações durante o movimento são ignoradas.
-
-Palco `#B8D8B6` · bacia `#3553A6` · água `#253568` · ímã `#B7453E` · peixes `#F0CC42` / `#EE913B` · [Implementação](dist/pracinha.js)
-
-### 16 · Pião
-
-<img src="dist/arte/piao.svg" width="128" alt="Pião num círculo de giz">
-
-Use **← → ou A/D** para corrigir o pião por **20 segundos**. No celular, segure o lado para o qual deseja movê-lo. Se o pião sair do círculo, a rodada termina.
-
-| Sossegado | Animado | Puxado |
-|---|---|---|
-| Giro manso · força de deriva 10 | Giro solto · força 14 | Giro arisco · força 18 |
-
-O centro parte de x=48. Uma deriva suave muda durante a rodada; os comandos corrigem a 35 px/s. O deslocamento permitido é de 21 pixels para cada lado, dentro do giz desenhado com raio horizontal de 25. A assimetria do sprite e a falha no giz preservam o traço simples.
-
-Palco `#A54A38` · giz `#FFF0CC` · madeira `#CF902B` · ponta `#572D21` · [Implementação](dist/pracinha.js)
 
 ---
 
@@ -340,12 +288,12 @@ flowchart TD
 | [catalogo.js](dist/catalogo.js) | IDs estáveis, ordem das paradas, nomes, regras, comandos, nomes dos níveis, paletas de palco e tipo de controle. |
 | [interface.js](dist/interface.js) | Ícones vetoriais em grade, escape de texto e leitura/gravação local com tratamento de indisponibilidade. |
 | [quintal.js](dist/quintal.js) | Goteira, Maré Miúda, Último Fio e Pipa de Laje. |
-| [esquina.js](dist/esquina.js) | Rádio de Pilha, Pão na Chapa, Balsa de Cabo e Rastro de Prata. |
-| [varanda.js](dist/varanda.js) | Luz de Varanda, Três Petelecos, Dois Pratos e Pisca no Mato. |
-| [pracinha.js](dist/pracinha.js) | Peteca, Gato na Sombra, Pescaria de Lata e Pião. |
+| [esquina.js](dist/esquina.js) | Rádio de Pilha, Pão na Chapa, Rastro de Prata. |
+| [varanda.js](dist/varanda.js) | Luz de Varanda, Três Petelecos, Pisca no Mato. |
+| [pracinha.js](dist/pracinha.js) | Peteca e Gato na Sombra. |
 | [scripts/](scripts/README.md) | Geração de miniaturas a partir dos desenhos jogáveis. |
 | [tests/](tests/README.md) | Verificação automática das regras, entradas e progressão. |
-| [arte/](dist/arte/README.md) | Fonte, ícone, capa e 16 miniaturas. Os sprites durante as partidas são desenhados pelos módulos de jogo. |
+| [arte/](dist/arte/README.md) | Fonte, ícone, capa e 12 miniaturas. Os sprites durante as partidas são desenhados pelos módulos de jogo. |
 | [docs/](docs/README.md) | Captura da tela inicial usada nesta documentação. |
 | [.openai/](.openai/README.md) | Manifesto da instalação hospedada de referência. O servidor local só precisa de dist/. |
 
@@ -401,26 +349,26 @@ O áudio usa um oscilador de onda quadrada com envelope curto. O contexto de áu
 
 **Onde editar.** Para alterar o tempo de uma rajada, edite a fábrica em quintal.js. Para alterar a explicação mostrada antes do jogo, edite catalogo.js. Uma mudança que altere a meta precisa aparecer nos dois lugares. Para revisar uma cor, identifique primeiro se ela pertence à interface, à margem do palco ou ao desenho da cena.
 
-**Compatibilidade da volta.** Os primeiros doze IDs continuam na mesma ordem. As quatro novas paradas foram acrescentadas ao fim, portanto voltas v1 em andamento conservam a posição e agora seguem até o Pião. Voltas já concluídas tinham o valor null e continuam concluídas. O total, a paginação, a última parada e o resumo derivam de catalogo.length. Cada página contém até seis jogos. Uma futura reordenação exige migrar o histórico por ID.
+**Compatibilidade da volta.** O histórico antigo é migrado pela ordem original de IDs, ignorando apenas as paradas retiradas. Vitórias e tentativas dos jogos mantidos preservam sua correspondência. Novas voltas armazenam também seus IDs. O salvamento antigo não é apagado ao consultar a retomada. Total, paginação e resumo derivam de catalogo.length.
 
 | Verificação reproduzível | Resultado esperado |
 |---|---|
-| Avulso → segunda página → Dois Pratos → Sossegado → esquerda | A banana vai para o prato esquerdo e aparece a vitória. |
+| Avulso → segunda página → Peteca → Sossegado | O jogo inicia normalmente e aceita rebatidas. |
 | Em Goteira, ficar fora do ralo depois de recolher quatro gotas | O indicador para em 4/4. Voltar ao ralo libera espaço e conserva a pontuação. |
 | Em Rastro de Prata, colher uma folha e voltar à casa anterior | O último segmento é desfeito e a folha volta à casa. |
 | Em Três Petelecos, começar a carregar um tiro e pausar | Ao continuar, a bolinha fica à espera de um novo comando. |
 | Alternar para outra aba durante uma rodada | A tela de pausa interrompe o avanço do jogo. |
 | Na Volta, avançar após Goteira, sair e retomar no mesmo navegador | A segunda parada é Maré Miúda no nível escolhido. |
-| Completar o percurso, inclusive com uma tentativa perdida | O resumo distingue vitórias e tentativas nas 16 miniaturas. |
+| Completar o percurso, inclusive com uma tentativa perdida | O resumo distingue vitórias e tentativas nas 12 miniaturas. |
 | Em telefone, tocar no pão, deslizar no tabuleiro e arrastar o dial | Cada gesto atua na cena correspondente e os botões também ficam disponíveis. |
 
-Execute `node --test tests/*.test.mjs` para verificar as metas dos novos jogos nos três níveis, passos de 1/60 s, 1/30 s e 0,08 s, derrotas, ausência de limite de tempo na pescaria, entrada e resultado único. A progressão também cobre a transição da 12ª para a 13ª parada e o encerramento na 16ª.
+Execute `node --test tests/*.test.mjs` para verificar catálogo, migração dos resultados, paginação, conclusão das 12 paradas e regras dos jogos da Pracinha nos três níveis.
 
 O teste rápido de sintaxe pode ser feito com Node recente, por exemplo `node --check dist/app.js`. Os cenários acima verificam comportamento e interação. O repositório inclui os testes automáticos e este roteiro de verificação manual.
 
 ## Referências
 
-**Inspirações de criação.** As referências visuais diretas são as doze prévias originais e as quatro prévias aprovadas da Pracinha. A peteca traz a palma aberta, o gato laranja acompanha a sombra roxa, os peixes de lata ficam numa bacia azul e o pião gira num círculo de giz irregular. A moldura vem da ideia de um jogo de janela para computador. O bairro dá unidade a cenas que pedem gestos diferentes, como dar um peteleco, acertar o ponto do pão, ajustar um rádio e observar os vaga-lumes. O quintal do caracol traz o raciocínio espacial ao chão de ladrilhos. A balança de feira traduz soma e igualdade em inclinação. Esses exemplos descrevem as escolhas tomadas para Miudezas.
+**Inspirações de criação.** As referências visuais diretas são as prévias aprovadas dos jogos mantidos. A peteca traz a palma aberta, o gato laranja acompanha a sombra roxa. A moldura vem da ideia de um jogo de janela para computador. O bairro dá unidade a cenas que pedem gestos diferentes, como dar um peteleco, acertar o ponto do pão, ajustar um rádio e observar os vaga-lumes. O quintal do caracol traz o raciocínio espacial ao chão de ladrilhos. Esses exemplos descrevem as escolhas tomadas para Miudezas.
 
 **Leitura técnica.** O Canvas explica a superfície de desenho usada pelas cenas. O agendamento de quadros explica o relógio de animação. A síntese dos sinais parte dos recursos nativos de áudio do navegador.
 
@@ -429,3 +377,4 @@ O teste rápido de sintaxe pode ser feito com Node recente, por exemplo `node --
 - [MDN — Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
 
 **Créditos.** © 2026 Luigi Scofano de Araujo. [Texto da licença](LICENSE)
+

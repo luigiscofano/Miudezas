@@ -16,7 +16,7 @@ Cada PNG da coleção original abaixo mede 128 × 120. O nome-base corresponde a
 |---|---|---|
 | [Goteira](goteira.png) | [Rádio de Pilha](radio.png) | [Luz de Varanda](luz.png) |
 | [Maré Miúda](mare.png) | [Pão na Chapa](pao.png) | [Três Petelecos](gude.png) |
-| [Último Fio](fio.png) | [Balsa de Cabo](balsa.png) | [Dois Pratos](pratos.png) |
+| [Último Fio](fio.png) | — | — |
 | [Pipa de Laje](pipa.png) | [Rastro de Prata](rastro.png) | [Pisca no Mato](pisca.png) |
 
 O fundo contínuo, o contorno em degraus e os poucos pontos de destaque permitem reconhecer a cena em miniatura. A fonte é registrada por @font-face no CSS. A ampliação do desenho usa renderização pixelada. O controle fino das cores fica em [style.css](../style.css), nos campos de palco de [catalogo.js](../catalogo.js) e nas funções de desenho.
@@ -25,6 +25,7 @@ O fundo contínuo, o contorno em degraus e os poucos pontos de destaque permitem
 
 ## Pracinha
 
-[Peteca](peteca.svg) · [Gato na Sombra](sombra.svg) · [Pescaria de Lata](pescaria.svg) · [Pião](piao.svg)
+[Peteca](peteca.svg) · [Gato na Sombra](sombra.svg)
 
-Essas quatro miniaturas são SVGs na mesma grade de 96 × 96 usada nas partidas, com retângulos inteiros e crispEdges. Execute `node scripts/gerar-miniaturas.mjs` na raiz para atualizar os arquivos a partir de pracinha.js. Assim, a seleção apresenta os próprios sprites jogáveis.
+Essas duas miniaturas são SVGs na mesma grade de 96 × 96 usada nas partidas, com retângulos inteiros e crispEdges. Execute `node scripts/gerar-miniaturas.mjs` na raiz para atualizar os arquivos a partir de pracinha.js. Assim, a seleção apresenta os próprios sprites jogáveis.
+

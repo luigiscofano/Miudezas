@@ -24,9 +24,9 @@ function corrigir(jogo, distancia) {
   if (Math.abs(distancia) > 0.6) jogo.press(distancia < 0 ? 'left' : 'right');
 }
 
-test('Os 16 jogos têm IDs únicos, três níveis e miniatura disponível', () => {
-  assert.equal(catalogo.length, 16);
-  assert.equal(new Set(catalogo.map(j=>j.id)).size, 16);
+test('Os 12 jogos têm IDs únicos, três níveis e miniatura disponível', () => {
+  assert.equal(catalogo.length, 12);
+  assert.equal(new Set(catalogo.map(j=>j.id)).size, 12);
   for (const j of catalogo) {
     assert.equal(j.niveis.length, 3);
     assert.ok(existsSync(new URL('../dist/arte/' + (j.imagem || j.id+'.png'), import.meta.url)));
@@ -48,8 +48,7 @@ for (const nivel of [1,2,3]) {
           } else if (id === 'sombra') {
             const faixa = pixels.find(p=>p.cor==='#6b587e' && p.h===96);
             corrigir(r.jogo, faixa.x+faixa.w/2-meio(pixels,'#efa32e'));
-          } else if (id === 'piao') {
-            corrigir(r.jogo, 48-meio(pixels,'#cf902b'));
+
           } else {
             // A tentativa é livre e o ímã retorna sozinho, mesmo após erro.
             r.jogo.press('down'); r.jogo.release('down');
@@ -63,12 +62,11 @@ for (const nivel of [1,2,3]) {
       }
     });
   }
-  test(`Sem ação: peteca, gato e pião perdem; pescaria aguarda · nível ${nivel}`, () => {
+  test(`Sem ação: peteca e gato perdem · nível ${nivel}`, () => {
     for (const id of Object.keys(pracinha)) {
       const r = rodada(id, nivel);
       for(let i=0;i<3000;i++) r.jogo.update(0.04);
-      if(id==='pescaria') { assert.equal(r.resultados.length,0); assert.match(r.jogo.hud(),/0\/3/); }
-      else { assert.equal(r.resultados.length,1); assert.equal(r.resultados[0][0],false); }
+      { assert.equal(r.resultados.length,1); assert.equal(r.resultados[0][0],false); }
     }
   });
 }
@@ -87,15 +85,9 @@ test('Desenhar não avança a partida; cancelar entrada libera movimentos', () =
   }
 });
 
-test('A peteca requer novas rebatidas e o ímã não repete ao segurar', () => {
+test('A peteca requer novas rebatidas', () => {
   const p=rodada('peteca',1);
   p.jogo.press('up');
   for(let i=0;i<150;i++)p.jogo.update(0.02);
   assert.equal(p.resultados[0][0],false);
-  const f=rodada('pescaria',1);
-  f.jogo.press('down');
-  for(let i=0;i<200;i++)f.jogo.update(0.02);
-  const cena=f.desenhar();
-  assert.match(f.jogo.hud(),/↓ para pescar/);
-  assert.equal(cena.find(p=>p.cor==='#383331').h,37);
 });
