@@ -44,3 +44,7 @@ Rastro aceita traçado iniciado no caracol, com avanço pelas casas vizinhas. Gu
 Consulte [dados](../docs/dados/README.md) e [testes](../tests/README.md). Simular ponteiros no navegador não demonstra compatibilidade com todos os aparelhos físicos.
 
 A arte do caranguejo em `quintal.js` é desenhada na grade nativa, sem arquivos externos ou filtros. Consulte [a documentação do quintal](../docs/jogos/quintal/README.md#arte-do-caranguejo).
+
+### Arte aprovada em `quintal.js`
+
+Goteira, Último Fio e Pipa de Laje: detalhes discretos no cenário, sem alterar a jogabilidade. A arte aprovada de Maré já estava incorporada. A resolução lógica permanece 96 × 96, sem suavização ou nova dependência.

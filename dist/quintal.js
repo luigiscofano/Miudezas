@@ -105,9 +105,21 @@ function goteira(level, api, options = {}) {
         line(ctx, ink, x + 2, y - 4, x - 1, y + 1);
         rect(ctx, wall, x - 1, y + 1, 2, 4);
       });
+      // Detalhes discretos ficam atrás das gotas, sem alterar sua leitura.
+      rect(ctx, '#253650', 6, 34, 23, 22);
+      rect(ctx, '#4b6388', 7, 34, 21, 1);
+      rect(ctx, '#4b6388', 6, 55, 24, 2);
+      rect(ctx, '#263653', 64, 39, 16, 1);
+      rect(ctx, '#263653', 70, 40, 1, 4);
+      rect(ctx, '#263653', 72, 58, 16, 1);
+      rect(ctx, '#263653', 80, 59, 1, 4);
       const pane = '#304565';
       for (let r = 0; r < 2; r++) for (let c = 0; c < 2; c++) rect(ctx, pane, 9 + 8 * c, 37 + 8 * r, 6, 6);
+      line(ctx, '#58728e', 11, 39, 12, 41);
+      line(ctx, '#58728e', 21, 47, 22, 49);
       rect(ctx, wall, 0, 88, 96, 3);
+      rect(ctx, '#243555', 0, 91, 96, 1);
+      for (let fx = 16; fx < 96; fx += 20) rect(ctx, '#243555', fx, 92, 1, 4);
       if (spilled) rect(ctx, '#287f9b', 16, 87, Math.min(80, Math.ceil(80 * spilled / floodLimit)), 2);
       rect(ctx, wall, 4, 86, 10, 3);
       for (let i = 0; i < 3; i++) rect(ctx, ink, 5 + 3 * i, 87, 2, 1);
@@ -123,6 +135,9 @@ function goteira(level, api, options = {}) {
       rect(ctx, gold, x - 6, by, 12, 2);
       rect(ctx, gold, x - 5, by + 2, 10, 4);
       rect(ctx, gold, x - 4, by + 6, 8, 3);
+      rect(ctx, '#f5cc73', x - 5, by, 10, 1);
+      rect(ctx, '#f5cc73', x - 4, by + 2, 1, 4);
+      rect(ctx, '#a67c36', x + 3, by + 3, 1, 5);
       rect(ctx, ink, x - 4, by, 8, 1);
       line(ctx, gold, x + 5, by + 1, x + 8, by + 5);
       line(ctx, gold, x + 8, by + 5, x + 5, by + 7);
@@ -321,9 +336,19 @@ function fio(level, api, options = {}) {
     draw(ctx) {
       const ink = '#352d32', peach = '#efa17f', roof = '#aa5748';
       rect(ctx, peach, 0, 0, 96, 96);
+      // Nuvens e telhados usam a mesma escala de um pixel do jogo.
+      rect(ctx, '#f8be92', 57, 10, 17, 2);
+      rect(ctx, '#f8be92', 62, 8, 7, 2);
+      rect(ctx, '#f8be92', 9, 16, 13, 2);
+      rect(ctx, '#f8be92', 12, 14, 5, 2);
+      rect(ctx, '#d98a71', 18, 89, 13, 7);
+      rect(ctx, '#d98a71', 43, 88, 11, 8);
+      rect(ctx, '#d98a71', 75, 85, 8, 11);
       rect(ctx, roof, 0, 92, 17, 4); rect(ctx, roof, 4, 89, 11, 3);
       rect(ctx, roof, 26, 94, 15, 2); rect(ctx, roof, 57, 92, 16, 4);
       rect(ctx, roof, 78, 90, 18, 6); rect(ctx, roof, 85, 86, 3, 6);
+      for (const [rx, ry] of [[5,92],[10,92],[29,95],[59,94],[64,94],[80,92],[86,92]]) rect(ctx, '#c77a59', rx, ry, 3, 1);
+      rect(ctx, '#8e493f', 89, 93, 3, 3);
       wires.forEach((height, r) => {
         for (let i = 0; i < 96; i++) {
           const sag = r === row && Math.abs(i - birdX(col)) < 6 ? 1 : 0;
@@ -405,19 +430,33 @@ function pipa(level, api, options = {}) {
         rect(ctx, white, cx, cy, 11, 2); rect(ctx, white, cx + 4, cy - 2, 4, 2);
       }
       for(let hx=0;hx<96;hx++) {const h=65+Math.round(7*Math.sin(hx*.08)+3*Math.sin(hx*.19));rect(ctx,'#64b8b0',hx,h,1,96-h);}
+      // Uma segunda camada de morros dá profundidade sem suavizar os pixels.
+      for (let hx = 0; hx < 96; hx++) {
+        const hy = 77 + Math.round(5 * Math.sin(hx * .11 + 1));
+        rect(ctx, '#55a79f', hx, hy, 1, 96 - hy);
+      }
       let bx = -Math.floor(scroll * 0.65) % 100 - 25;
       for (let i = 0; bx < 96; i++) {
         const [top, width] = skyline[i % skyline.length];
-        rect(ctx, white, bx, top + 2, width, 96 - top);
+        const fachada = ['#fff2c8', '#e6d7ae', '#e6bea0'][i % 3];
+        rect(ctx, fachada, bx, top + 2, width, 96 - top);
+        rect(ctx, '#d29a74', bx, top + 4, width, 1);
+        rect(ctx, '#d29a74', bx, top + 5, 1, 96 - top - 5);
         rect(ctx, brick, bx - 1, top, width + 2, 3);
         for(let wx=bx+3;wx<bx+width-2;wx+=5){rect(ctx,'#a9b7a0',wx,top+6,3,8);rect(ctx,white,wx+1,top+6,1,8);rect(ctx,brick,wx-1,top+14,5,1);}
         for(let tx=bx;tx<bx+width;tx+=3)rect(ctx,'#ce8060',tx,top,2,1);
+        rect(ctx, '#91634e', bx + width - 5, 91, 3, 5);
+        rect(ctx, '#d29a74', bx + width - 6, 90, 5, 1);
         bx += width + 2;
       }
       for (const tower of towers) {
         const ax = Math.round(tower.x - scroll);
         if (ax < -14 || ax > 108) continue;
         rect(ctx, brick, ax - 8, 77, 18, 19);
+        rect(ctx, '#cc8060', ax - 8, 77, 18, 1);
+        rect(ctx, '#99503f', ax - 8, 83, 18, 1);
+        rect(ctx, '#99503f', ax - 3, 78, 1, 5);
+        rect(ctx, '#99503f', ax + 3, 84, 1, 5);
         rect(ctx, ink, ax, tower.top, 1, 77 - tower.top);
         rect(ctx, ink, ax - 6, tower.top, 13, 2);
         for (let i = -1; i <= 1; i++) rect(ctx, ink, ax + i * 4, tower.top - 2, 1, 4);
