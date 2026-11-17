@@ -137,13 +137,16 @@ const breadOutline = [
 
 // Tempos em segundos: preparo, janela no ponto e aviso tostado antes de queimar.
 const ritmosChapa = [
-  {preparo: 4.6, ponto: 2.8, tostado: 1.2, meta: 5},
-  {preparo: 3.5, ponto: 1.9, tostado: 0.9, meta: 7},
-  {preparo: 2.6, ponto: 1.3, tostado: 0.7, meta: 9}
+  {preparo: 4.6, ponto: 2.8, tostado: 1.2},
+  {preparo: 3.5, ponto: 1.9, tostado: 0.9},
+  {preparo: 2.6, ponto: 1.3, tostado: 0.7}
 ];
 
-function pao(level, api) {
+function pao(level, api, options = {}) {
   const round = roundEnd(api), ritmo = ritmosChapa[level - 1];
+  const infinito = options.mode === 'endless';
+  const metas = {ovo: level + 2, pao: level + 2};
+  const entregues = {ovo: 0, pao: 0};
   // A identidade e o relógio pertencem ao alimento, nunca ao lado da chapa.
   const alimentos = [
     {tipo: 'ovo', idade: 0, reposicao: 0},
@@ -187,9 +190,10 @@ function pao(level, api) {
     if (ponto === 0) { informar('Ainda cru: espere dourar.'); return; }
     if (ponto === 3) return;
     servidos++;
+    entregues[alimento.tipo]++;
     informar(ponto === 1 ? 'No ponto!' : 'Tostado, a tempo!');
     api.tone?.(540, 0.09);
-    if (servidos >= ritmo.meta) {
+    if (!infinito && entregues.ovo >= metas.ovo && entregues.pao >= metas.pao) {
       round.finish(true, servidos + ' alimentos servidos antes de queimar!');
       return;
     }
@@ -197,14 +201,15 @@ function pao(level, api) {
   }
   function avancar(dt) {
     if (troca > 0) { troca = Math.max(0, troca - dt); return; }
-    restante = Math.max(0, restante - dt);
+    if (!infinito) restante = Math.max(0, restante - dt);
     avisoTempo = Math.max(0, avisoTempo - dt);
     for (const alimento of alimentos) {
       if (alimento.reposicao > 0) {
         alimento.reposicao = Math.max(0, alimento.reposicao - dt);
         if (alimento.reposicao === 0) repor(alimento);
       } else {
-        alimento.idade += dt;
+        // O desafio cresce devagar e tem teto; a janela mínima continua legível.
+        alimento.idade += dt * (infinito ? Math.min(1.25, 1 + servidos * 0.003) : 1);
         if (estado(alimento) === 3) {
           // Marca o queimado antes de contar: uma atualização não cobra de novo.
           alimento.reposicao = 0.85;
@@ -213,7 +218,7 @@ function pao(level, api) {
         }
       }
     }
-    if (restante === 0) round.finish(false, 'O minuto acabou. Sirva ' + ritmo.meta + ' alimentos para vencer.');
+    if (!infinito && restante === 0) round.finish(false, 'O minuto acabou. Complete as metas de ovos e pães.');
   }
   function update(dt) {
     if (round.done || !Number.isFinite(dt) || dt <= 0) return;
@@ -221,7 +226,7 @@ function pao(level, api) {
     while (dt > 0 && !round.done) { const passo = Math.min(dt, 0.05); avancar(passo); dt -= passo; }
   }
   function snapshot() {
-    return {utensilio, servidos, erros, restantes: 3 - erros, troca: troca > 0, fim: round.done,
+    return {utensilio, servidos, entregues: {...entregues}, metas: infinito ? null : {...metas}, erros, restantes: 3 - erros, troca: troca > 0, fim: round.done,
       alimentos: lados.map(i => ({tipo: alimentos[i].tipo, estado: estado(alimentos[i]), reposicao: alimentos[i].reposicao > 0}))};
   }
   function draw(ctx) {
@@ -265,6 +270,7 @@ function pao(level, api) {
   }
   return {
     draw, update, snapshot,
+    score() { return servidos; },
     selectTool(valor) { if (!round.done && ['espatula', 'pinca'].includes(valor)) utensilio = valor; },
     press(dir) { if (dir === 'left' || dir === 'right') servir(dir === 'left' ? 0 : 1); },
     release() {},
@@ -273,12 +279,86 @@ function pao(level, api) {
       if (y >= 77 && y <= 96) this.selectTool(x < 48 ? 'espatula' : 'pinca');
       else if (y >= 13 && y <= 75) servir(x < 48 ? 0 : 1);
     },
-    hud() { return (troca > 0 ? 'Troca de lados! · ' : avisoTempo > 0 ? aviso + ' · ' : '') + servidos + '/' + ritmo.meta + ' · ' + (3 - erros) + ' erros restantes · ' + Math.ceil(restante) + 's'; }
+    hud() { return (troca > 0 ? 'Troca de lados! · ' : avisoTempo > 0 ? aviso + ' · ' : '') + (infinito ? servidos + ' alimentos' : 'Ovos ' + entregues.ovo + '/' + metas.ovo + ' · Pães ' + entregues.pao + '/' + metas.pao) + ' · ' + (3 - erros) + ' erros restantes' + (infinito ? '' : ' · ' + Math.ceil(restante) + 's'); }
   };
 }
 
-function rastro(level, api) {
-  const maze = gardens[level - 1], side = maze.length, tiles = maze.join('');
+const gardens = [
+  ['....P', 'L.L.#', '.#L..', '....#', 'S....'],
+  ['..#..P', 'L...#.', '.##L..', '...#..', '.#..L.', 'S....#'],
+  ['..#...P', 'L...#..', '.#.#L..', '...#...', '.#...#.', '...#L..', 'S....#.']
+];
+const directions = {left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1]};
+const leaf = ['...gg', '..ggg', '.ggig', 'ggigg', 'gigg.', 'gg...'];
+const rock = ['..rr..', '.rrrr.', 'rrrrrr', '.rrrr.'];
+const snail = [
+  '..sss....e.e', '.saaas...e.e', 'saassas.eeee', 'sas.saseeeee', 'saassaseeee.',
+  '.saaassseee.', '..esssseee..', 'eeeeeeeee...'
+];
+
+// A prova é uma trilha simples que passa por todas as folhas antes do vaso.
+// Assim ela respeita inclusive a restrição de não cruzar o próprio rastro.
+export function validarRastro(mapa, solucao) {
+  const lado = mapa.length, casas = mapa.join('');
+  if (!lado || mapa.some(linha => linha.length !== lado) || [...casas].filter(c => c === 'S').length !== 1 || [...casas].filter(c => c === 'P').length !== 1 || [...casas].filter(c => c === 'L').length !== 3) return false;
+  let posicao = casas.indexOf('S'), folhas = 0;
+  const visitadas = new Set([posicao]);
+  for (const [indice, comando] of solucao.entries()) {
+    const vetor = directions[comando];
+    if (!vetor) return false;
+    const x = posicao % lado + vetor[0], y = Math.floor(posicao / lado) + vetor[1];
+    if (x < 0 || y < 0 || x >= lado || y >= lado) return false;
+    posicao = y * lado + x;
+    if (casas[posicao] === '#' || visitadas.has(posicao)) return false;
+    visitadas.add(posicao);
+    if (casas[posicao] === 'L') folhas++;
+    if (casas[posicao] === 'P' && (folhas !== 3 || indice !== solucao.length - 1)) return false;
+  }
+  return casas[posicao] === 'P' && folhas === 3;
+}
+
+export function gerarRastro(seed = 1) {
+  let estado = Number(seed) >>> 0;
+  const aleatorio = () => {
+    estado = (Math.imul(1664525, estado) + 1013904223) >>> 0;
+    return estado / 4294967296;
+  };
+  const lado = 6, nomes = Object.keys(directions);
+  let trilha = [];
+  // Tentativas e tamanho limitados evitam bloquear a interface em sementes ruins.
+  for (let tentativa = 0; tentativa < 32; tentativa++) {
+    const candidata = [Math.floor(aleatorio() * lado * lado)], usadas = new Set(candidata);
+    const tamanho = 17 + Math.floor(aleatorio() * 8);
+    while (candidata.length < tamanho) {
+      const atual = candidata.at(-1);
+      const vizinhas = nomes.map(nome => {
+        const [dx, dy] = directions[nome], x = atual % lado + dx, y = Math.floor(atual / lado) + dy;
+        return x >= 0 && y >= 0 && x < lado && y < lado ? y * lado + x : -1;
+      }).filter(casa => casa >= 0 && !usadas.has(casa));
+      if (!vizinhas.length) break;
+      const proxima = vizinhas[Math.floor(aleatorio() * vizinhas.length)];
+      candidata.push(proxima); usadas.add(proxima);
+    }
+    if (candidata.length === tamanho) { trilha = candidata; break; }
+  }
+  // Caminho serpenteado conhecido: saída determinística sem busca ilimitada.
+  if (!trilha.length) trilha = [0,1,2,3,4,5,11,10,9,8,7,6,12,13,14,15,16,17];
+  const protegidas = new Set(trilha);
+  const casas = Array.from({length: lado * lado}, (_, i) => !protegidas.has(i) && aleatorio() < 0.65 ? '#' : '.');
+  casas[trilha[0]] = 'S'; casas[trilha.at(-1)] = 'P';
+  for (const fracao of [0.25, 0.5, 0.75]) casas[trilha[Math.floor((trilha.length - 1) * fracao)]] = 'L';
+  const mapa = Array.from({length: lado}, (_, y) => casas.slice(y * lado, (y + 1) * lado).join(''));
+  const solucao = trilha.slice(1).map((casa, i) => {
+    const dx = casa % lado - trilha[i] % lado, dy = Math.floor(casa / lado) - Math.floor(trilha[i] / lado);
+    return nomes.find(nome => directions[nome][0] === dx && directions[nome][1] === dy);
+  });
+  if (!validarRastro(mapa, solucao)) throw new Error('A fase gerada não passou pela validação do percurso.');
+  return {mapa, solucao};
+}
+
+function rastro(level, api, options = {}) {
+  const gerado = options.mode === 'generated' ? gerarRastro(options.seed) : null;
+  const maze = gerado ? gerado.mapa : gardens[level - 1], side = maze.length, tiles = maze.join('');
   const round = roundEnd(api);
   const path = [tiles.indexOf('S')], walked = new Set(path), leaves = new Set();
   let held = '', repeatIn = 0;
@@ -341,6 +421,7 @@ function rastro(level, api) {
   }
   return {
     draw, update,
+    snapshot() { return {mapa: [...maze], caminho: [...path], folhas: leaves.size, solucao: gerado ? [...gerado.solucao] : null, fim: round.done}; },
     press(dir) { if (directions[dir]) { step(dir); held = dir; repeatIn = 0.37; } },
     release(dir) { if (dir === held) held = ''; },
     hud() { return leaves.size + '/3 folhas · ' + (leaves.size === 3 ? 'Entre no vaso' : 'Recolha as folhas'); }

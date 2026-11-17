@@ -155,8 +155,57 @@ const terrenos = [
 ];
 const desenhoBolinha = ['..bbb..','.bbwwb.','bbbwwbb','bbwwbbb','bwwbbbb','.bbbbb.','..bbb..'];
 
-function gude(level, api) {
-  const terreno = terrenos[level-1];
+// Gerador determinístico: o mesmo código de semente reconstrói a tentativa.
+function aleatorioComSemente(seed) {
+  let valor = Number(seed) >>> 0;
+  return () => { valor = (Math.imul(valor,1664525)+1013904223) >>> 0; return valor/4294967296; };
+}
+
+// O certificado usa os controles públicos e a física real, não apenas conectividade.
+export function validarTerrenoGude(terreno) {
+  if (!terreno.solucao || terreno.solucao.length > 3) return false;
+  for (const dt of [1/30,1/60,1/120]) {
+    for (let combinacao=0; combinacao<8; combinacao++) {
+      let venceu=false;
+      const jogo=gude(1,{tone(){},finish(ok){venceu=ok;}},{terrenoValidado:terreno});
+      for (const [indice,passo] of terreno.solucao.entries()) {
+        jogo.press(passo.direcao);
+        // Tolerância de 15 ms por gesto; evita certificados sem margem de execução.
+        jogo.update(passo.duracao + ((combinacao>>indice)&1 ? .015 : -.015));
+        jogo.release(passo.direcao);
+        for(let quadro=0;quadro<600 && jogo.moving;quadro++) jogo.update(dt);
+      }
+      if(!venceu) return false;
+    }
+  }
+  return true;
+}
+
+export function criarTerrenoGude(seed=1) {
+  const random=aleatorioComSemente(seed);
+  const inteiro=(a,b)=>a+Math.floor(random()*(b-a+1));
+  function candidato(virada,altura,final,pedras) {
+    return {alvo:[final,altura],pedras,semente:Number(seed)>>>0,solucao:[
+      {direcao:'right',duracao:(virada-16-5)/68},
+      {direcao:'up',duracao:(80-altura-5)/68},
+      {direcao:'right',duracao:(final-virada-5)/68}
+    ]};
+  }
+  for(let tentativa=0;tentativa<32;tentativa++) {
+    const virada=inteiro(34,49),altura=inteiro(27,40),final=inteiro(75,83);
+    // Uma pedra entre a origem e o buraco impede que todos os mapas sejam um tiro direto.
+    const pedras=[[virada+9,altura+13,inteiro(8,12),inteiro(9,14)],
+      [inteiro(8,17),inteiro(28,47),inteiro(7,10),inteiro(7,11)]];
+    const terreno=candidato(virada,altura,final,pedras);
+    if(validarTerrenoGude(terreno)) return terreno;
+  }
+  const seguro=candidato(40,25,80,[[52,41,10,12],[12,35,8,9]]);
+  if(!validarTerrenoGude(seguro)) throw new Error('O percurso de segurança não passou pela física do jogo.');
+  return seguro;
+}
+
+function gude(level, api, options={}) {
+  const terreno = options.terrenoValidado || (options.mode==='generated' ? criarTerrenoGude(options.seed) : terrenos[level-1]);
   const inicio = [16,80], alvo = terreno.alvo;
   let x = inicio[0], y = inicio[1], jogadas = 0, acabou = false;
   let tecla = null, carga = 0, arrasto = null, tiro = null;
@@ -187,6 +236,8 @@ function gude(level, api) {
     if (bloqueia(x,y)) { x=ox; y=oy; }
   }
   return {
+    get moving(){return Boolean(tiro);},
+    snapshot(){return {x,y,jogadas,acabou,emMovimento:Boolean(tiro),terreno:structuredClone(terreno)};},
     press(dir) {
       if (!direcoes[dir] || acabou || tiro || arrasto || tecla) return;
       tecla = dir; carga = 0;
@@ -261,9 +312,14 @@ function gude(level, api) {
   };
 }
 
-function pisca(level,api) {
+const corpoVaga = ['....kk....','..wwggww..','.wwggggww.','llggggggkk','llggggggkk','..kk..kk..'];
+
+function pisca(level,api,options={}) {
+  const infinito=options.mode==='endless';
+  let concluidas=0;
   const meta=level+2, duracao=0.58-0.055*level;
-  const sorteio=()=>Math.random()<0.5?'left':'right';
+  const random=options.seed===undefined?Math.random:aleatorioComSemente(options.seed);
+  const sorteio=()=>random()<0.5?'left':'right';
   const sequencia=[sorteio()];
   let estado='preparo', espera=0.75, mostrado=0, resposta=0, luzAcesa=null, pulso=0, tempo=0;
   function nota(dir,segundos){api.tone(dir==='left'?392:587,segundos);}
@@ -280,18 +336,21 @@ function pisca(level,api) {
     }
     nota(dir,0.12); resposta++;
     if(resposta===sequencia.length){
-      estado=sequencia.length===meta?'ganhou':'ampliar';
+      concluidas=sequencia.length;
+      estado=!infinito&&sequencia.length===meta?'ganhou':'ampliar';
       espera=0.52;
     }
   }
   return {
+    score(){return concluidas;},
+    snapshot(){return {estado,sequencia:[...sequencia],concluidas};},
     press:responder,release:semAcao,
     point(x,y,phase){if(phase==='down') responder(x<48?'left':'right');},
     hud() {
       if(estado==='resposta') return 'Sua vez · '+resposta+'/'+sequencia.length;
-      if(estado==='ampliar'||estado==='ganhou')return 'Acertou! · '+sequencia.length+'/'+meta;
+      if(estado==='ampliar'||estado==='ganhou')return 'Acertou! · '+sequencia.length+(infinito?' piscadas':'/'+meta);
       if(estado==='perdeu')return 'Outra ordem…';
-      return 'Observe · Sequência '+sequencia.length+'/'+meta;
+      return 'Observe · Sequência '+sequencia.length+(infinito?'':'/'+meta);
     },
     update(dt){
       if(estado==='fim')return;
@@ -303,7 +362,7 @@ function pisca(level,api) {
       if(estado==='ganhou'||estado==='perdeu'){
         const ok=estado==='ganhou';
         estado='fim';
-        api.finish(ok,ok?'Repetiu as '+meta+' piscadas!':'Chegou à sequência de '+sequencia.length+'.');return;
+        api.finish(ok,ok?'Repetiu as '+meta+' piscadas!':'Completou '+concluidas+' piscadas na maior sequência.');return;
       }
       if(estado==='ampliar'){
         sequencia.push(sorteio()); mostrado=0; resposta=0; estado='preparo'; espera=0.48; return;
