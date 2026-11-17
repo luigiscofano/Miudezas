@@ -9,3 +9,5 @@ Os testes não substituem a inspeção visual nem o teste de toque em aparelhos 
 
 [Manual principal](../README.md)
 
+
+- capa.test.mjs verifica dimensões do PNG, preservação da proporção e título acessível sem sobreposição.

@@ -2,7 +2,7 @@
 
 **Doze jogos de bairro em uma janelinha.** Um balde quase cheio, uma mariposa no fio de cima, duas metades de pão que douram em tempos diferentes. Em Miudezas, cada uma dessas cenas vira uma partida que se aprende olhando e se joga com poucas teclas ou um gesto.
 
-<p align="center"><img src="dist/arte/bairro.png" alt="Tela inicial de Miudezas, com casas, pipa e bem-te-vi acima dos botões Jogo avulso e Volta no Bairro" width="440"></p>
+<p align="center"><img src="dist/artes/capas/miudezas-tijuca.png" alt="Capa aprovada de Miudezas: Tijuca, bem-te-vi, pipa e Ritual do Vento em pixel art" width="440"></p>
 
 | Coleção | Desafios | Tela de jogo | Plataforma |
 |---|---|---|---|
@@ -54,13 +54,13 @@ Para experimentar no celular, conecte os dois aparelhos à mesma rede local, exe
 
 ## Identidade visual
 
-O nome **Miudezas** reúne acontecimentos pequenos o bastante para caber numa janela. A capa os situa no mesmo bairro. O bem-te-vi pousa no fio, a pipa aparece sobre os telhados e as fachadas sugerem os lugares que o jogador vai visitar. A janela de quatro vidraças funciona como ícone do conjunto, inclusive na aba do navegador.
+O nome **Miudezas** reúne acontecimentos pequenos o bastante para caber numa janela. A capa os situa no mesmo bairro. O bem-te-vi pousa no telhado com uma nota musical; a linha da pipa parte de trás de uma casa. As fachadas, árvores apoiadas no chão e montanhas evocam a Tijuca. Um Cristo discreto e uma interpretação do Ritual do Vento completam a paisagem. A janela de quatro vidraças funciona como ícone do conjunto, inclusive na aba do navegador.
 
 | Elemento | Aplicação e critério |
 |---|---|
 | Moldura | Contorno escuro, barra clara e sombra deslocada lembram uma janela de computador. A moldura separa a interface persistente das cores próprias de cada cena. |
 | Tipografia | **Miudezas Pixel**, fonte local com acentos, identifica títulos, níveis e comandos. Verdana, Arial e a fonte sem serifa do sistema sustentam regras e textos corridos. |
-| Escala | A cena ativa é desenhada em 96 × 96 e ampliada com pixels aparentes. As doze miniaturas originais têm 128 × 120; as duas da Pracinha usam SVG com grade de 96 × 96, a paisagem da capa 192 × 88 e o ícone 16 × 16. |
+| Escala | A cena ativa é desenhada em 96 × 96 e ampliada com pixels aparentes. As doze miniaturas originais têm 128 × 120; as duas da Pracinha usam SVG com grade de 96 × 96, a capa aprovada 1672 × 941 e o ícone 16 × 16. |
 | Silhueta | Asa curta e peito amarelo identificam o pássaro. Um retângulo de água sob a rachadura avisa onde a gota vai cair. Cada detalhe precisa continuar legível no tamanho da janela. |
 | Pequenas irregularidades | A alça do balde cai de lado, a antena do rádio dobra e as fachadas variam um pixel. A irregularidade pertence ao objeto. As áreas de toque e as regras continuam previsíveis. |
 | Sinais de jogo | O fio treme antes da rajada, o pão muda de cor e solta vapor, a luz do rádio indica sintonia. Sons curtos confirmam ações, enquanto o indicador escrito conserva a informação principal. |
@@ -378,3 +378,9 @@ O teste rápido de sintaxe pode ser feito com Node recente, por exemplo `node --
 
 **Créditos.** © 2026 Luigi Scofano de Araujo. [Texto da licença](LICENSE)
 
+
+## Artes do jogo e capa aprovada
+
+A [pasta de artes](dist/artes/README.md) reúne a documentação da nova capa e aponta para os demais recursos visuais. A [capa Tijuca](dist/artes/capas/miudezas-tijuca.png) é o arquivo aprovado, preservado sem recortes: título com iluminação em blocos de pixels, bem-te-vi com nota musical, pipa sobre os telhados e referência escultórica ao Ritual do Vento. A referência é uma interpretação artística, não uma reprodução documental do monumento.
+
+A aplicação exibe a composição inteira com `object-fit: contain`, sem esticar a imagem nem sobrepor outro título. O título textual continua disponível para tecnologias assistivas. A alteração não modifica catálogo, regras, controles ou progresso salvo. A antiga paisagem `dist/arte/bairro.png` permanece apenas como recurso legado, sem uso na abertura.

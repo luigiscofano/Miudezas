@@ -67,7 +67,8 @@ function mudar(nome){
 }
 function inicio(){
   mudar('inicio');partida=null;volta=null;
-  area.innerHTML='<div class="hero"><img src="./arte/bairro.png" alt="Casas de bairro, um bem-te-vi no fio e uma pipa sobre os telhados"><div class="brand"><h1>Miudezas</h1><p>'+totalJogos+' jogos de bairro</p></div></div>'+
+  // A capa aprovada já contém o título; o cabeçalho acessível evita texto sobreposto.
+  area.innerHTML='<div class="hero"><img src="./artes/capas/miudezas-tijuca.png" width="1672" height="941" alt="Miudezas: bairro inspirado na Tijuca, com bem-te-vi, pipa, Cristo ao longe e referência ao Ritual do Vento"><h1 class="sr-only">Miudezas — '+totalJogos+' jogos de bairro</h1></div>'+
     '<div class="home-options">'+
     btn('avulso','<span class="mode-icon">'+icone('avulso')+'</span><span><b>Jogo avulso</b><small>Escolha uma das '+totalJogos+' janelinhas.</small></span><span class="chev" aria-hidden="true">›</span>','mode primary')+
     btn('circuito','<span class="mode-icon">'+icone('mapa')+'</span><span><b>Volta no Bairro</b><small>Jogue os '+totalJogos+' em sequência.</small></span><span class="chev" aria-hidden="true">›</span>','mode')+'</div>';

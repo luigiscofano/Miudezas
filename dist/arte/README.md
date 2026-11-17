@@ -4,7 +4,7 @@ A capa estabelece o bairro; as miniaturas apresentam o recorte de cada parada. O
 
 | Arquivo | Formato | Uso |
 |---|---|---|
-| [bairro.png](bairro.png) | PNG, 192 × 88 | Paisagem de capa com fachadas, pipa e bem-te-vi. |
+| [bairro.png](bairro.png) | PNG, 192 × 88 | Paisagem legada; não é mais usada na abertura. |
 | [janela.png](janela.png) | PNG, 16 × 16 | Favicon e símbolo da barra de título. |
 | [miudezas.ttf](miudezas.ttf) | TrueType | Títulos, níveis, controles e indicadores pixelados, com caracteres acentuados em português. |
 
@@ -29,3 +29,9 @@ O fundo contínuo, o contorno em degraus e os poucos pontos de destaque permitem
 
 Essas duas miniaturas são SVGs na mesma grade de 96 × 96 usada nas partidas, com retângulos inteiros e crispEdges. Execute `node scripts/gerar-miniaturas.mjs` na raiz para atualizar os arquivos a partir de pracinha.js. Assim, a seleção apresenta os próprios sprites jogáveis.
 
+
+## Nova capa
+
+![Capa aprovada](../artes/capas/miudezas-tijuca.png)
+
+A abertura usa a [capa Tijuca](../artes/capas/README.md). Este diretório mantém os recursos das partidas e o cenário anterior como legado.
