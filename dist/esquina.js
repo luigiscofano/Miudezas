@@ -317,43 +317,99 @@ export function validarRastro(mapa, solucao) {
   return casas[posicao] === 'P' && folhas === 3;
 }
 
+function vizinhosRastro(posicao, lado) {
+  return Object.entries(directions).flatMap(([direcao, [dx, dy]]) => {
+    const x = posicao % lado + dx, y = Math.floor(posicao / lado) + dy;
+    return x >= 0 && y >= 0 && x < lado && y < lado ? [{posicao: y * lado + x, direcao}] : [];
+  });
+}
+
+// Busca caminhos simples: desfazer passos só remove um sufixo e nunca permite
+// manter folhas de um trecho desfeito. Portanto toda vitória tem esta forma.
+export function buscarAtalhoRastro(mapa, limite = 21, orcamento = 30000) {
+  const lado = mapa.length, casas = mapa.join(''), inicio = casas.indexOf('S'), fim = casas.indexOf('P');
+  const folhas = [...casas].flatMap((c, i) => c === 'L' ? [i] : []);
+  const adjacencias = Array.from(casas, (_, i) => vizinhosRastro(i, lado).filter(v => casas[v.posicao] !== '#'));
+  const distancia = (a, b) => Math.abs(a % lado - b % lado) + Math.abs(Math.floor(a / lado) - Math.floor(b / lado));
+  function minimoRestante(posicao, faltam) {
+    if (!faltam.length) return distancia(posicao, fim);
+    return Math.min(...faltam.map(alvo => distancia(posicao, alvo) + minimoRestante(alvo, faltam.filter(i => i !== alvo))));
+  }
+  const usadas = new Set([inicio]);
+  let nos = 0, esgotado = false;
+  function visitar(posicao, faltam, passos) {
+    if (++nos > orcamento) { esgotado = true; return false; }
+    if (passos + minimoRestante(posicao, faltam) > limite) return false;
+    if (posicao === fim) return !faltam.length;
+    for (const vizinho of adjacencias[posicao]) {
+      const proxima = vizinho.posicao;
+      if (usadas.has(proxima) || (proxima === fim && faltam.length)) continue;
+      usadas.add(proxima);
+      const achou = visitar(proxima, faltam.filter(i => i !== proxima), passos + 1);
+      usadas.delete(proxima);
+      if (achou) return true;
+      if (esgotado) return false;
+    }
+    return false;
+  }
+  const encontrado = visitar(inicio, folhas, 0);
+  return {encontrado, conclusivo: !esgotado, nos};
+}
+
+function reservaRastro(seed) {
+  const base = ['#....L.', '...S.#.', '.......', '..L####', '..#####', '#....#P', '#L.#...'];
+  const comandos = ['left','left','up','right','right','right','right','right','down','down','left','left','left','left','down','left','up','left','down','down','right','down','down','right','up','right','right','down','right','right','up'];
+  const giro = (Number(seed) >>> 0) % 4, espelho = ((Number(seed) >>> 0) & 4) !== 0;
+  const transformar = (x, y) => {
+    if (espelho) x = 6 - x;
+    for (let i = 0; i < giro; i++) [x, y] = [6 - y, x];
+    return y * 7 + x;
+  };
+  const casas = Array(49);
+  base.join('').split('').forEach((c, i) => { casas[transformar(i % 7, Math.floor(i / 7))] = c; });
+  let pos = base.join('').indexOf('S');
+  const trajeto = [transformar(pos % 7, Math.floor(pos / 7))];
+  for (const comando of comandos) {
+    const [dx, dy] = directions[comando]; pos += dx + dy * 7;
+    trajeto.push(transformar(pos % 7, Math.floor(pos / 7)));
+  }
+  const mapa = Array.from({length: 7}, (_, y) => casas.slice(y * 7, y * 7 + 7).join(''));
+  const solucao = trajeto.slice(1).map((casa, i) => vizinhosRastro(trajeto[i], 7).find(v => v.posicao === casa).direcao);
+  if (!validarRastro(mapa, solucao)) throw new Error('Reserva inválida de Rastro.');
+  return {mapa, solucao, bifurcacoes: 17, minimoPassos: 22, fallback: true};
+}
+
 export function gerarRastro(seed = 1) {
   let estado = Number(seed) >>> 0;
   const aleatorio = () => {
     estado = (Math.imul(1664525, estado) + 1013904223) >>> 0;
     return estado / 4294967296;
   };
-  const lado = 6, nomes = Object.keys(directions);
-  let trilha = [];
-  // Tentativas e tamanho limitados evitam bloquear a interface em sementes ruins.
-  for (let tentativa = 0; tentativa < 32; tentativa++) {
-    const candidata = [Math.floor(aleatorio() * lado * lado)], usadas = new Set(candidata);
-    const tamanho = 17 + Math.floor(aleatorio() * 8);
-    while (candidata.length < tamanho) {
-      const atual = candidata.at(-1);
-      const vizinhas = nomes.map(nome => {
-        const [dx, dy] = directions[nome], x = atual % lado + dx, y = Math.floor(atual / lado) + dy;
-        return x >= 0 && y >= 0 && x < lado && y < lado ? y * lado + x : -1;
-      }).filter(casa => casa >= 0 && !usadas.has(casa));
+  const lado = 7;
+  // Um certificado longo não basta: o solver também rejeita soluções curtas.
+  for (let tentativa = 0; tentativa < 96; tentativa++) {
+    const trilha = [Math.floor(aleatorio() * 49)], usadas = new Set(trilha);
+    const tamanho = 27 + Math.floor(aleatorio() * 8);
+    while (trilha.length < tamanho) {
+      const vizinhas = vizinhosRastro(trilha.at(-1), lado).filter(v => !usadas.has(v.posicao));
       if (!vizinhas.length) break;
-      const proxima = vizinhas[Math.floor(aleatorio() * vizinhas.length)];
-      candidata.push(proxima); usadas.add(proxima);
+      const proxima = vizinhas[Math.floor(aleatorio() * vizinhas.length)].posicao;
+      trilha.push(proxima); usadas.add(proxima);
     }
-    if (candidata.length === tamanho) { trilha = candidata; break; }
+    if (trilha.length < tamanho) continue;
+    const casas = Array.from({length: 49}, (_, i) => usadas.has(i) || aleatorio() < 0.12 ? '.' : '#');
+    casas[trilha[0]] = 'S'; casas[trilha.at(-1)] = 'P';
+    for (const fracao of [0.25, 0.5, 0.75]) casas[trilha[Math.floor((trilha.length - 1) * fracao)]] = 'L';
+    const bifurcacoes = casas.filter((c, i) => c !== '#' && vizinhosRastro(i, lado).filter(v => casas[v.posicao] !== '#').length >= 3).length;
+    if (bifurcacoes < 6) continue;
+    const mapa = Array.from({length: lado}, (_, y) => casas.slice(y * lado, (y + 1) * lado).join(''));
+    const solucao = trilha.slice(1).map((casa, i) => vizinhosRastro(trilha[i], lado).find(v => v.posicao === casa).direcao);
+    if (!validarRastro(mapa, solucao)) continue;
+    const atalho = buscarAtalhoRastro(mapa);
+    if (!atalho.conclusivo || atalho.encontrado) continue;
+    return {mapa, solucao, bifurcacoes, minimoPassos: 22, fallback: false};
   }
-  // Caminho serpenteado conhecido: saída determinística sem busca ilimitada.
-  if (!trilha.length) trilha = [0,1,2,3,4,5,11,10,9,8,7,6,12,13,14,15,16,17];
-  const protegidas = new Set(trilha);
-  const casas = Array.from({length: lado * lado}, (_, i) => !protegidas.has(i) && aleatorio() < 0.65 ? '#' : '.');
-  casas[trilha[0]] = 'S'; casas[trilha.at(-1)] = 'P';
-  for (const fracao of [0.25, 0.5, 0.75]) casas[trilha[Math.floor((trilha.length - 1) * fracao)]] = 'L';
-  const mapa = Array.from({length: lado}, (_, y) => casas.slice(y * lado, (y + 1) * lado).join(''));
-  const solucao = trilha.slice(1).map((casa, i) => {
-    const dx = casa % lado - trilha[i] % lado, dy = Math.floor(casa / lado) - Math.floor(trilha[i] / lado);
-    return nomes.find(nome => directions[nome][0] === dx && directions[nome][1] === dy);
-  });
-  if (!validarRastro(mapa, solucao)) throw new Error('A fase gerada não passou pela validação do percurso.');
-  return {mapa, solucao};
+  return reservaRastro(seed);
 }
 
 function rastro(level, api, options = {}) {
@@ -381,6 +437,42 @@ function rastro(level, api, options = {}) {
       api.tone?.(370 + leaves.size * 65, 0.09);
     }
     if (tiles[next] === 'P') round.finish(true, 'Três folhas e um cantinho no vaso.');
+  }
+  const tamanhoCelula = Math.floor(94 / side), margem = Math.floor((96 - tamanhoCelula * side) / 2);
+  let gesto = null;
+  function celula(x, y) {
+    const coluna = Math.floor((x - margem) / tamanhoCelula), linha = Math.floor((y - margem) / tamanhoCelula);
+    return coluna >= 0 && linha >= 0 && coluna < side && linha < side ? linha * side + coluna : -1;
+  }
+  function point(x, y, phase) {
+    if (phase === 'cancel') { gesto = null; return; }
+    if (!Number.isFinite(x) || !Number.isFinite(y) || round.done) { gesto = null; return; }
+    if (phase === 'down') {
+      held = '';
+      gesto = celula(x, y) === path.at(-1) ? {x, y} : null;
+      return;
+    }
+    if (!gesto || !['move', 'up'].includes(phase)) return;
+    const origem = gesto, dx = x - origem.x, dy = y - origem.y;
+    let coluna = Math.floor((origem.x - margem) / tamanhoCelula), linha = Math.floor((origem.y - margem) / tamanhoCelula);
+    const sx = Math.sign(dx), sy = Math.sign(dy);
+    // DDA percorre cada fronteira de célula na ordem do segmento recebido.
+    // Não depende da frequência dos eventos nem teletransporta através de pedra.
+    let tx = sx ? (margem + (coluna + (sx > 0 ? 1 : 0)) * tamanhoCelula - origem.x) / dx : Infinity;
+    let ty = sy ? (margem + (linha + (sy > 0 ? 1 : 0)) * tamanhoCelula - origem.y) / dy : Infinity;
+    const incrementoX = sx ? tamanhoCelula / Math.abs(dx) : Infinity;
+    const incrementoY = sy ? tamanhoCelula / Math.abs(dy) : Infinity;
+    for (let cruzamentos = 0; cruzamentos < side * 2 + 2 && Math.min(tx, ty) <= 1; cruzamentos++) {
+      let direcao;
+      if (tx <= ty) { coluna += sx; tx += incrementoX; direcao = sx > 0 ? 'right' : 'left'; }
+      else { linha += sy; ty += incrementoY; direcao = sy > 0 ? 'down' : 'up'; }
+      if (coluna < 0 || linha < 0 || coluna >= side || linha >= side) { gesto = null; return; }
+      const destino = linha * side + coluna;
+      step(direcao);
+      if (path.at(-1) !== destino) { gesto = null; return; }
+      if (round.done) break;
+    }
+    gesto = phase === 'up' || round.done ? null : {x, y};
   }
   function update(dt) {
     if (held && !round.done) {
@@ -420,9 +512,10 @@ function rastro(level, api, options = {}) {
     }
   }
   return {
-    draw, update,
+    draw, update, point,
+    cancelInput() { held = ''; gesto = null; },
     snapshot() { return {mapa: [...maze], caminho: [...path], folhas: leaves.size, solucao: gerado ? [...gerado.solucao] : null, fim: round.done}; },
-    press(dir) { if (directions[dir]) { step(dir); held = dir; repeatIn = 0.37; } },
+    press(dir) { if (directions[dir]) { gesto = null; step(dir); held = dir; repeatIn = 0.37; } },
     release(dir) { if (dir === held) held = ''; },
     hud() { return leaves.size + '/3 folhas · ' + (leaves.size === 3 ? 'Entre no vaso' : 'Recolha as folhas'); }
   };
