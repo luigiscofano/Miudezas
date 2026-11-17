@@ -4,7 +4,7 @@ Implementação: [`dist/varanda.js`](../../../dist/varanda.js). Os modos respeit
 
 | Jogo | Modos | Justificativa |
 | --- | --- | --- |
-| Luz de Varanda | Dificuldades autorais | A derrota existente é por prazo. Retirar o prazo não produz derrota natural; adicionar vidas arbitrárias mudaria a regra. Sem Parar não é oferecido. |
+| Luz de Varanda | Dificuldades autorais e Sem Parar | Botes errados passam a consumir três tentativas exclusivamente no novo modo; capturas medem o recorde. |
 | Bolinha de Gude | Dificuldades autorais e Caminho Novo | Percurso completo, buraco e até três petelecos; outra fase pode ser gerada após a conclusão. |
 | Pisca no Mato | Dificuldades autorais e Sem Parar | A memória cresce uma piscada por rodada e errar encerra naturalmente a partida. |
 
@@ -14,17 +14,21 @@ Pontuação: tamanho da **maior sequência concluída**, não respostas de uma s
 
 As dificuldades clássicas mantêm três, quatro e cinco piscadas. Foi declarado o desenho do vagalume: anteriormente o renderizador referenciava variável inexistente.
 
+## Luz de Varanda: Sem Parar
+
+Cada mosquito capturado vale um ponto. Um bote desalinhado consome uma das três tentativas; no terceiro erro termina em derrota, sem meta final nem prazo. A velocidade angular cresce 0,07 por captura, partindo de 1,98 e limitada a 3,8 rad/s. O tamanho da janela de acerto não diminui indefinidamente. Botes em andamento não aceitam outro ataque, evitando erros duplicados. O clássico preserva suas metas e seu prazo.
+
 ## Bolinha de Gude: Caminho Novo
 
 `criarTerrenoGude(seed)` usa um gerador determinístico. A semente reconstrói alvo, pedras e certificado de solução com até três petelecos. As fases autorais não mudam. O gerenciador deve conservar a semente ao tentar novamente e fornecer outra somente ao pedir nova fase.
 
-O certificado não é apenas conectividade: `validarTerrenoGude()` instancia **o mesmo jogo**, pressiona e solta controles públicos e executa a física real, incluindo alcance carregado, desaceleração, ricochetes, colisões e raio do buraco. Verifica 30, 60 e 120 atualizações/s e oito combinações de erro de ±15 ms ao soltar os três gestos. Geração limitada a 32 tentativas, seguida de percurso seguro também validado. Se até ele falhar, lança erro em vez de apresentar mapa sem certificado.
+O certificado não é apenas conectividade: `validarTerrenoGude()` instancia **o mesmo jogo**, pressiona e solta controles públicos e executa a física real, incluindo alcance carregado, desaceleração, ricochetes, colisões e raio do buraco. Verifica 30, 60 e 120 atualizações/s e oito combinações de erro de ±15 ms ao soltar os três gestos. Também repete o certificado por arrasto com perturbação de ±0,25 pixel lógico em ambos os eixos, nas mesmas frequências, verificando que o gesto cabe no tabuleiro. Geração limitada a 32 tentativas, seguida de percurso seguro também validado. Se até ele falhar, lança erro em vez de apresentar mapa sem certificado.
 
-O trajeto de referência contorna pedras em três segmentos. O jogador pode encontrar outra solução; não há autopiloto. A variedade limita-se deliberadamente a esta família de trajetos validáveis. A prova garante a existência de uma sequência executável, não a vitória com qualquer força ou caminho.
+Como referência mensurável do Puxado, exige pelo menos duas pedras e área total de obstáculos de 360 pixels quadrados (duas pedras autorais de 15 × 12). Rejeita mapas em que mirar diretamente no buraco vence com qualquer alcance inteiro de 3 a 94, incluindo os ricochetes dessa tentativa. Isso exige trabalhar direção e força; não prova equivalência subjetiva de dificuldade. O trajeto de referência contorna pedras em três segmentos. O jogador pode encontrar outra solução; não há autopiloto. A variedade limita-se deliberadamente a esta família de trajetos validáveis. A prova garante a existência de uma sequência executável, não a vitória com qualquer força ou caminho.
 
 ### Controles
 
-No teclado, mantenha uma seta e solte para dar força. No toque/mouse, arraste a partir da bolinha no sentido contrário e solte. Os trajetos gerados têm arrastos de referência inteiramente dentro do tabuleiro 96 × 96. O tamanho visual do canvas não altera coordenadas lógicas.
+O arrasto precisa começar sobre a área de toque da bolinha; mover não lança. Soltar lança, mas cancelar o gesto ou perder a entrada não lança. O módulo não solicita pausa; o gerenciador de eventos trata interrupções do navegador. No teclado, mantenha uma seta e solte para dar força. No toque/mouse, arraste a partir da bolinha no sentido contrário e solte. Os trajetos gerados têm arrastos de referência inteiramente dentro do tabuleiro 96 × 96. O tamanho visual do canvas não altera coordenadas lógicas.
 
 ## Verificações
 
@@ -32,6 +36,8 @@ No teclado, mantenha uma seta e solte para dar força. No toque/mouse, arraste a
 node --test tests/varanda-modos.test.mjs
 ```
 
+- Luz: 30 capturas sem encerrar, teto de velocidade, três erros e regras clássicas;
+- Gude: gesto inválido, cancelamento, força curta/longa e rejeição de mapas triviais;
 - 200 sementes, reconstrução idêntica e mais de 190 layouts distintos;
 - validação pelo motor real com três frequências e perturbações de tempo;
 - 200 certificados repetidos por arrasto/toque, sem sair do canvas;
