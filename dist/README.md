@@ -29,4 +29,4 @@ A [pasta artes](artes/README.md) guarda a composição oficial. A capa é exibid
 
 ## Marca da interface
 
-[Logotipo e ícone verde](artes/marca/README.md) são usados na barra e no favicon. A partida mantém o título textual do jogo.
+[Logotipo e ícone verde](artes/marca/README.md) identificam os menus e o favicon, respectivamente. A pequena janela original permanece à esquerda do logotipo na barra. A partida mantém o título textual do jogo.
