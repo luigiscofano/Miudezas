@@ -1,3 +1,4 @@
+import {normalizarRecordes,registrarRecorde} from './recordes.js';
 import {normalizarVolta} from './progresso.js';
 import {catalogo,nomesNiveis} from './catalogo.js';
 import {quintal} from './quintal.js';
@@ -18,6 +19,10 @@ const segurando=new Map();
 const teclas={ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right',ArrowUp:'up',w:'up',ArrowDown:'down',s:'down'};
 const setas={left:'←',right:'→',up:'↑',down:'↓',act:'Bote'};
 const nomesDir={left:'Esquerda',right:'Direita',up:'Cima',down:'Baixo',act:'Dar o bote'};
+const modosExtras={goteira:'endless',pipa:'endless',fio:'endless',pao:'endless',pisca:'endless',mare:'generated',rastro:'generated',gude:'generated'};
+let tipoPartida='classic',semente=1,recordes=normalizarRecordes(ler('recordes',{}));
+const novoMapa=()=>{semente=(Math.random()*4294967296)>>>0;};
+const nomeModo=()=>tipoPartida==='endless'?'Sem Parar':tipoPartida==='generated'?'Caminho Novo':nomesNiveis[nivel-1];
 const atual=()=>catalogo[selecionado];
 const foto=(j,extra='')=>'<img src="./arte/'+(j.imagem||j.id+'.png')+'" alt="" '+extra+'>';
 const btn=(acao,titulo,classe='action',extra='')=>'<button type="button" class="'+classe+'" data-do="'+acao+'" '+extra+'>'+titulo+'</button>';
@@ -98,17 +103,18 @@ function niveis(){
   mudar('nivel');const j=atual(),circuito=modo==='circuito';
   const intro=circuito?'<div><h3 class="small-title">Uma volta, '+totalJogos+' paradas</h3><p class="body-copy">O nível muda o ritmo dos jogos e os desafios dos quebra-cabeças.</p></div>':
     '<div class="game-intro">'+foto(j)+'<div><h3>'+j.nome+'</h3><p>'+j.regra+'</p></div></div><p class="controls-copy">'+j.controle+'</p>';
-  const lista=nomesNiveis.map((n,i)=>btn('nivel','<span class="number">'+(i+1)+'</span>'+n+'<small>'+(circuito?['Leve','Intermediário','Desafiador'][i]:j.niveis[i])+'</small>','level-btn '+(nivel===i+1?'selected':''),'data-index="'+(i+1)+'" aria-pressed="'+(nivel===i+1)+'"')).join('');
-  area.innerHTML=paginaHTML(topo('Escolha o nível')+intro+'<div class="level-list">'+lista+'</div><div class="actions">'+btn('comecar',circuito?'Começar a volta  ›':'Jogar  ›')+'</div>');
+  const lista=nomesNiveis.map((n,i)=>btn('nivel','<span class="number">'+(i+1)+'</span>'+n+'<small>'+(circuito?['Leve','Intermediário','Desafiador'][i]:j.niveis[i])+'</small>','level-btn '+(tipoPartida==='classic'&&nivel===i+1?'selected':''),'data-index="'+(i+1)+'" aria-pressed="'+(tipoPartida==='classic'&&nivel===i+1)+'"')).join('');
+  const extra=!circuito&&modosExtras[j.id]?btn('modo-extra',(modosExtras[j.id]==='endless'?'Sem Parar':'Caminho Novo')+'<small>'+(modosExtras[j.id]==='endless'?'Até errar · recorde: '+(recordes[j.id]||0):'Nova fase com solução validada')+'</small>','level-btn '+(tipoPartida!=='classic'?'selected':''),'aria-pressed="'+(tipoPartida!=='classic')+'"'):'';
+  area.innerHTML=paginaHTML(topo('Escolha o nível')+intro+'<div class="level-list">'+lista+extra+'</div><div class="actions">'+btn('comecar',circuito?'Começar a volta  ›':'Jogar  ›')+'</div>');
   pfooter(circuito?'Volta no Bairro':'Jogo avulso','3 níveis abertos');
 }
 function parada(){
-  selecionado=volta.resultados.length;nivel=volta.nivel;const j=atual();mudar('parada');
+  tipoPartida='classic';selecionado=volta.resultados.length;nivel=volta.nivel;const j=atual();mudar('parada');
   area.innerHTML=paginaHTML(topo('Próxima parada',(selecionado+1)+' / '+totalJogos)+'<div class="modal-box">'+foto(j)+'<h2>'+j.nome+'</h2><p class="body-copy">'+j.regra+'</p><p class="controls-copy">'+j.controle+'</p></div><div class="actions">'+btn('partir','Jogar esta parada  ›')+'</div>');
   pfooter('Volta no Bairro',nomesNiveis[nivel-1]);
 }
 function criarPartida(){
-  const instancia=jogos[atual().id](nivel,{tone:tom,finish:finalizar});
+  const instancia=jogos[atual().id](nivel,{tone:tom,finish:finalizar},{mode:tipoPartida,seed:semente});
   partida=instancia;ultimo=null;mostrarJogo();
 }
 function ativarDir(fonte,dir){
@@ -148,7 +154,7 @@ function mostrarJogo(){
   mudar('jogo');const j=atual();
   const chapa=j.id==='pao';
   const dirs=j.eixo==='quatro'?['left','up','down','right']:j.eixo==='vertical'?['up','down']:j.eixo==='um'?['act']:['left','right'];
-  area.innerHTML='<div class="game-area"><div class="game-head">'+btn('pausa',icone('pausa'),'icon-button','aria-label="Pausar" title="Pausar"')+'<strong>'+j.nome+'</strong><span class="level-tag">'+nomesNiveis[nivel-1]+'</span></div><div class="stage"><canvas width="96" height="96" aria-label="Cena jogável de '+j.nome+'"></canvas></div><div class="game-hud"></div>'+ (chapa ? '<div class="chapa-tools" aria-label="Escolha o utensílio"><button type="button" data-tool="espatula" aria-pressed="true">1 · Espátula <small>ovo</small></button><button type="button" data-tool="pinca" aria-pressed="false">2 · Pinça <small>pão</small></button></div>' : '') +'<div class="pad" aria-label="Controles">'+dirs.map(d=>'<button type="button" class="'+(d==='act'?'single':'')+'" data-dir="'+d+'" aria-label="'+(d==='act'?(j.acao||nomesDir[d]):nomesDir[d])+'">'+(d==='act'?(j.acao||setas[d]):setas[d])+'</button>').join('')+'</div></div>';
+  area.innerHTML='<div class="game-area"><div class="game-head">'+btn('pausa',icone('pausa'),'icon-button','aria-label="Pausar" title="Pausar"')+'<strong>'+j.nome+'</strong><span class="level-tag">'+nomeModo()+'</span></div><div class="stage"><canvas width="96" height="96" aria-label="Cena jogável de '+j.nome+'"></canvas></div><div class="game-hud"></div>'+ (chapa ? '<div class="chapa-tools" aria-label="Escolha o utensílio"><button type="button" data-tool="espatula" aria-pressed="true">1 · Espátula <small>ovo</small></button><button type="button" data-tool="pinca" aria-pressed="false">2 · Pinça <small>pão</small></button></div>' : '') +'<div class="pad" aria-label="Controles">'+dirs.map(d=>'<button type="button" class="'+(d==='act'?'single':'')+'" data-dir="'+d+'" aria-label="'+(d==='act'?(j.acao||nomesDir[d]):nomesDir[d])+'">'+(d==='act'?(j.acao||setas[d]):setas[d])+'</button>').join('')+'</div></div>';
   area.querySelector('.game-area').classList.toggle('chapa-game',chapa);
   area.querySelector('.game-area').style.setProperty('--game-color',j.cor);pfooter(modo==='circuito'?'Parada '+(selecionado+1)+' de '+totalJogos:'Jogo avulso','Esc pausa');
   const c=area.querySelector('canvas'),stage=c.parentElement,ctx=c.getContext('2d'),hud=area.querySelector('.game-hud');
@@ -157,14 +163,19 @@ function mostrarJogo(){
   observador=new ResizeObserver(ajustar);observador.observe(stage);ajustar();
   const esta=partida;
   function mostrarStatus(){
-    esta.draw(ctx);const h=esta.hud();if(hud.textContent!==h)hud.textContent=h;
+    esta.draw(ctx);
+    const pontos=tipoPartida==='endless'?esta.score():0;
+    if(tipoPartida==='endless'&&pontos>(recordes[j.id]||0)){
+      recordes=registrarRecorde(recordes,j.id,pontos);salvar('recordes',recordes);
+    }
+    const h=esta.hud()+(tipoPartida==='endless'?' · Pontos '+pontos+' · Recorde '+(recordes[j.id]||0):tipoPartida==='generated'?' · Fase '+semente:'');if(hud.textContent!==h)hud.textContent=h;
     if(chapa){
       const estado=esta.snapshot(), pontos=['cru','no ponto','tostado','queimado'];
       for(const b of area.querySelectorAll('[data-tool]')) b.setAttribute('aria-pressed',String(b.dataset.tool===estado.utensilio));
       estado.alimentos.forEach((alimento,i)=>{
         const b=area.querySelector('[data-dir="'+(i===0?'left':'right')+'"]');
         const nome=alimento.tipo==='ovo'?'Ovo':'Pão';
-        b.textContent=(i===0?'← ':'→ ')+nome+' · '+pontos[alimento.estado];
+        b.textContent=(i===0?'← ':'→ ')+nome;
         b.setAttribute('aria-label','Recolher '+nome.toLowerCase()+' à '+(i===0?'esquerda':'direita')+', '+pontos[alimento.estado]);
         b.disabled=estado.troca||alimento.reposicao;
       });
@@ -190,11 +201,18 @@ function pausar(){
   pfooter(modo==='circuito'?'Parada '+(selecionado+1)+' de '+totalJogos:'Jogo avulso','Partida pausada');
 }
 function finalizar(venceu,mensagem){
-  if(tela!=='jogo')return;ultimo={venceu,mensagem};mudar('resultado');partida=null;
-  const principal=modo==='circuito'?btn('avancar',selecionado===totalJogos-1?'Concluir a volta':'Próxima parada  ›'):btn('repetir','Jogar de novo');
+  if(tela!=='jogo')return;
+  // A pontuação é capturada antes de descartar a instância; o recorde nunca diminui.
+  if(tipoPartida==='endless'){
+    const pontos=partida.score(),atualizados=registrarRecorde(recordes,atual().id,pontos);
+    if(atualizados!==recordes){recordes=atualizados;salvar('recordes',recordes);}
+    mensagem+=' Pontuação: '+pontos+'. Recorde pessoal: '+(recordes[atual().id]||0)+'.';
+  }
+  ultimo={venceu,mensagem};mudar('resultado');partida=null;
+  const principal=modo==='circuito'?btn('avancar',selecionado===totalJogos-1?'Concluir a volta':'Próxima parada  ›'):(tipoPartida==='generated'&&venceu?btn('outra-fase','Gerar outra fase'):btn('repetir',tipoPartida==='generated'?'Tentar a mesma fase':'Jogar de novo'));
   const secundaria=modo==='circuito'?btn('repetir','Repetir parada','action secondary'):btn('lista','Escolher jogo','action secondary');
   area.innerHTML=paginaHTML('<div class="modal-box">'+foto(atual())+'<span class="small-title">'+atual().nome+'</span><h2>'+(venceu?'Conseguiu!':'Fim da rodada')+'</h2><p class="body-copy">'+escapar(mensagem)+'</p></div><div class="result-actions">'+principal+secundaria+'</div>');
-  pfooter(modo==='circuito'?'Parada '+(selecionado+1)+' de '+totalJogos:'Jogo avulso',nomesNiveis[nivel-1]);
+  pfooter(modo==='circuito'?'Parada '+(selecionado+1)+' de '+totalJogos:'Jogo avulso',nomeModo());
 }
 function resumo(){
   mudar('resumo');const total=volta.resultados.filter(Boolean).length;
@@ -209,7 +227,7 @@ function voltar(){
 }
 function abrirJanela(destino){
   const u=new URL(location.href);u.search='';u.hash='';
-  for(const [k,v] of Object.entries({janela:1,tela:destino,modo,nivel,jogo:selecionado,pag:pagina}))u.searchParams.set(k,v);
+  for(const [k,v] of Object.entries({janela:1,tela:destino,modo,nivel,jogo:selecionado,pag:pagina,tipo:tipoPartida,semente}))u.searchParams.set(k,v);
   try{const p=window.open(u.href,'miudezas_jogo','popup=yes,width=492,height=492,resizable=yes,scrollbars=yes');if(p){p.focus();return true;}}catch{}
   return false;
 }
@@ -226,9 +244,11 @@ function acao(el){
   if(a==='sair'){inicio();return;}
   if(a==='lista'){galeria();return;}
   if(a==='seguinte'||a==='anterior'){pagina=Math.max(0,Math.min(totalPaginas-1,pagina+(a==='seguinte'?1:-1)));galeria();return;}
-  if(a==='escolher'){selecionado=Number(el.dataset.index);nivel=1;niveis();return;}
-  if(a==='escolher-nivel'){nivel=1;niveis();return;}
-  if(a==='nivel'){nivel=Number(el.dataset.index);niveis();area.querySelector('.selected').focus({preventScroll:true});return;}
+  if(a==='escolher'){tipoPartida='classic';selecionado=Number(el.dataset.index);nivel=1;niveis();return;}
+  if(a==='escolher-nivel'){tipoPartida='classic';nivel=1;niveis();return;}
+  if(a==='nivel'){tipoPartida='classic';nivel=Number(el.dataset.index);niveis();area.querySelector('.selected').focus({preventScroll:true});return;}
+  if(a==='modo-extra'){tipoPartida=modosExtras[atual().id]||'classic';nivel=1;novoMapa();niveis();return;}
+  if(a==='outra-fase'){novoMapa();criarPartida();return;}
   if(a==='comecar'){
     if(modo==='avulso'){criarPartida();return;}
     volta={nivel,ids:[...ids],resultados:[]};manterVolta();parada();return;
@@ -279,6 +299,12 @@ modo=parametros.get('modo')==='circuito'?'circuito':'avulso';
 nivel=Math.max(1,Math.min(3,Number(parametros.get('nivel'))||1));
 selecionado=Math.max(0,Math.min(ids.length-1,Number(parametros.get('jogo'))||0));
 pagina=Math.max(0,Math.min(totalPaginas-1,Math.floor(Number(parametros.get('pag')))||0));
+// A janela mantém somente modos permitidos para este jogo; circuito continua autoral.
+if(modo==='avulso'&&parametros.get('tipo')===modosExtras[atual().id]){
+  tipoPartida=parametros.get('tipo');
+  const valor=Number(parametros.get('semente'));
+  if(Number.isInteger(valor)&&valor>=0&&valor<=4294967295)semente=valor;
+}
 if (parametros.has('jogo') && !catalogo[Number(parametros.get('jogo'))]) galeria();
 else if(inicial==='galeria')galeria();else if(inicial==='roteiro')roteiro();else if(inicial==='nivel')niveis();else inicio();
 

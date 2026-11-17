@@ -9,14 +9,16 @@ Esta é a raiz que o servidor entrega ao navegador. Para executar a partir desta
 | [app.js](app.js) | Navegação, avanço e retomada da volta, pausa, eventos de entrada e animação. |
 | [catalogo.js](catalogo.js) | Ordem dos jogos, IDs, regras, controles, nomes de nível e cores de palco. |
 | [progresso.js](progresso.js) | Migração da volta antiga por IDs, sem trocar resultados entre jogos. |
+| [recordes.js](recordes.js) | Validação e atualização de recordes, separados dos resultados autorais. |
+| [backup.js](backup.js) | Exportação/importação compatível de preferências, volta e recordes. |
 | [interface.js](interface.js) | Ícones da barra, texto seguro para HTML e funções de armazenamento. |
 | [quintal.js](quintal.js) | Chuva, maré, fios do bem-te-vi e pipa. |
 | [esquina.js](esquina.js) | Sintonia, chapa e caminhos do caracol. |
 | [varanda.js](varanda.js) | Bote, bolinha e sequências luminosas. |
-| [pracinha.js](pracinha.js) | Peteca e sombra do gato. |
+| [pracinha.js](pracinha.js) | Código legado de Peteca/Gato, não importado pelo aplicativo. |
 | [arte/](arte/README.md) | Imagens do menu e fonte local. |
 
-Uma fábrica recebe o nível de 1 a 3 e uma API com callbacks de som e conclusão. Ela devolve controles, atualização, desenho e indicador. A interface central transforma eventos de teclado e toque no mesmo vocabulário. Para uma alteração de regra, revise a fábrica e o texto correspondente no catálogo. Para uma alteração de arte, confira a miniatura e o desenho da partida separadamente.
+Uma fábrica recebe o nível de 1 a 3, uma API com callbacks de som e conclusão e opções `{mode, seed}`. Os modos são `classic`, `endless` e `generated`; uma semente identifica a fase para reinício reproduzível. O método `score()` fornece a pontuação quando existe modo por recorde. Ela devolve controles, atualização, desenho e indicador. A interface central transforma eventos de teclado e toque no mesmo vocabulário. Para uma alteração de regra, revise a fábrica e o texto correspondente no catálogo. Para uma alteração de arte, confira a miniatura e o desenho da partida separadamente.
 
 [Manual completo do projeto](../README.md)
 
@@ -30,3 +32,7 @@ A [pasta artes](artes/README.md) guarda a composição oficial. A capa é exibid
 ## Marca da interface
 
 [Logotipo e ícone verde](artes/marca/README.md) identificam os menus e o favicon, respectivamente. A pequena janela original permanece à esquerda do logotipo na barra. A partida mantém o título textual do jogo.
+
+## Regras por módulo
+
+O catálogo tem dez jogos. Sem Parar: Goteira, Último Fio, Pipa, Pão e Pisca. Caminho Novo: Maré, Rastro e Três Petelecos. Rádio e Luz preservam as fases autorais. Consulte os guias de [Quintal](../docs/jogos/quintal/README.md), [Esquina](../docs/jogos/esquina/README.md) e [Varanda](../docs/jogos/varanda/README.md). A Volta no Bairro permanece nas três dificuldades.

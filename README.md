@@ -2,13 +2,13 @@
 
 <p align="center"><img src="dist/artes/marca/miudezas-logo.png" alt="Logotipo oficial de Miudezas" width="440"></p>
 
-**Doze jogos de bairro em uma janelinha.** Um balde quase cheio, uma mariposa no fio de cima, um ovo e um pão que douram em tempos diferentes. Em Miudezas, cada uma dessas cenas vira uma partida que se aprende olhando e se joga com poucas teclas ou um gesto.
+**Dez jogos de bairro em uma janelinha.** Um balde quase cheio, uma mariposa no fio de cima, um ovo e um pão que douram em tempos diferentes. Em Miudezas, cada uma dessas cenas vira uma partida que se aprende olhando e se joga com poucas teclas ou um gesto.
 
 <p align="center"><img src="dist/artes/capas/miudezas-tijuca.png" alt="Capa aprovada de Miudezas: Tijuca, bem-te-vi, pipa e Ritual do Vento em pixel art" width="440"></p>
 
 | Coleção | Desafios | Tela de jogo | Plataforma |
 |---|---|---|---|
-| 10 minigames | 3 níveis por jogo, 30 combinações | Canvas de 96 × 96 pixels lógicos | Navegador de computador ou celular |
+| 10 minigames | 30 fases autorais + modos adicionais | Canvas de 96 × 96 pixels lógicos | Navegador de computador ou celular |
 
 **Autor:** Luigi Scofano de Araujo · [Jogar no GitHub Pages](https://luigiscofano.github.io/Miudezas/) · [Licença MIT](LICENSE)
 
@@ -42,13 +42,32 @@ Para experimentar no celular, conecte os dois aparelhos à mesma rede local, exe
 |---|---|
 | Início | Escolher entre uma partida avulsa e a sequência. A barra oferece som e abertura da janela no desktop. |
 | Galeria | Percorrer duas páginas com até seis miniaturas cada. A ordem segue o percurso do bairro. |
-| Roteiro | Ver as doze paradas. Com progresso salvo, escolher entre retomar e iniciar uma nova volta. |
-| Seleção de nível | Escolher **Sossegado**, **Animado** ou **Puxado**. No avulso, a tela antecipa a regra e a mudança concreta de cada nível. |
+| Roteiro | Ver as dez paradas. Com progresso salvo, escolher entre retomar e iniciar uma nova volta. |
+| Seleção de nível | Escolher **Sossegado**, **Animado** ou **Puxado**, além do modo adicional nos jogos elegíveis. As fases autorais permanecem disponíveis. |
 | Próxima parada | Ler o objetivo e os comandos antes de iniciar o relógio do jogo. |
 | Partida | Ver a cena, a meta ou o tempo no indicador e os botões correspondentes àquela mecânica. |
 | Pausa | Consultar regras, continuar ou sair ao menu. Perder o foco ou ocultar a aba também pausa a partida. |
 | Resultado | No avulso, repetir ou voltar à galeria. Na volta, repetir a parada ou avançar mesmo depois de uma derrota. |
 | Resumo | Após a 10ª parada, ver os desafios vencidos e as dez miniaturas com seus resultados. |
+
+### Modos adicionais por jogo
+
+Os modos adicionais são partidas avulsas; a Volta no Bairro continua nas três dificuldades autorais. **Sem Parar** não tem meta final nem cronômetro de encerramento: superar o recorde não encerra a partida. **Caminho Novo** gera uma fase completa; repetir mantém a semente e gerar outra cria um percurso novo.
+
+| Jogo | Modo adicional | Métrica ou razão |
+|---|---|---|
+| Goteira | Sem Parar | Gotas recolhidas até alagar o chão. |
+| Maré Miúda | Caminho Novo | Percurso validado considerando passos, maré e última areia segura. |
+| Último Fio | Sem Parar | Mariposas recolhidas até uma rajada atingir o fio ocupado. |
+| Pipa de Laje | Sem Parar | Obstáculos superados até colidir. |
+| Rádio de Pilha | Clássico | História finita em três transmissões; repetição arbitrária não melhora a proposta. |
+| Pão na Chapa | Sem Parar | Alimentos corretos até o terceiro erro. |
+| Rastro de Prata | Caminho Novo | Trilha sem cruzar o próprio rastro, com três folhas antes do vaso. |
+| Luz de Varanda | Clássico | Desafio curto de mira com lâmpada e meta; preserva seu ritmo autoral. |
+| Três Petelecos | Caminho Novo | Percurso validado com a física e os controles de lançamento reais. |
+| Pisca no Mato | Sem Parar | Maior sequência concluída; errar encerra. |
+
+Os geradores usam sementes reproduzíveis, tentativas limitadas e configurações de reserva validadas. A prova de solução é executada antes da entrega da fase, não presumida apenas pela aparência do mapa. Consulte [Quintal](docs/jogos/quintal/README.md), [Esquina](docs/jogos/esquina/README.md) e [Varanda](docs/jogos/varanda/README.md) para regras, limites e verificações.
 
 **Uma volta de exemplo.** Escolha Animado, jogue Goteira e avance. O próximo cartão é Maré Miúda no mesmo nível. Fechar o navegador nesse cartão permite retomar na segunda parada. Se sair no meio da partida, ela recomeça naquela parada. O avanço registra um resultado por jogo.
 
@@ -62,7 +81,7 @@ O nome **Miudezas** reúne acontecimentos pequenos o bastante para caber numa ja
 |---|---|
 | Moldura | Contorno escuro, barra clara e sombra deslocada lembram uma janela de computador. A moldura separa a interface persistente das cores próprias de cada cena. |
 | Tipografia | **Miudezas Pixel**, fonte local com acentos, identifica títulos, níveis e comandos. Verdana, Arial e a fonte sem serifa do sistema sustentam regras e textos corridos. |
-| Escala | A cena ativa é desenhada em 96 × 96 e ampliada com pixels aparentes. As dez miniaturas originais têm 128 × 120; as duas da Pracinha usam SVG com grade de 96 × 96, a capa aprovada 1672 × 941 e o ícone verde aprovado 390 × 390. |
+| Escala | A cena ativa é desenhada em 96 × 96 e ampliada com pixels aparentes. As dez miniaturas ativas têm 128 × 120; a capa aprovada 1672 × 941 e o ícone verde aprovado 390 × 390. |
 | Silhueta | Asa curta e peito amarelo identificam o pássaro. Um retângulo de água sob a rachadura avisa onde a gota vai cair. Cada detalhe precisa continuar legível no tamanho da janela. |
 | Pequenas irregularidades | A alça do balde cai de lado, a antena do rádio dobra e as fachadas variam um pixel. A irregularidade pertence ao objeto. As áreas de toque e as regras continuam previsíveis. |
 | Sinais de jogo | O fio treme antes da rajada, o pão muda de cor e solta vapor, a luz do rádio indica sintonia. Sons curtos confirmam ações, enquanto o indicador escrito conserva a informação principal. |
@@ -98,7 +117,7 @@ Pegue as gotas por um minuto. O balde comporta quatro. Encoste no ralo à esquer
 |---|---|---|
 | **Chuva fina** · Intervalo de 1,85 s, queda a 27 px/s | **Chuva firme** · 1,52 s e 34 px/s | **Temporal** · 1,20 s e 40 px/s |
 
-A gota espera 0,55 s na rachadura. O ponto entra ao captar a água. Ir ao ralo libera capacidade. Ao fim de 60 s, captar pelo menos uma gota conta como vitória.
+A gota espera 0,55 s na rachadura. O balde guarda quatro: a quinta transborda para o chão sem aumentar o conteúdo. Gotas não recolhidas também molham o piso, uma contagem por gota. Os limites são **12, 9 e 6 gotas no chão**, respectivamente; ao atingir o limite, aparece **“O chão alagou!”** e a partida termina. Ir ao ralo libera capacidade. Nas fases autorais, sobreviver aos 60 s e captar pelo menos uma gota conta como vitória. Em **Sem Parar**, o limite é 8 gotas no chão e não há encerramento por tempo.
 
 Palco `#172244` · [Implementação de Goteira](dist/quintal.js)
 
@@ -134,13 +153,13 @@ Palco `#E9A17E` · [Implementação de Último Fio](dist/quintal.js)
 
 <img src="dist/arte/pipa.png" width="128" alt="Miniatura de Pipa de Laje na galeria">
 
-Chegue à última laje com a rabiola inteira. Passe entre as antenas e os fios. **Comandos.** ↑ solta linha e ↓ recolhe. No celular, segure a parte de cima ou de baixo.
+Chegue à última laje com a rabiola inteira. Passe entre os postes e os pássaros. **Comandos.** ↑ solta linha e ↓ recolhe. No celular, segure a parte de cima ou de baixo.
 
 | Sossegado | Animado | Puxado |
 |---|---|---|
-| **Laje vizinha** · 4 antenas, cenário a 14 px/s | **Fim da rua** · 5 antenas, 17 px/s | **Outro quarteirão** · 6 antenas, 20 px/s |
+| **Laje vizinha** · 4 obstáculos, cenário a 14 px/s | **Fim da rua** · 5 obstáculos, 17 px/s | **Outro quarteirão** · 6 obstáculos, 20 px/s |
 
-Antenas limitam a passagem por baixo e fios alternados limitam por cima. A pipa responde gradualmente e o vento varia. Antecipar a descida importa tanto quanto subir. Uma colisão prende a rabiola.
+Postes limitam a passagem por baixo e pássaros ocupam a parte alta. Casas estreitas, janelas altas, telhas e morros compõem o cenário carioca, sem colisão com elementos decorativos. A pipa responde gradualmente e o vento varia. Antecipar a descida importa tanto quanto subir. Uma colisão prende a rabiola.
 
 Palco `#60C3BD` · [Implementação de Pipa de Laje](dist/quintal.js)
 
@@ -166,17 +185,18 @@ Use **espátula no ovo** e **pinça no pão**. Selecione o utensílio por clique
 
 | Ritmo | Meta | Preparo do pão / ovo | No ponto | Tostado (última chance) |
 |---|---|---|---|---|
-| Sossegado | 5 | 4,60 / 4,95 s | 2,80 s | 1,20 s |
-| Animado | 7 | 3,50 / 3,85 s | 1,90 s | 0,90 s |
-| Puxado | 9 | 2,60 / 2,95 s | 1,30 s | 0,70 s |
+| Sossegado | 3 ovos + 3 pães | 4,60 / 4,95 s | 2,80 s | 1,20 s |
+| Animado | 4 ovos + 4 pães | 3,50 / 3,85 s | 1,90 s | 0,90 s |
+| Puxado | 5 ovos + 5 pães | 2,60 / 2,95 s | 1,30 s | 0,70 s |
 
 Há sempre um ovo e um pão, com relógios e identidades próprios. O pão inicial já tem 1,2 s de preparo para escalonar as escolhas. Após duas reposições, os alimentos trocam de lado; o aviso **“Troca de lados!”** acompanha uma pausa de 0,75 s no cozimento e na coleta. O estado dos alimentos é conservado, sem movimento contínuo que atrapalhe a leitura.
 
-- **Vitória:** alcance a meta em até um minuto de chapa ativa.
-- **Derrota:** o terceiro erro encerra a fase; “Jogar de novo” inicia uma tentativa limpa (ou “Repetir parada” na Volta no Bairro).
+- **Vitória:** complete as duas metas em até um minuto de chapa ativa. O último recolhimento encerra imediatamente; não é preciso esperar o relógio.
+- **Derrota:** o terceiro erro ou o prazo esgotado sem ambas as metas encerra a fase; “Jogar de novo” inicia uma tentativa limpa (ou “Repetir parada” na Volta no Bairro).
 - **Erro:** deixar queimar ou usar o utensílio errado. Um queimado conta uma única vez e é reposto após 0,85 s. A tentativa com utensílio errado também repõe aquele alimento, sem cobrar uma queima adicional.
 - **Cru:** a coleta é ignorada com aviso, sem inventar uma terceira penalidade. **Tostado:** ainda pode ser servido antes de queimar.
-- **Progresso:** formato e chaves de armazenamento não mudam. Os resultados anteriores e a Volta no Bairro permanecem compatíveis.
+- **Sem Parar:** sem metas nem prazo final, com uma pontuação por alimento correto e derrota no terceiro erro. A velocidade cresce gradualmente até 125% da inicial.
+- **Progresso:** resultados anteriores e a Volta no Bairro permanecem compatíveis; os recordes adicionais são separados por jogo.
 
 
 Palco `#A25843` · [Implementação de Pão na Chapa](dist/esquina.js)
@@ -256,7 +276,6 @@ flowchart TD
   F --> Q["quintal.js"]
   F --> E["esquina.js"]
   F --> V["varanda.js"]
-  F --> P["pracinha.js"]
   I --> L["localStorage"]
 ```
 
@@ -274,12 +293,12 @@ flowchart TD
 | [scripts/](scripts/README.md) | Geração de miniaturas a partir dos desenhos jogáveis. |
 | [tests/](tests/README.md) | Verificação automática das regras, entradas e progressão. |
 | [arte/](dist/arte/README.md) | Fonte, ícone, capa e 10 miniaturas. Os sprites durante as partidas são desenhados pelos módulos de jogo. |
-| [docs/](docs/README.md) | Captura da tela inicial usada nesta documentação. |
+| [docs/](docs/README.md) | Guias de publicação e regras/validação dos modos de cada módulo. |
 | [.openai/](.openai/README.md) | Manifesto da instalação hospedada de referência. O servidor local só precisa de dist/. |
 
 ### Contrato de um minigame
 
-O ID do catálogo seleciona uma fábrica. Por exemplo, `jogos['goteira'](1, api)` cria uma rodada nova no primeiro nível. No exemplo abaixo, a chamada de desenho recebe o contexto 2D e o intervalo de atualização está em segundos.
+O ID do catálogo seleciona uma fábrica. O terceiro argumento opcional `{mode, seed}` escolhe `classic`, `endless` ou `generated` e a semente reproduzível. `score()` informa a métrica do modo por recorde; as fábricas não gravam no armazenamento diretamente. Por exemplo, `jogos['goteira'](1, api)` cria uma rodada nova no primeiro nível. No exemplo abaixo, a chamada de desenho recebe o contexto 2D e o intervalo de atualização está em segundos.
 
 ```js
 import { quintal } from './dist/quintal.js';
@@ -319,7 +338,9 @@ console.log(rodada.hud());
 | Chave local | Conteúdo | Momento de gravação |
 |---|---|---|
 | miudezas.v1.som | Booleano. O padrão é desligado. | Ao alternar o som na barra superior. |
-| miudezas.v1.volta | Objeto com nivel e resultados, uma lista ordenada de valores booleanos. | No começo da volta e ao avançar de parada. Ao completar a última, o valor passa a null. |
+| miudezas.v1.volta | Objeto com nivel, ids e resultados booleanos, migrado por IDs. | No começo da volta e ao avançar de parada. Ao completar a última, o valor passa a null. |
+
+Os recordes ficam em `miudezas.v1.recordes`, por ID de jogo, separados da volta e dos resultados autorais. O backup versão 2 inclui esse campo e aceita arquivos anteriores. Importar um backup antigo não deve apagar recordes já existentes. Os dados são locais ao navegador: limpar armazenamento ou trocar de dispositivo pode removê-los; use exportação/importação explícita. Não há conta, sincronização ou ranking inviolável.
 
 Com `{"nivel":2,"resultados":[true,false]}`, a próxima parada é Último Fio em Animado. O resultado mais recente só entra no histórico ao escolher avançar. Repetir permite substituir a tentativa antes desse registro. A retomada depende da origem e do navegador. Outra cópia do site tem seu próprio histórico. Se o armazenamento estiver indisponível, a rodada segue em memória.
 
@@ -334,7 +355,7 @@ O áudio usa um oscilador de onda quadrada com envelope curto. O contexto de áu
 | Verificação reproduzível | Resultado esperado |
 |---|---|
 | Avulso → segunda página → Pisca no Mato → Sossegado | O jogo inicia normalmente e aceita a sequência. |
-| Em Goteira, ficar fora do ralo depois de recolher quatro gotas | O indicador para em 4/4. Voltar ao ralo libera espaço e conserva a pontuação. |
+| Em Goteira, ficar fora do ralo depois de recolher quatro gotas | O indicador para em 4/4; a quinta gota transborda e molha o chão. Voltar ao ralo libera espaço. |
 | Em Rastro de Prata, colher uma folha e voltar à casa anterior | O último segmento é desfeito e a folha volta à casa. |
 | Em Três Petelecos, começar a carregar um tiro e pausar | Ao continuar, a bolinha fica à espera de um novo comando. |
 | Alternar para outra aba durante uma rodada | A tela de pausa interrompe o avanço do jogo. |
@@ -342,13 +363,13 @@ O áudio usa um oscilador de onda quadrada com envelope curto. O contexto de áu
 | Completar o percurso, inclusive com uma tentativa perdida | O resumo distingue vitórias e tentativas nas 10 miniaturas. |
 | Em telefone, tocar no pão, deslizar no tabuleiro e arrastar o dial | Cada gesto atua na cena correspondente e os botões também ficam disponíveis. |
 
-Execute `node --test tests/*.test.mjs` para verificar catálogo, migração dos resultados, paginação, conclusão das 10 paradas e regras dos jogos da Pracinha nos três níveis.
+Execute `node --test tests/*.test.mjs` para verificar catálogo, migração dos resultados, paginação, conclusão das 10 paradas, modos adicionais, geração reproduzível e regras de derrota/vitória. Os testes de Pracinha são de código legado, não indicam jogos disponíveis.
 
 O teste rápido de sintaxe pode ser feito com Node recente, por exemplo `node --check dist/app.js`. Os cenários acima verificam comportamento e interação. O repositório inclui os testes automáticos e este roteiro de verificação manual.
 
 ## Referências
 
-**Inspirações de criação.** As referências visuais diretas são as prévias aprovadas dos jogos mantidos. A peteca traz a palma aberta, o gato laranja acompanha a sombra roxa. A moldura vem da ideia de um jogo de janela para computador. O bairro dá unidade a cenas que pedem gestos diferentes, como dar um peteleco, acertar o ponto do pão, ajustar um rádio e observar os vaga-lumes. O quintal do caracol traz o raciocínio espacial ao chão de ladrilhos. Esses exemplos descrevem as escolhas tomadas para Miudezas.
+**Inspirações de criação.** As referências visuais diretas são as prévias aprovadas dos jogos mantidos. A moldura vem da ideia de um jogo de janela para computador. O bairro dá unidade a cenas que pedem gestos diferentes, como dar um peteleco, acertar o ponto do pão, ajustar um rádio e observar os vaga-lumes. O quintal do caracol traz o raciocínio espacial ao chão de ladrilhos. Esses exemplos descrevem as escolhas tomadas para Miudezas.
 
 **Leitura técnica.** O Canvas explica a superfície de desenho usada pelas cenas. O agendamento de quadros explica o relógio de animação. A síntese dos sinais parte dos recursos nativos de áudio do navegador.
 
