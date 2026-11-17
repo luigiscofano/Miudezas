@@ -354,11 +354,16 @@ function pipa(level, api, options = {}) {
   const held = new Set();
   const baseSpeed = [14, 17, 20][level - 1];
   const n = [4, 5, 6][level - 1];
-  const towers = Array.from({length: n}, (_, i) => ({
-    x: 90 + i * 70,
-    top: [48, 42, 46, 38, 44, 40][i],
-    cable: i % 2 === 1, counted: false
-  }));
+  // Nas fases, passagens altas e baixas se alternam: não existe altura segura fixa.
+  // Sem Parar conserva a geração e o ritmo já aprovados.
+  const margem = [8, 7, 6][level - 1];
+  const towers = Array.from({length: n}, (_, i) => {
+    if(endless)return {x:90+i*70,top:[48,42,46,38,44,40][i],cable:i%2===1,counted:false};
+    const centro=i%2===0?22:46;
+    const birds=[];
+    for(let py=centro-margem-8;py>=0;py-=8)birds.push(py);
+    return {x:90+i*70,top:centro+margem+12,birds,centro,counted:false};
+  });
   const end = towers[n-1].x + 43;
   let scroll = 0, clock = 0, y = 37, vertical = 0, passed = 0, done = false;
   const kx = 30;
@@ -386,7 +391,8 @@ function pipa(level, api, options = {}) {
         const dx = tower.x - scroll - kx;
         // A ponta da rabiola se estende para trás, a três pixels do corpo.
         if (dx >= -13 && dx <= 7 && y + 10 >= tower.top - 2) { fail(); return; }
-        if (tower.cable && dx >= -14 && dx <= 9 && y - 4 <= 11) { fail(); return; }
+        const birds=tower.birds || (tower.cable?[7]:[]);
+        if(dx>=-14&&dx<=9&&birds.some(py=>y-4<=py+4&&y+4>=py)){fail();return;}
       }
       for(const tower of towers) if(!tower.counted && tower.x-scroll<kx-14){tower.counted=true;passed++;}
       if (!endless && scroll >= end - kx) { done = true; api.finish(true, 'Última laje! A rabiola chegou inteira.'); }
@@ -415,9 +421,9 @@ function pipa(level, api, options = {}) {
         rect(ctx, ink, ax, tower.top, 1, 77 - tower.top);
         rect(ctx, ink, ax - 6, tower.top, 13, 2);
         for (let i = -1; i <= 1; i++) rect(ctx, ink, ax + i * 4, tower.top - 2, 1, 4);
-        if (tower.cable) {
-          // Pássaro ativo em tinta escura; morros e casas são apenas cenário.
-          sprite(ctx, ['kk.......kk','.kk.....kk.','..kk...kk..','...kkkkk...','....kkk....'], {k:ink}, ax-5, 7);
+        // Pequenos bandos delimitam a passagem; não há tampa sólida no céu.
+        for(const py of tower.birds || (tower.cable?[7]:[])) {
+          sprite(ctx, ['kk.......kk','.kk.....kk.','..kk...kk..','...kkkkk...','....kkk....'], {k:ink}, ax-5, py);
         }
       }
       const topY = Math.round(y);
@@ -429,7 +435,11 @@ function pipa(level, api, options = {}) {
       sprite(ctx, ['....r....','...rrw...','..rrrww..','.rrrrwww.','rrrrrwwww','.wwwwrrr.','..wwwrr..','...wwr...','....w....'], {w:white,r:red}, kx - 4, topY - 4);
     },
     score() { return passed; },
-    snapshot() { return {y,passed,done,obstacles:towers.length}; },
+    snapshot() {
+      const proxima=towers.find(t=>t.x-scroll-kx>=-14);
+      return {y,passed,done,obstacles:towers.length,scroll,velocidade:baseSpeed,
+        passagem:proxima?{distancia:proxima.x-scroll-kx,centro:proxima.centro??22,margem:endless?null:margem}:null};
+    },
     hud() { return 'Obstáculos ' + passed + (endless ? '' : '/' + n) + ' · ' + (vertical < -8 ? 'Subindo' : vertical > 8 ? 'Descendo' : 'Ao vento'); }
   };
 }

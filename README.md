@@ -170,7 +170,7 @@ Chegue à última laje com a rabiola inteira. Passe entre os postes e os pássar
 |---|---|---|
 | **Laje vizinha** · 4 obstáculos, cenário a 14 px/s | **Fim da rua** · 5 obstáculos, 17 px/s | **Outro quarteirão** · 6 obstáculos, 20 px/s |
 
-Postes limitam a passagem por baixo e pássaros ocupam a parte alta. Casas estreitas, janelas altas, telhas e morros compõem o cenário carioca, sem colisão com elementos decorativos. A pipa responde gradualmente e o vento varia. Antecipar a descida importa tanto quanto subir. Uma colisão prende a rabiola.
+Postes limitam a passagem por baixo e pássaros ocupam a parte alta. Casas estreitas, janelas altas, telhas e morros compõem o cenário carioca, sem colisão com elementos decorativos. A pipa responde gradualmente e o vento varia. Nas fases Sossegado, Animado e Puxado, aberturas altas e baixas se alternam, exigindo subir e descer. As margens diminuem de 8 para 7 e 6 pixels e a velocidade cresce; ficar numa única altura não resolve a fase. Uma colisão prende a rabiola. O modo Sem Parar mantém sua configuração anterior.
 
 Palco `#60C3BD` · [Implementação de Pipa de Laje](dist/quintal.js)
 

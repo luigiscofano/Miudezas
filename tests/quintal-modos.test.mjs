@@ -36,8 +36,8 @@ for(const mode of ['classic','endless'])test(`Pipa: corredor executável e memó
  const {game,results}=criar('pipa',1,{mode});
  // Controle discreto permitido ao jogador: corrigir para o centro da passagem.
  for(let i=0;i<60*240&&!results.length;i++){
-  const {y}=game.snapshot();game.release('up');game.release('down');
-  if(y>22.3)game.press('up');else if(y<21.7)game.press('down');
+  const {y,passagem}=game.snapshot(),centro=mode==='endless'?22:(passagem?.centro??22);game.release('up');game.release('down');
+  if(y>centro+.3)game.press('up');else if(y<centro-.3)game.press('down');
   game.update(1/60);assert.ok(game.snapshot().obstacles<=7);
  }
  if(mode==='endless'){assert.equal(results.length,0);assert.ok(game.score()>30);}else assert.equal(results[0][0],true);
@@ -62,4 +62,35 @@ test('Maré: referência Puxado e fallback exigem maré; novas fases variam',()=
  const maps=new Set(),solutions=new Set();
  for(let seed=0;seed<60;seed++){const m=gerarMare(seed);maps.add(m.grid.join(''));solutions.add(m.solution.join(','));}
  assert.ok(maps.size>=50);assert.ok(solutions.size>=10);
+});
+
+
+test('Pipa exige movimento nas três fases e mantém passagens alcançáveis',()=>{
+ for(const level of [1,2,3]){
+  const parado=criar('pipa',level);
+  for(let i=0;i<60*120&&!parado.results.length;i++)parado.game.update(1/60);
+  assert.equal(parado.results[0][0],false,'parado não vence nível '+level);
+  const acomodado=criar('pipa',level);
+  for(let i=0;i<60*120&&!acomodado.results.length;i++){
+   const estado=acomodado.game.snapshot();acomodado.game.release('up');acomodado.game.release('down');
+   if(estado.passed===0){if(estado.y>22.3)acomodado.game.press('up');else if(estado.y<21.7)acomodado.game.press('down');}
+   acomodado.game.update(1/60);
+  }
+  assert.equal(acomodado.results[0][0],false,'acomodar na primeira passagem e parar não vence');
+  for(const dt of [1/30,1/60,1/120]){
+   const {game,results}=criar('pipa',level);const sentidos=new Set();
+   for(let i=0;i<120/dt&&!results.length;i++){
+    const {y,passagem}=game.snapshot(),alvo=passagem?.centro??22;
+    game.release('up');game.release('down');
+    if(y>alvo+.8){game.press('up');sentidos.add('up');}
+    else if(y<alvo-.8){game.press('down');sentidos.add('down');}
+    game.update(dt);
+   }
+   assert.equal(results[0]?.[0],true,'trajetória executável '+level+' '+dt);
+   assert.equal(sentidos.size,2);assert.equal(results.length,1);
+  }
+ }
+ const configs=[1,2,3].map(l=>criar('pipa',l).game.snapshot());
+ assert.deepEqual(configs.map(s=>s.velocidade),[14,17,20]);
+ assert.deepEqual(configs.map(s=>s.passagem.margem),[8,7,6]);
 });

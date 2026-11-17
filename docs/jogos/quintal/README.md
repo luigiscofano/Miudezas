@@ -17,7 +17,9 @@ O balde guarda no máximo quatro gotas. A quinta transborda e é imediatamente r
 
 Casario estreito com janelas altas, telhas em pixels e morros ao fundo distingue o cenário carioca. Postes e pássaros escuros são obstáculos; casas e morros são decorativos. Não existe mais a tampa superior de fios. As colisões usam envelopes conservadores do corpo e da rabiola, não colisão perfeita por pixel. Postes mantêm seus isoladores e o pássaro ocupa o teto da passagem.
 
-O corredor central permite manter a pipa aproximadamente na altura 22, abaixo dos pássaros e acima dos postes. A simulação automatizada usa apenas subir/soltar/descer, os mesmos comandos reais, para atravessar quatro minutos sem colisão. O intervalo entre obstáculos é de 70 pixels e a velocidade fica limitada a 23 pixels/s. Obstáculos que saíram da tela são descartados; o total ativo permanece limitado. Subpassos de no máximo 25 ms evitam atravessar obstáculos por um quadro lento.
+Nas três fases autorais, passagens altas e baixas alternam seus centros entre as alturas 22 e 46. Pequenos bandos acima e postes abaixo delimitam aberturas sem uma altitude fixa segura. Sossegado, Animado e Puxado usam velocidades de 14, 17 e 20 pixels/s, respectivamente, e margens verticais de 8, 7 e 6 pixels em torno do centro; o número de obstáculos continua 4, 5 e 6. Há 70 pixels entre obstáculos para permitir reposicionamento. Os testes verificam derrota sem comandos e trajetórias vencedoras que sobem e descem, a 30/60/120 Hz.
+
+O modo **Sem Parar não foi recalibrado nesta revisão**: mantém seu corredor próximo da altura 22, progressão e velocidade limitada a 23 pixels/s. Sua simulação de quatro minutos continua aprovada. Obstáculos que saíram da tela são descartados; o total ativo permanece limitado. Subpassos de no máximo 25 ms evitam atravessar obstáculos por um quadro lento.
 
 ## Fio de Varal
 
@@ -38,7 +40,7 @@ O gerador faz mutações locais do mapa autoral, incluindo acessos e obstáculos
 - 300 sementes reproduzíveis, com cada solução executada na instância real de Maré.
 - Quarta gota armazenada, quinta transbordada, capacidade respeitada, derrota única e ausência de contagem após o fim.
 - Limites de chão progressivos.
-- Travessia da Pipa nos modos autoral e contínuo; partida longa com memória limitada; colisão encerra uma vez.
+- Pipa: derrota sem comandos em cada dificuldade; subida e descida executáveis a 30/60/120 Hz; progressão de margens e velocidade; regressão de quatro minutos do modo contínuo; colisão encerra uma vez.
 - Quinze mariposas sem vitória automática; derrota por rajada.
 
 Esses são testes de lógica e simulação. Não substituem a inspeção visual de navegador e os testes manuais de toque do aplicativo completo.
