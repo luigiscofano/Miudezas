@@ -12,4 +12,4 @@ Os testes não substituem a inspeção visual nem o teste de toque em aparelhos 
 
 - capa.test.mjs verifica dimensões do PNG, preservação da proporção e título acessível sem sobreposição.
 
-- pao.test.mjs verifica ovo e pão nos três estados, reposição por teclado/toque e metas dos três níveis sem alterar a duração da rodada.
+- pao.test.mjs verifica os três ritmos em 30/60/120 atualizações por segundo, identidades permanentes, alternância, seleções, reposições, queima única, utensílio errado, derrota no terceiro erro, vitória, bloqueio após término e reinício limpo.

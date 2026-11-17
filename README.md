@@ -162,13 +162,22 @@ Palco `#4F2A48` · [Implementação de Rádio de Pilha](dist/esquina.js)
 
 <img src="dist/arte/pao.png" width="128" alt="Miniatura de Pão na Chapa na galeria">
 
-Sirva o ovo e o pão quando dourarem. Você tem um minuto para retirar os alimentos no ponto. **Comandos.** ← serve a esquerda e → a direita. No celular, toque no ovo ou no pão.
+Use **espátula no ovo** e **pinça no pão**. Selecione o utensílio por clique/toque ou pelas teclas **1 e 2**, depois clique/toque no alimento. **← e →** continuam recolhendo o lado correspondente com o utensílio selecionado. Os botões informam alimento, posição e ponto, além dos sinais em pixel art.
 
-| Sossegado | Animado | Puxado |
-|---|---|---|
-| **5 no ponto** · 5 alimentos, janela de 3,4 s para servir | **7 no ponto** · 7 alimentos, janela de 2,6 s | **9 no ponto** · 9 alimentos, janela de 1,9 s |
+| Ritmo | Meta | Preparo do pão / ovo | No ponto | Tostado (última chance) |
+|---|---|---|---|---|
+| Sossegado | 5 | 4,60 / 4,95 s | 2,80 s | 1,20 s |
+| Animado | 7 | 3,50 / 3,85 s | 1,90 s | 0,90 s |
+| Puxado | 9 | 2,60 / 2,95 s | 1,30 s | 0,70 s |
 
-O ovo à esquerda e o pão à direita começam em estágios diferentes e mantêm sua identidade ao cozinhar e ao serem repostos. Cada lado pode ser servido separadamente. Retirar cedo ou tarde consome a tentativa daquele alimento. O objetivo é atingir a meta ao final do minuto.
+Há sempre um ovo e um pão, com relógios e identidades próprios. O pão inicial já tem 1,2 s de preparo para escalonar as escolhas. Após duas reposições, os alimentos trocam de lado; o aviso **“Troca de lados!”** acompanha uma pausa de 0,75 s no cozimento e na coleta. O estado dos alimentos é conservado, sem movimento contínuo que atrapalhe a leitura.
+
+- **Vitória:** alcance a meta em até um minuto de chapa ativa.
+- **Derrota:** o terceiro erro encerra a fase; “Jogar de novo” inicia uma tentativa limpa (ou “Repetir parada” na Volta no Bairro).
+- **Erro:** deixar queimar ou usar o utensílio errado. Um queimado conta uma única vez e é reposto após 0,85 s. A tentativa com utensílio errado também repõe aquele alimento, sem cobrar uma queima adicional.
+- **Cru:** a coleta é ignorada com aviso, sem inventar uma terceira penalidade. **Tostado:** ainda pode ser servido antes de queimar.
+- **Progresso:** formato e chaves de armazenamento não mudam. Os resultados anteriores e a Volta no Bairro permanecem compatíveis.
+
 
 Palco `#A25843` · [Implementação de Pão na Chapa](dist/esquina.js)
 

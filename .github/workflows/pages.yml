@@ -1,6 +1,8 @@
 name: Publicar Miudezas no GitHub Pages
-# Execução manual: só ativar depois de confirmar a publicação pública.
+# Publicação pública autorizada: integrações na main atualizam o site.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read

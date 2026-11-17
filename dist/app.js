@@ -147,15 +147,31 @@ function ligarCena(canvas){
 }
 function mostrarJogo(){
   mudar('jogo');const j=atual();
+  const chapa=j.id==='pao';
   const dirs=j.eixo==='quatro'?['left','up','down','right']:j.eixo==='vertical'?['up','down']:j.eixo==='um'?['act']:['left','right'];
-  area.innerHTML='<div class="game-area"><div class="game-head">'+btn('pausa',icone('pausa'),'icon-button','aria-label="Pausar" title="Pausar"')+'<strong>'+j.nome+'</strong><span class="level-tag">'+nomesNiveis[nivel-1]+'</span></div><div class="stage"><canvas width="96" height="96" aria-label="Cena jogável de '+j.nome+'"></canvas></div><div class="game-hud"></div><div class="pad" aria-label="Controles">'+dirs.map(d=>'<button type="button" class="'+(d==='act'?'single':'')+'" data-dir="'+d+'" aria-label="'+(d==='act'?(j.acao||nomesDir[d]):nomesDir[d])+'">'+(d==='act'?(j.acao||setas[d]):setas[d])+'</button>').join('')+'</div></div>';
+  area.innerHTML='<div class="game-area"><div class="game-head">'+btn('pausa',icone('pausa'),'icon-button','aria-label="Pausar" title="Pausar"')+'<strong>'+j.nome+'</strong><span class="level-tag">'+nomesNiveis[nivel-1]+'</span></div><div class="stage"><canvas width="96" height="96" aria-label="Cena jogável de '+j.nome+'"></canvas></div><div class="game-hud"></div>'+ (chapa ? '<div class="chapa-tools" aria-label="Escolha o utensílio"><button type="button" data-tool="espatula" aria-pressed="true">1 · Espátula <small>ovo</small></button><button type="button" data-tool="pinca" aria-pressed="false">2 · Pinça <small>pão</small></button></div>' : '') +'<div class="pad" aria-label="Controles">'+dirs.map(d=>'<button type="button" class="'+(d==='act'?'single':'')+'" data-dir="'+d+'" aria-label="'+(d==='act'?(j.acao||nomesDir[d]):nomesDir[d])+'">'+(d==='act'?(j.acao||setas[d]):setas[d])+'</button>').join('')+'</div></div>';
+  area.querySelector('.game-area').classList.toggle('chapa-game',chapa);
   area.querySelector('.game-area').style.setProperty('--game-color',j.cor);pfooter(modo==='circuito'?'Parada '+(selecionado+1)+' de '+totalJogos:'Jogo avulso','Esc pausa');
   const c=area.querySelector('canvas'),stage=c.parentElement,ctx=c.getContext('2d'),hud=area.querySelector('.game-hud');
   ligarCena(c);ctx.imageSmoothingEnabled=false;
   function ajustar(){const r=stage.getBoundingClientRect(),tam=Math.floor(Math.min(r.width,r.height));c.style.width=tam+'px';c.style.height=tam+'px';}
   observador=new ResizeObserver(ajustar);observador.observe(stage);ajustar();
   const esta=partida;
-  function mostrarStatus(){esta.draw(ctx);const h=esta.hud();if(hud.textContent!==h)hud.textContent=h;}
+  function mostrarStatus(){
+    esta.draw(ctx);const h=esta.hud();if(hud.textContent!==h)hud.textContent=h;
+    if(chapa){
+      const estado=esta.snapshot(), pontos=['cru','no ponto','tostado','queimado'];
+      for(const b of area.querySelectorAll('[data-tool]')) b.setAttribute('aria-pressed',String(b.dataset.tool===estado.utensilio));
+      estado.alimentos.forEach((alimento,i)=>{
+        const b=area.querySelector('[data-dir="'+(i===0?'left':'right')+'"]');
+        const nome=alimento.tipo==='ovo'?'Ovo':'Pão';
+        b.textContent=(i===0?'← ':'→ ')+nome+' · '+pontos[alimento.estado];
+        b.setAttribute('aria-label','Recolher '+nome.toLowerCase()+' à '+(i===0?'esquerda':'direita')+', '+pontos[alimento.estado]);
+        b.disabled=estado.troca||alimento.reposicao;
+      });
+    }
+  }
+  for(const b of area.querySelectorAll('[data-tool]')) b.onclick=()=>{esta.selectTool(b.dataset.tool);mostrarStatus();};
   function frame(t){
     if(tela!=='jogo'||partida!==esta)return;
     const dt=tempoAnterior?Math.min(.08,(t-tempoAnterior)/1000):0;tempoAnterior=t;
@@ -163,6 +179,7 @@ function mostrarJogo(){
   }
   mostrarStatus();quadro=requestAnimationFrame(frame);
   for(const b of area.querySelectorAll('[data-dir]')){
+    if(chapa){b.onclick=()=>{ativarAudio();esta.press(b.dataset.dir);};continue;}
     b.onpointerdown=e=>{e.preventDefault();ativarAudio();b.setPointerCapture(e.pointerId);ativarDir('pad'+e.pointerId,b.dataset.dir);};
     b.onpointerup=b.onpointercancel=e=>soltarDir('pad'+e.pointerId);
     b.onclick=e=>{if(e.detail===0){ativarDir('acessivel',b.dataset.dir);soltarDir('acessivel');}};
@@ -233,6 +250,9 @@ document.addEventListener('keydown',e=>{
   const dir=teclas[e.key]||teclas[e.key.toLowerCase()];
   if(e.key==='Escape'){e.preventDefault();if(!e.repeat)voltar();return;}
   if(tela==='jogo'){
+    if(atual().id==='pao' && (e.key==='1'||e.key==='2')){
+      e.preventDefault();if(!e.repeat)partida.selectTool(e.key==='1'?'espatula':'pinca');return;
+    }
     if(!dir)return;e.preventDefault();ativarAudio();
     if(atual().direcaoAcao&&dir!==atual().direcaoAcao)return;
     if(!e.repeat)ativarDir('key'+e.code,atual().eixo==='um'?'act':dir);
