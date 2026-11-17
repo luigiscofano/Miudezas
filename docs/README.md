@@ -7,3 +7,5 @@
 As ilustrações individuais no manual são os arquivos de galeria de [dist/arte](../dist/arte/README.md). A captura da janela registra a interface em execução, enquanto as miniaturas identificam cada parada. Se a interface mudar, a captura e o texto de navegação podem ser revisados juntos.
 
 [Voltar ao README principal](../README.md)
+
+[pracinha.jpg](pracinha.jpg) mostra a terceira página da galeria com os quatro novos jogos. A captura de início foi atualizada para 16 jogos.

@@ -1,12 +1,12 @@
 # Miudezas
 
-**Doze jogos de bairro em uma janelinha.** Um balde quase cheio, uma mariposa no fio de cima, duas metades de pão que douram em tempos diferentes. Em Miudezas, cada uma dessas cenas vira uma partida que se aprende olhando e se joga com poucas teclas ou um gesto.
+**Dezesseis jogos de bairro em uma janelinha.** Um balde quase cheio, uma mariposa no fio de cima, duas metades de pão que douram em tempos diferentes. Em Miudezas, cada uma dessas cenas vira uma partida que se aprende olhando e se joga com poucas teclas ou um gesto.
 
 <p align="center"><img src="docs/inicio.jpg" alt="Tela inicial de Miudezas, com casas, pipa e bem-te-vi acima dos botões Jogo avulso e Volta no Bairro" width="440"></p>
 
 | Coleção | Desafios | Tela de jogo | Plataforma |
 |---|---|---|---|
-| 12 minigames | 3 níveis por jogo, 36 combinações | Canvas de 96 × 96 pixels lógicos | Navegador de computador ou celular |
+| 16 minigames | 3 níveis por jogo, 48 combinações | Canvas de 96 × 96 pixels lógicos | Navegador de computador ou celular |
 
 **Autor:** Luigi Scofano de Araujo · [Versão hospedada com acesso privado](https://miudezas-de-luigi.luigiscofano.chatgpt.site) · [Licença MIT](LICENSE)
 
@@ -39,14 +39,14 @@ Para experimentar no celular, conecte os dois aparelhos à mesma rede local, exe
 | Tela | O que se faz nela |
 |---|---|
 | Início | Escolher entre uma partida avulsa e a sequência. A barra oferece som e abertura da janela no desktop. |
-| Galeria | Percorrer duas páginas com seis miniaturas cada. A ordem segue o percurso do bairro. |
-| Roteiro | Ver as doze paradas. Com progresso salvo, escolher entre retomar e iniciar uma nova volta. |
+| Galeria | Percorrer três páginas com até seis miniaturas cada. A ordem segue o percurso do bairro. |
+| Roteiro | Ver as dezesseis paradas. Com progresso salvo, escolher entre retomar e iniciar uma nova volta. |
 | Seleção de nível | Escolher **Sossegado**, **Animado** ou **Puxado**. No avulso, a tela antecipa a regra e a mudança concreta de cada nível. |
 | Próxima parada | Ler o objetivo e os comandos antes de iniciar o relógio do jogo. |
 | Partida | Ver a cena, a meta ou o tempo no indicador e os botões correspondentes àquela mecânica. |
 | Pausa | Consultar regras, continuar ou sair ao menu. Perder o foco ou ocultar a aba também pausa a partida. |
 | Resultado | No avulso, repetir ou voltar à galeria. Na volta, repetir a parada ou avançar mesmo depois de uma derrota. |
-| Resumo | Após a 12ª parada, ver os desafios vencidos e as doze miniaturas com seus resultados. |
+| Resumo | Após a 16ª parada, ver os desafios vencidos e as dezesseis miniaturas com seus resultados. |
 
 **Uma volta de exemplo.** Escolha Animado, jogue Goteira e avance. O próximo cartão é Maré Miúda no mesmo nível. Fechar o navegador nesse cartão permite retomar na segunda parada. Se sair no meio da partida, ela recomeça naquela parada. O avanço registra um resultado por jogo.
 
@@ -60,7 +60,7 @@ O nome **Miudezas** reúne acontecimentos pequenos o bastante para caber numa ja
 |---|---|
 | Moldura | Contorno escuro, barra clara e sombra deslocada lembram uma janela de computador. A moldura separa a interface persistente das cores próprias de cada cena. |
 | Tipografia | **Miudezas Pixel**, fonte local com acentos, identifica títulos, níveis e comandos. Verdana, Arial e a fonte sem serifa do sistema sustentam regras e textos corridos. |
-| Escala | A cena ativa é desenhada em 96 × 96 e ampliada com pixels aparentes. As miniaturas da seleção têm 128 × 120, a paisagem da capa 192 × 88 e o ícone 16 × 16. |
+| Escala | A cena ativa é desenhada em 96 × 96 e ampliada com pixels aparentes. As doze miniaturas originais têm 128 × 120; as quatro da Pracinha usam SVG com grade de 96 × 96, a paisagem da capa 192 × 88 e o ícone 16 × 16. |
 | Silhueta | Asa curta e peito amarelo identificam o pássaro. Um retângulo de água sob a rachadura avisa onde a gota vai cair. Cada detalhe precisa continuar legível no tamanho da janela. |
 | Pequenas irregularidades | A alça do balde cai de lado, a antena do rádio dobra e as fachadas variam um pixel. A irregularidade pertence ao objeto. As áreas de toque e as regras continuam previsíveis. |
 | Sinais de jogo | O fio treme antes da rajada, o pão muda de cor e solta vapor, a luz do rádio indica sintonia. Sons curtos confirmam ações, enquanto o indicador escrito conserva a informação principal. |
@@ -254,6 +254,64 @@ Uma piscada é acrescentada após cada sequência correta. O vaga-lume esquerdo 
 
 Palco `#1A393B` · [Implementação de Pisca no Mato](dist/varanda.js#L345)
 
+<p align="center"><img src="docs/pracinha.jpg" alt="Galeria com Peteca, Gato na Sombra, Pescaria de Lata e Pião" width="600"></p>
+
+### 13 · Peteca
+
+<img src="dist/arte/peteca.svg" width="128" alt="Peteca acima de uma mão">
+
+Rebata **10 vezes** sem deixar cair. Pressione **↑ ou W**, ou toque na cena, quando ela estiver descendo perto da palma. Segurar não gera novas rebatidas. Ao cair no chão, a rodada termina e o botão permite recomeçar.
+
+| Sossegado | Animado | Puxado |
+|---|---|---|
+| Queda leve · gravidade 58 px/s²; acerto entre y=65 e 82 | Queda firme · 66 px/s²; y=68 a 82 | Queda rápida · 74 px/s²; y=71 a 82 |
+
+A altura inicial é 27, o ápice após uma rebatida fica próximo de 23 e a queda encerra em y=86. Uma ação anima a mão por 0,18 s. A janela de acerto continua utilizável com o passo máximo de 0,08 s. A meta é sempre dez.
+
+Palco `#94CDEA` · penas `#FFF0CC` · base `#A52F32` · chão `#C5664D` · mão `#A65F38` · [Implementação](dist/pracinha.js)
+
+### 14 · Gato na Sombra
+
+<img src="dist/arte/sombra.svg" width="128" alt="Gatinho laranja numa faixa de sombra">
+
+Use **← → ou A/D** para acompanhar a sombra por **20 segundos**. No celular, segure o lado desejado. Sair da faixa encerra a rodada; ao vencer, o gato se deita por um segundo antes do resultado.
+
+| Sossegado | Animado | Puxado |
+|---|---|---|
+| Sombra larga · 34 px, deslocamento 7 px/s | Sombra andando · 28 px, 10 px/s | Sombra estreita · 24 px, 13 px/s |
+
+O centro da sombra percorre x=20 a x=76 e retorna pelas bordas. O gato anda a 32 px/s. Seu corpo, com margem de quatro pixels de cada lado, deve permanecer dentro da faixa. O recorte irregular do topo é decorativo; a faixa na altura do gato representa a área válida.
+
+Palco `#F5B08B` · sombra `#6B587E` · gato `#EFA32E` · listras `#BD6127` · [Implementação](dist/pracinha.js)
+
+### 15 · Pescaria de Lata
+
+<img src="dist/arte/pescaria.svg" width="128" alt="Ímã e dois peixes numa bacia azul">
+
+Pressione **↓ ou S**, ou toque na cena, para baixar o ímã. Ele volta sozinho. Pegue **3 peixes**, sem cronômetro ou limite de tentativas. Um erro apenas devolve o ímã à posição inicial.
+
+| Sossegado | Animado | Puxado |
+|---|---|---|
+| Peixe tranquilo · 10 px/s; tolerância 6 px | Peixe ligeiro · 14 px/s; tolerância 5 px | Peixe apressado · 18 px/s; tolerância 4 px |
+
+O ímã fica em x=48, desce de y=45 a y=76 a 42 px/s e retorna a 36 px/s. Os peixes continuam andando durante a descida: vale antecipar a passagem. O peixe é recolhido ao retornar ao topo. Segurar a tecla não repete a tentativa; novas ações durante o movimento são ignoradas.
+
+Palco `#B8D8B6` · bacia `#3553A6` · água `#253568` · ímã `#B7453E` · peixes `#F0CC42` / `#EE913B` · [Implementação](dist/pracinha.js)
+
+### 16 · Pião
+
+<img src="dist/arte/piao.svg" width="128" alt="Pião num círculo de giz">
+
+Use **← → ou A/D** para corrigir o pião por **20 segundos**. No celular, segure o lado para o qual deseja movê-lo. Se o pião sair do círculo, a rodada termina.
+
+| Sossegado | Animado | Puxado |
+|---|---|---|
+| Giro manso · força de deriva 10 | Giro solto · força 14 | Giro arisco · força 18 |
+
+O centro parte de x=48. Uma deriva suave muda durante a rodada; os comandos corrigem a 35 px/s. O deslocamento permitido é de 21 pixels para cada lado, dentro do giz desenhado com raio horizontal de 25. A assimetria do sprite e a falha no giz preservam o traço simples.
+
+Palco `#A54A38` · giz `#FFF0CC` · madeira `#CF902B` · ponta `#572D21` · [Implementação](dist/pracinha.js)
+
 ---
 
 ## Arquitetura
@@ -270,6 +328,7 @@ flowchart TD
   F --> Q["quintal.js"]
   F --> E["esquina.js"]
   F --> V["varanda.js"]
+  F --> P["pracinha.js"]
   I --> L["localStorage"]
 ```
 
@@ -283,7 +342,10 @@ flowchart TD
 | [quintal.js](dist/quintal.js) | Goteira, Maré Miúda, Último Fio e Pipa de Laje. |
 | [esquina.js](dist/esquina.js) | Rádio de Pilha, Pão na Chapa, Balsa de Cabo e Rastro de Prata. |
 | [varanda.js](dist/varanda.js) | Luz de Varanda, Três Petelecos, Dois Pratos e Pisca no Mato. |
-| [arte/](dist/arte/README.md) | Fonte, ícone, capa e 12 miniaturas. Os sprites durante as partidas são desenhados pelos módulos de jogo. |
+| [pracinha.js](dist/pracinha.js) | Peteca, Gato na Sombra, Pescaria de Lata e Pião. |
+| [scripts/](scripts/README.md) | Geração de miniaturas a partir dos desenhos jogáveis. |
+| [tests/](tests/README.md) | Verificação automática das regras, entradas e progressão. |
+| [arte/](dist/arte/README.md) | Fonte, ícone, capa e 16 miniaturas. Os sprites durante as partidas são desenhados pelos módulos de jogo. |
 | [docs/](docs/README.md) | Captura da tela inicial usada nesta documentação. |
 | [.openai/](.openai/README.md) | Manifesto da instalação hospedada de referência. O servidor local só precisa de dist/. |
 
@@ -308,7 +370,7 @@ console.log(rodada.hud());
 
 | Operação | Contrato |
 |---|---|
-| press(dir), release(dir) | Recebem as direções normalizadas. No jogo de bote, a ação única é act. |
+| press(dir), release(dir) | Recebem as direções normalizadas. Nos jogos de ação única, o comando normalizado é act; direcaoAcao restringe a tecla quando informado e acao nomeia o botão de toque. |
 | update(dt) | Avança o tempo lógico e aplica regras, física, colisões ou contagens. |
 | draw(ctx) | Desenha a cena no espaço lógico de 96 × 96. |
 | hud() | Retorna o texto do indicador de tempo, progresso ou condição atual. |
@@ -339,7 +401,7 @@ O áudio usa um oscilador de onda quadrada com envelope curto. O contexto de áu
 
 **Onde editar.** Para alterar o tempo de uma rajada, edite a fábrica em quintal.js. Para alterar a explicação mostrada antes do jogo, edite catalogo.js. Uma mudança que altere a meta precisa aparecer nos dois lugares. Para revisar uma cor, identifique primeiro se ela pertence à interface, à margem do palco ou ao desenho da cena.
 
-**Compatibilidade da volta.** A posição de cada resultado salvo corresponde ao índice do catálogo. Uma futura alteração da ordem ou da quantidade de paradas requer considerar os registros da versão v1. Hoje a interface usa o total fixo de doze em vários pontos e a galeria exibe seis por página.
+**Compatibilidade da volta.** Os primeiros doze IDs continuam na mesma ordem. As quatro novas paradas foram acrescentadas ao fim, portanto voltas v1 em andamento conservam a posição e agora seguem até o Pião. Voltas já concluídas tinham o valor null e continuam concluídas. O total, a paginação, a última parada e o resumo derivam de catalogo.length. Cada página contém até seis jogos. Uma futura reordenação exige migrar o histórico por ID.
 
 | Verificação reproduzível | Resultado esperado |
 |---|---|
@@ -349,14 +411,16 @@ O áudio usa um oscilador de onda quadrada com envelope curto. O contexto de áu
 | Em Três Petelecos, começar a carregar um tiro e pausar | Ao continuar, a bolinha fica à espera de um novo comando. |
 | Alternar para outra aba durante uma rodada | A tela de pausa interrompe o avanço do jogo. |
 | Na Volta, avançar após Goteira, sair e retomar no mesmo navegador | A segunda parada é Maré Miúda no nível escolhido. |
-| Completar o percurso, inclusive com uma tentativa perdida | O resumo distingue vitórias e tentativas nas 12 miniaturas. |
+| Completar o percurso, inclusive com uma tentativa perdida | O resumo distingue vitórias e tentativas nas 16 miniaturas. |
 | Em telefone, tocar no pão, deslizar no tabuleiro e arrastar o dial | Cada gesto atua na cena correspondente e os botões também ficam disponíveis. |
 
-O teste rápido de sintaxe pode ser feito com Node recente, por exemplo `node --check dist/app.js`. Os cenários acima verificam comportamento e interação. O repositório distribui o jogo estático e este roteiro de verificação manual.
+Execute `node --test tests/*.test.mjs` para verificar as metas dos novos jogos nos três níveis, passos de 1/60 s, 1/30 s e 0,08 s, derrotas, ausência de limite de tempo na pescaria, entrada e resultado único. A progressão também cobre a transição da 12ª para a 13ª parada e o encerramento na 16ª.
+
+O teste rápido de sintaxe pode ser feito com Node recente, por exemplo `node --check dist/app.js`. Os cenários acima verificam comportamento e interação. O repositório inclui os testes automáticos e este roteiro de verificação manual.
 
 ## Referências
 
-**Inspirações de criação.** A referência visual direta é a série das doze prévias do projeto. A moldura vem da ideia de um jogo de janela para computador. O bairro dá unidade a cenas que pedem gestos diferentes, como dar um peteleco, acertar o ponto do pão, ajustar um rádio e observar os vaga-lumes. O quintal do caracol traz o raciocínio espacial ao chão de ladrilhos. A balança de feira traduz soma e igualdade em inclinação. Esses exemplos descrevem as escolhas tomadas para Miudezas.
+**Inspirações de criação.** As referências visuais diretas são as doze prévias originais e as quatro prévias aprovadas da Pracinha. A peteca traz a palma aberta, o gato laranja acompanha a sombra roxa, os peixes de lata ficam numa bacia azul e o pião gira num círculo de giz irregular. A moldura vem da ideia de um jogo de janela para computador. O bairro dá unidade a cenas que pedem gestos diferentes, como dar um peteleco, acertar o ponto do pão, ajustar um rádio e observar os vaga-lumes. O quintal do caracol traz o raciocínio espacial ao chão de ladrilhos. A balança de feira traduz soma e igualdade em inclinação. Esses exemplos descrevem as escolhas tomadas para Miudezas.
 
 **Leitura técnica.** O Canvas explica a superfície de desenho usada pelas cenas. O agendamento de quadros explica o relógio de animação. A síntese dos sinais parte dos recursos nativos de áudio do navegador.
 

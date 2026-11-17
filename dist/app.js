@@ -2,14 +2,16 @@ import {catalogo,nomesNiveis} from './catalogo.js';
 import {quintal} from './quintal.js';
 import {esquina} from './esquina.js';
 import {varanda} from './varanda.js';
+import {pracinha} from './pracinha.js';
 import {icone,escapar,ler,salvar} from './interface.js';
 
-const jogos={...quintal,...esquina,...varanda};
+const jogos={...quintal,...esquina,...varanda,...pracinha};
 const area=document.querySelector('#screen'),rodape=document.querySelector('#foot');
 const barra=document.querySelector('#bar-title'), somBotao=document.querySelector('#sound'), janelaBotao=document.querySelector('#popup');
 const parametros=new URLSearchParams(location.search), pequena=parametros.get('janela')==='1';
 if(pequena) document.body.classList.add('popup');
 const ids=catalogo.map(j=>j.id);
+const totalJogos=catalogo.length, porPagina=6, totalPaginas=Math.ceil(totalJogos/porPagina);
 let tela='inicio',modo='avulso',nivel=1,selecionado=0,pagina=0,volta=null,partida=null,ultimo=null;
 let quadro=0,observador=null,tempoAnterior=0,audio=null,comSom=ler('som',false)===true;
 const segurando=new Map();
@@ -17,7 +19,7 @@ const teclas={ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right',ArrowUp:'up
 const setas={left:'←',right:'→',up:'↑',down:'↓',act:'Bote'};
 const nomesDir={left:'Esquerda',right:'Direita',up:'Cima',down:'Baixo',act:'Dar o bote'};
 const atual=()=>catalogo[selecionado];
-const foto=(j,extra='')=>'<img src="./arte/'+j.id+'.png" alt="" '+extra+'>';
+const foto=(j,extra='')=>'<img src="./arte/'+(j.imagem||j.id+'.png')+'" alt="" '+extra+'>';
 const btn=(acao,titulo,classe='action',extra='')=>'<button type="button" class="'+classe+'" data-do="'+acao+'" '+extra+'>'+titulo+'</button>';
 const paginaHTML=(conteudo,classe='')=>'<section class="screen-page '+classe+'">'+conteudo+'</section>';
 function topo(titulo,direita=''){return '<div class="page-head">'+btn('voltar',icone('volta'),'back','aria-label="Voltar"')+'<h2>'+titulo+'</h2>'+(direita?'<span class="count">'+direita+'</span>':'')+'</div>';}
@@ -44,11 +46,11 @@ janelaBotao.innerHTML=icone('janela');somUI();
 
 function lerVolta(){
   const v=ler('volta',null);
-  if(!v||![1,2,3].includes(v.nivel)||!Array.isArray(v.resultados)||v.resultados.length>=12||
+  if(!v||![1,2,3].includes(v.nivel)||!Array.isArray(v.resultados)||v.resultados.length>=totalJogos||
       !v.resultados.every(r=>typeof r==='boolean'))return null;
   return v;
 }
-function manterVolta(){salvar('volta',volta?.resultados.length<12?volta:null);}
+function manterVolta(){salvar('volta',volta?.resultados.length<totalJogos?volta:null);}
 function desligarEntrada(){
   if(partida?.cancelInput)partida.cancelInput();
   if(partida)for(const d of new Set(segurando.values()))partida.release(d);
@@ -67,30 +69,33 @@ function mudar(nome){
 }
 function inicio(){
   mudar('inicio');partida=null;volta=null;
-  area.innerHTML='<div class="hero"><img src="./arte/bairro.png" alt="Casas de bairro, um bem-te-vi no fio e uma pipa sobre os telhados"><div class="brand"><h1>Miudezas</h1><p>Doze jogos de bairro</p></div></div>'+
+  area.innerHTML='<div class="hero"><img src="./arte/bairro.png" alt="Casas de bairro, um bem-te-vi no fio e uma pipa sobre os telhados"><div class="brand"><h1>Miudezas</h1><p>'+totalJogos+' jogos de bairro</p></div></div>'+
     '<div class="home-options">'+
-    btn('avulso','<span class="mode-icon">'+icone('avulso')+'</span><span><b>Jogo avulso</b><small>Escolha uma das doze janelinhas.</small></span><span class="chev" aria-hidden="true">›</span>','mode primary')+
-    btn('circuito','<span class="mode-icon">'+icone('mapa')+'</span><span><b>Volta no Bairro</b><small>Jogue os doze em sequência.</small></span><span class="chev" aria-hidden="true">›</span>','mode')+'</div>';
+    btn('avulso','<span class="mode-icon">'+icone('avulso')+'</span><span><b>Jogo avulso</b><small>Escolha uma das '+totalJogos+' janelinhas.</small></span><span class="chev" aria-hidden="true">›</span>','mode primary')+
+    btn('circuito','<span class="mode-icon">'+icone('mapa')+'</span><span><b>Volta no Bairro</b><small>Jogue os '+totalJogos+' em sequência.</small></span><span class="chev" aria-hidden="true">›</span>','mode')+'</div>';
   pfooter('Luigi Scofano de Araujo','Teclado ou toque');
 }
 function galeria(){
   modo='avulso';mudar('galeria');
-  const inicioPag=pagina*6;
-  const cards=catalogo.slice(inicioPag,inicioPag+6).map((j,k)=>btn('escolher',foto(j)+'<span>'+j.nome+'</span>','card','data-index="'+(inicioPag+k)+'"')).join('');
-  area.innerHTML=paginaHTML(topo('Escolha um jogo',(pagina+1)+' / 2')+'<div class="gallery">'+cards+'</div><div class="pager">'+
-    btn('anterior','‹ Anterior','small-btn',pagina===0?'disabled':'')+'<span class="pips" aria-hidden="true"><i class="'+(pagina===0?'on':'')+'"></i><i class="'+(pagina===1?'on':'')+'"></i></span>'+
-    btn('seguinte','Próxima ›','small-btn',pagina===1?'disabled':'')+'</div>');
-  pfooter('Jogo avulso','12 minigames');
+  pagina=Math.max(0,Math.min(totalPaginas-1,pagina));
+  const inicioPag=pagina*porPagina;
+  const cards=catalogo.slice(inicioPag,inicioPag+porPagina).map((j,k)=>btn('escolher',foto(j)+'<span>'+j.nome+'</span>','card','data-index="'+(inicioPag+k)+'"')).join('');
+  const pontos=Array.from({length:totalPaginas},(_,i)=>'<i class="'+(pagina===i?'on':'')+'"></i>').join('');
+  area.innerHTML=paginaHTML(topo('Escolha um jogo',(pagina+1)+' / '+totalPaginas)+'<div class="gallery">'+cards+'</div><div class="pager">'+
+    btn('anterior','‹ Anterior','small-btn',pagina===0?'disabled':'')+'<span class="pips" aria-hidden="true">'+pontos+'</span>'+
+    btn('seguinte','Próxima ›','small-btn',pagina===totalPaginas-1?'disabled':'')+'</div>');
+  pfooter('Jogo avulso',totalJogos+' minigames');
 }
+
 function roteiro(){
   modo='circuito';mudar('roteiro');const salvo=lerVolta();
-  area.innerHTML=paginaHTML(topo('Volta no Bairro','12 paradas')+'<p class="body-copy">Da cozinha de Goteira ao quintal dos vaga-lumes. Escolha um nível para jogar as doze paradas.</p><ol class="route-grid">'+catalogo.map((j,i)=>'<li>'+foto(j)+'<span class="idx">'+String(i+1).padStart(2,'0')+'</span><span>'+j.nome+'</span></li>').join('')+'</ol>'+
-    '<div class="actions">'+(salvo?btn('retomar','Retomar · '+(salvo.resultados.length+1)+'/12')+btn('escolher-nivel','Nova volta','action secondary'):btn('escolher-nivel','Escolher nível  ›'))+'</div>','overview');
-  pfooter('Volta no Bairro',salvo?'Volta em andamento':'Do balde ao vaga-lume');
+  area.innerHTML=paginaHTML(topo('Volta no Bairro',totalJogos+' paradas')+'<p class="body-copy">Da cozinha à pracinha. Escolha um nível para jogar as '+totalJogos+' paradas.</p><ol class="route-grid">'+catalogo.map((j,i)=>'<li>'+foto(j)+'<span class="idx">'+String(i+1).padStart(2,'0')+'</span><span>'+j.nome+'</span></li>').join('')+'</ol>'+
+    '<div class="actions">'+(salvo?btn('retomar','Retomar · '+(salvo.resultados.length+1)+'/'+totalJogos)+btn('escolher-nivel','Nova volta','action secondary'):btn('escolher-nivel','Escolher nível  ›'))+'</div>','overview');
+  pfooter('Volta no Bairro',salvo?'Volta em andamento':'Do balde à pracinha');
 }
 function niveis(){
   mudar('nivel');const j=atual(),circuito=modo==='circuito';
-  const intro=circuito?'<div><h3 class="small-title">Uma volta, doze paradas</h3><p class="body-copy">O nível muda o ritmo dos jogos e os desafios dos quebra-cabeças.</p></div>':
+  const intro=circuito?'<div><h3 class="small-title">Uma volta, '+totalJogos+' paradas</h3><p class="body-copy">O nível muda o ritmo dos jogos e os desafios dos quebra-cabeças.</p></div>':
     '<div class="game-intro">'+foto(j)+'<div><h3>'+j.nome+'</h3><p>'+j.regra+'</p></div></div><p class="controls-copy">'+j.controle+'</p>';
   const lista=nomesNiveis.map((n,i)=>btn('nivel','<span class="number">'+(i+1)+'</span>'+n+'<small>'+(circuito?['Leve','Intermediário','Desafiador'][i]:j.niveis[i])+'</small>','level-btn '+(nivel===i+1?'selected':''),'data-index="'+(i+1)+'" aria-pressed="'+(nivel===i+1)+'"')).join('');
   area.innerHTML=paginaHTML(topo('Escolha o nível')+intro+'<div class="level-list">'+lista+'</div><div class="actions">'+btn('comecar',circuito?'Começar a volta  ›':'Jogar  ›')+'</div>');
@@ -98,7 +103,7 @@ function niveis(){
 }
 function parada(){
   selecionado=volta.resultados.length;nivel=volta.nivel;const j=atual();mudar('parada');
-  area.innerHTML=paginaHTML(topo('Próxima parada',(selecionado+1)+' / 12')+'<div class="modal-box">'+foto(j)+'<h2>'+j.nome+'</h2><p class="body-copy">'+j.regra+'</p><p class="controls-copy">'+j.controle+'</p></div><div class="actions">'+btn('partir','Jogar esta parada  ›')+'</div>');
+  area.innerHTML=paginaHTML(topo('Próxima parada',(selecionado+1)+' / '+totalJogos)+'<div class="modal-box">'+foto(j)+'<h2>'+j.nome+'</h2><p class="body-copy">'+j.regra+'</p><p class="controls-copy">'+j.controle+'</p></div><div class="actions">'+btn('partir','Jogar esta parada  ›')+'</div>');
   pfooter('Volta no Bairro',nomesNiveis[nivel-1]);
 }
 function criarPartida(){
@@ -141,8 +146,8 @@ function ligarCena(canvas){
 function mostrarJogo(){
   mudar('jogo');const j=atual();
   const dirs=j.eixo==='quatro'?['left','up','down','right']:j.eixo==='vertical'?['up','down']:j.eixo==='um'?['act']:['left','right'];
-  area.innerHTML='<div class="game-area"><div class="game-head">'+btn('pausa',icone('pausa'),'icon-button','aria-label="Pausar" title="Pausar"')+'<strong>'+j.nome+'</strong><span class="level-tag">'+nomesNiveis[nivel-1]+'</span></div><div class="stage"><canvas width="96" height="96" aria-label="Cena jogável de '+j.nome+'"></canvas></div><div class="game-hud"></div><div class="pad" aria-label="Controles">'+dirs.map(d=>'<button type="button" class="'+(d==='act'?'single':'')+'" data-dir="'+d+'" aria-label="'+nomesDir[d]+'">'+setas[d]+'</button>').join('')+'</div></div>';
-  area.querySelector('.game-area').style.setProperty('--game-color',j.cor);pfooter(modo==='circuito'?'Parada '+(selecionado+1)+' de 12':'Jogo avulso','Esc pausa');
+  area.innerHTML='<div class="game-area"><div class="game-head">'+btn('pausa',icone('pausa'),'icon-button','aria-label="Pausar" title="Pausar"')+'<strong>'+j.nome+'</strong><span class="level-tag">'+nomesNiveis[nivel-1]+'</span></div><div class="stage"><canvas width="96" height="96" aria-label="Cena jogável de '+j.nome+'"></canvas></div><div class="game-hud"></div><div class="pad" aria-label="Controles">'+dirs.map(d=>'<button type="button" class="'+(d==='act'?'single':'')+'" data-dir="'+d+'" aria-label="'+(d==='act'?(j.acao||nomesDir[d]):nomesDir[d])+'">'+(d==='act'?(j.acao||setas[d]):setas[d])+'</button>').join('')+'</div></div>';
+  area.querySelector('.game-area').style.setProperty('--game-color',j.cor);pfooter(modo==='circuito'?'Parada '+(selecionado+1)+' de '+totalJogos:'Jogo avulso','Esc pausa');
   const c=area.querySelector('canvas'),stage=c.parentElement,ctx=c.getContext('2d'),hud=area.querySelector('.game-hud');
   ligarCena(c);ctx.imageSmoothingEnabled=false;
   function ajustar(){const r=stage.getBoundingClientRect(),tam=Math.floor(Math.min(r.width,r.height));c.style.width=tam+'px';c.style.height=tam+'px';}
@@ -164,18 +169,18 @@ function mostrarJogo(){
 function pausar(){
   if(tela!=='jogo')return;mudar('pausa');
   area.innerHTML=paginaHTML(topo('Pausa')+'<div class="modal-box">'+foto(atual())+'<h2>'+atual().nome+'</h2><p class="body-copy">'+atual().regra+'</p><p class="controls-copy">'+atual().controle+'</p></div><div class="result-actions">'+btn('continuar','Continuar')+btn('sair','Sair ao menu','action secondary')+'</div>');
-  pfooter(modo==='circuito'?'Parada '+(selecionado+1)+' de 12':'Jogo avulso','Partida pausada');
+  pfooter(modo==='circuito'?'Parada '+(selecionado+1)+' de '+totalJogos:'Jogo avulso','Partida pausada');
 }
 function finalizar(venceu,mensagem){
   if(tela!=='jogo')return;ultimo={venceu,mensagem};mudar('resultado');partida=null;
-  const principal=modo==='circuito'?btn('avancar',selecionado===11?'Concluir a volta':'Próxima parada  ›'):btn('repetir','Jogar de novo');
+  const principal=modo==='circuito'?btn('avancar',selecionado===totalJogos-1?'Concluir a volta':'Próxima parada  ›'):btn('repetir','Jogar de novo');
   const secundaria=modo==='circuito'?btn('repetir','Repetir parada','action secondary'):btn('lista','Escolher jogo','action secondary');
   area.innerHTML=paginaHTML('<div class="modal-box">'+foto(atual())+'<span class="small-title">'+atual().nome+'</span><h2>'+(venceu?'Conseguiu!':'Fim da rodada')+'</h2><p class="body-copy">'+escapar(mensagem)+'</p></div><div class="result-actions">'+principal+secundaria+'</div>');
-  pfooter(modo==='circuito'?'Parada '+(selecionado+1)+' de 12':'Jogo avulso',nomesNiveis[nivel-1]);
+  pfooter(modo==='circuito'?'Parada '+(selecionado+1)+' de '+totalJogos:'Jogo avulso',nomesNiveis[nivel-1]);
 }
 function resumo(){
   mudar('resumo');const total=volta.resultados.filter(Boolean).length;
-  area.innerHTML=paginaHTML('<div class="modal-box"><span class="small-title">Volta no Bairro</span><h2>De volta em casa</h2><p class="body-copy">12 paradas visitadas · '+total+' desafios vencidos.</p></div><div class="summary-cards">'+catalogo.map((j,i)=>'<img src="./arte/'+j.id+'.png" class="'+(volta.resultados[i]?'':'miss')+'" title="'+j.nome+' · '+(volta.resultados[i]?'Vitória':'Tentativa')+'" alt="'+j.nome+' · '+(volta.resultados[i]?'Vitória':'Tentativa')+'">').join('')+'</div><div class="actions">'+btn('sair','Voltar ao início')+'</div>');
+  area.innerHTML=paginaHTML('<div class="modal-box"><span class="small-title">Volta no Bairro</span><h2>De volta em casa</h2><p class="body-copy">'+totalJogos+' paradas visitadas · '+total+' desafios vencidos.</p></div><div class="summary-cards">'+catalogo.map((j,i)=>'<img src="./arte/'+(j.imagem||j.id+'.png')+'" class="'+(volta.resultados[i]?'':'miss')+'" title="'+j.nome+' · '+(volta.resultados[i]?'Vitória':'Tentativa')+'" alt="'+j.nome+' · '+(volta.resultados[i]?'Vitória':'Tentativa')+'">').join('')+'</div><div class="actions">'+btn('sair','Voltar ao início')+'</div>');
   pfooter('Volta completa',nomesNiveis[nivel-1]);
 }
 function voltar(){
@@ -202,7 +207,7 @@ function acao(el){
   if(a==='voltar'){voltar();return;}
   if(a==='sair'){inicio();return;}
   if(a==='lista'){galeria();return;}
-  if(a==='seguinte'||a==='anterior'){pagina=a==='seguinte'?1:0;galeria();return;}
+  if(a==='seguinte'||a==='anterior'){pagina=Math.max(0,Math.min(totalPaginas-1,pagina+(a==='seguinte'?1:-1)));galeria();return;}
   if(a==='escolher'){selecionado=Number(el.dataset.index);nivel=1;niveis();return;}
   if(a==='escolher-nivel'){nivel=1;niveis();return;}
   if(a==='nivel'){nivel=Number(el.dataset.index);niveis();area.querySelector('.selected').focus({preventScroll:true});return;}
@@ -216,7 +221,7 @@ function acao(el){
   if(a==='continuar'){mostrarJogo();return;}
   if(a==='avancar'&&ultimo){
     volta.resultados.push(ultimo.venceu);ultimo=null;manterVolta();
-    if(volta.resultados.length===12)resumo();else parada();
+    if(volta.resultados.length===totalJogos)resumo();else parada();
   }
 }
 area.addEventListener('click',e=>{const el=e.target.closest('button[data-do]');if(el&&!el.disabled){ativarAudio();acao(el);}});
@@ -227,6 +232,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){e.preventDefault();if(!e.repeat)voltar();return;}
   if(tela==='jogo'){
     if(!dir)return;e.preventDefault();ativarAudio();
+    if(atual().direcaoAcao&&dir!==atual().direcaoAcao)return;
     if(!e.repeat)ativarDir('key'+e.code,atual().eixo==='um'?'act':dir);
     return;
   }
@@ -251,5 +257,5 @@ const inicial=parametros.get('tela');
 modo=parametros.get('modo')==='circuito'?'circuito':'avulso';
 nivel=Math.max(1,Math.min(3,Number(parametros.get('nivel'))||1));
 selecionado=Math.max(0,Math.min(ids.length-1,Number(parametros.get('jogo'))||0));
-pagina=parametros.get('pag')==='1'?1:0;
+pagina=Math.max(0,Math.min(totalPaginas-1,Math.floor(Number(parametros.get('pag')))||0));
 if(inicial==='galeria')galeria();else if(inicial==='roteiro')roteiro();else if(inicial==='nivel')niveis();else inicio();

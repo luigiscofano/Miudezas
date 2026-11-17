@@ -14,3 +14,7 @@ body.popup .desktop{padding:0}body.popup .window{width:min(492px,100vw,100svh);h
 @media(max-height:465px){.window{min-height:0}.screen-page{display:block;overflow:auto}.screen-page>*+*{margin-top:7px}.gallery{min-height:185px}.hero{min-height:50px}.brand{margin-top:3px}.brand h1{font-size:38px}.home-options{padding:6px 13px;gap:5px}.mode{min-height:42px;padding:5px 10px}.bar{height:29px}#foot{height:22px}.brand p{margin-top:0}.game-intro img{height:48px}.gallery{grid-template-rows:85px 85px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 [hidden]{display:none!important}
+
+/* O roteiro cresce com o catálogo, conservando a ação visível na janelinha. */
+.overview .route-grid{flex:1;min-height:0;overflow-y:auto;align-content:start;padding:2px}
+.summary-cards{grid-template-columns:repeat(8,minmax(0,1fr))}
