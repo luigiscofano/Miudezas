@@ -59,3 +59,5 @@ Os testes comparam as três dificuldades: nenhuma vence sem comandos, e uma traj
 `quintal-arte.test.mjs` verifica cores características da arte aprovada, coordenadas finitas e ausência de mutação de estado/HUD durante o desenho. São testes de renderização isolada, não testes de aparelho físico.
 
 `esquina-arte.test.mjs` verifica cores características da arte aprovada, coordenadas finitas e ausência de mutação de estado/HUD durante o desenho. São testes de renderização isolada, não testes de aparelho físico.
+
+`varanda-arte.test.mjs` verifica cores características da arte aprovada, coordenadas finitas e ausência de mutação de estado/HUD durante o desenho. São testes de renderização isolada, não testes de aparelho físico.
