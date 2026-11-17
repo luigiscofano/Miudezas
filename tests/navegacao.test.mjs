@@ -10,7 +10,7 @@ function navegador(salvo=null) {
   const elementos=new Map();
   const dados={volta:salvo};
   function elemento(id) {
-    if(!elementos.has(id))elementos.set(id,{innerHTML:'',textContent:'',classList:{add(){}},setAttribute(){},addEventListener(){},querySelector(){return null;}});
+    if(!elementos.has(id))elementos.set(id,{innerHTML:'',textContent:'',classList:{add(){},toggle(){}},setAttribute(){},addEventListener(){},querySelector(){return null;}});
     return elementos.get(id);
   }
   const sandbox={normalizarVolta,catalogo,nomesNiveis,quintal:{},esquina:{},varanda:{},pracinha:{},
@@ -59,4 +59,12 @@ test('Dados inválidos ou percurso já concluído não oferecem retomada',()=>{
  for(const salvo of [{nivel:4,resultados:[]},{nivel:1,resultados:['sim']},{nivel:1,resultados:Array(14).fill(true)}]){
   assert.ok(!navegador(salvo).html().includes('Retomar ·'));
  }
+});
+
+test('Marca e capa não impedem a entrada no menu avulso',()=>{
+  const n=navegador();
+  n.executar('inicio()');
+  assert.match(n.html(),/artes\/capas\/miudezas-tijuca.png/);
+  n.executar("acao({dataset:{do:'avulso'}})");
+  assert.match(n.html(),/1 \/ 2/);
 });

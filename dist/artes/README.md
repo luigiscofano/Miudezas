@@ -12,3 +12,9 @@
 - [Recursos do jogo](../arte/README.md): miniaturas, ícone, fonte e cenário legado. Mantidos nos caminhos existentes para não afetar as partidas.
 
 [Manual principal](../../README.md)
+
+## Marca
+
+![Logo aprovada](marca/miudezas-logo.png)
+
+[Logotipo principal e ícone verde](marca/README.md), com arquivos separados e orientação de uso.

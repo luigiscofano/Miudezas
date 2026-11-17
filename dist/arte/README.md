@@ -35,3 +35,7 @@ Essas duas miniaturas são SVGs na mesma grade de 96 × 96 usada nas partidas, c
 ![Capa aprovada](../artes/capas/miudezas-tijuca.png)
 
 A abertura usa a [capa Tijuca](../artes/capas/README.md). Este diretório mantém os recursos das partidas e o cenário anterior como legado.
+
+## Ícone atual
+
+O antigo `janela.png` é legado. O favicon atual é o [ícone verde aprovado](../artes/marca/miudezas-icone-verde.png), documentado na [marca](../artes/marca/README.md).
