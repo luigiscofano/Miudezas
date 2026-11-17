@@ -36,7 +36,9 @@ function line(ctx, color, x0, y0, x1, y1) {
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const delta = {left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1]};
 
-function goteira(level, api) {
+function goteira(level, api, options = {}) {
+  const endless = options.mode === 'endless';
+  const floodLimit = endless ? 8 : [12, 9, 6][level - 1];
   const ink = '#131a37', wall = '#354e76', rain = '#83ddf4', gold = '#e1ad45';
   const lanes = [24, 50, 76], sequence = [1, 2, 1, 0, 2, 0, 1, 0, 2, 1, 2, 0, 2];
   const held = new Set();
@@ -44,7 +46,15 @@ function goteira(level, api) {
   const splashes = [];
   const interval = [1.85, 1.52, 1.20][level - 1];
   const speed = [27, 34, 40][level - 1];
-  let x = 48, time = 0, next = 0.2, index = 0, bucket = 0, score = 0, bounce = 0, done = false;
+  let x = 48, time = 0, next = 0.2, index = 0, bucket = 0, score = 0, bounce = 0, done = false, spilled = 0;
+  function spill(drop) {
+    spilled++;
+    splashes.push({x: drop.x, life: 0.4});
+    if (spilled >= floodLimit && !done) {
+      done = true;
+      api.finish(false, 'O chão alagou! ' + score + ' gotas recolhidas.');
+    }
+  }
   return {
     press(dir) { held.add(dir); },
     release(dir) { held.delete(dir); },
@@ -57,29 +67,30 @@ function goteira(level, api) {
       if (time >= next) {
         const lane = sequence[index++ % sequence.length];
         drops.push({x: lanes[lane], y: 12 + lane * 2, wait: 0.55});
-        next += interval;
+        next += endless ? Math.max(1.35, interval - score * 0.008) : interval;
       }
       for (let i = drops.length - 1; i >= 0; i--) {
         const d = drops[i];
         if (d.wait > 0) { d.wait -= dt; continue; }
         const previousY = d.y;
-        d.y += speed * dt;
-        if (previousY < 79 && d.y >= 79 && Math.abs(x - d.x) <= 6 && bucket < 4) {
-          bucket++;
-          score++;
-          bounce = 0.18;
-          api.tone(330 + bucket * 95, 0.065);
+        d.y += (endless ? Math.min(36, speed + score * 0.12) : speed) * dt;
+        if (previousY < 79 && d.y >= 79 && Math.abs(x - d.x) <= 6) {
+          // A gota é removida nesta passagem: nunca transborda duas vezes.
+          if (bucket < 4) {
+            bucket++; score++; bounce = 0.18;
+            api.tone(330 + bucket * 95, 0.065);
+          } else spill(d);
           drops.splice(i, 1);
         } else if (d.y >= 87) {
-          splashes.push({x: d.x, life: 0.23});
-          drops.splice(i, 1);
+          spill(d); drops.splice(i, 1);
         }
+        if (done) return;
       }
       for (let i = splashes.length - 1; i >= 0; i--) {
         splashes[i].life -= dt;
         if (splashes[i].life <= 0) splashes.splice(i, 1);
       }
-      if (time >= 60) {
+      if (!endless && time >= 60) {
         done = true;
         api.finish(score > 0, score + (score === 1 ? ' gota recolhida.' : ' gotas recolhidas.'));
       }
@@ -97,6 +108,7 @@ function goteira(level, api) {
       const pane = '#304565';
       for (let r = 0; r < 2; r++) for (let c = 0; c < 2; c++) rect(ctx, pane, 9 + 8 * c, 37 + 8 * r, 6, 6);
       rect(ctx, wall, 0, 88, 96, 3);
+      if (spilled) rect(ctx, '#287f9b', 16, 87, Math.min(80, Math.ceil(80 * spilled / floodLimit)), 2);
       rect(ctx, wall, 4, 86, 10, 3);
       for (let i = 0; i < 3; i++) rect(ctx, ink, 5 + 3 * i, 87, 2, 1);
       for (const d of drops) {
@@ -116,7 +128,9 @@ function goteira(level, api) {
       line(ctx, gold, x + 8, by + 5, x + 5, by + 7);
       for (let i = 0; i < bucket; i++) rect(ctx, rain, x - 4 + i * 2, by + 1, 2, 1);
     },
-    hud() { return Math.max(0, 60 - Math.floor(time)) + ' s · Balde ' + bucket + '/4 · ' + score + ' gotas'; }
+    score() { return score; },
+    snapshot() { return {x, bucket, spilled, floodLimit, score, done, drops: drops.map(d => ({...d}))}; },
+    hud() { return (endless ? 'Sem Parar' : Math.max(0, 60 - Math.floor(time)) + ' s') + ' · Balde ' + bucket + '/4 · ' + score + ' gotas · Chão ' + spilled + '/' + floodLimit; }
   };
 }
 
@@ -125,10 +139,49 @@ const shores = [
   ['~~~~~...','~~~~~.C.','~~..=..#','~~..#~~~','~.=.~~~~','...~~~~~','S.#~~~~~','...~~~~~'],
   ['~~~~~..C','~~~~~#..','~~~..=..','~~~#..~~','~..=.~~~','~..#~~~~','..=.~~~~','S..~~~~~']
 ];
+// Busca no estado completo: posição, fase da maré e última areia segura.
+export function resolverMare(grid) {
+  let start;
+  grid.forEach((r,y)=>{if(r.includes('S')) start=[r.indexOf('S'),y];});
+  if (!start) return null;
+  const queue=[{x:start[0],y:start[1],phase:0,sx:start[0],sy:start[1],path:[]}], seen=new Set();
+  for(let head=0;head<queue.length && head<24576;head++) {
+    const at=queue[head];
+    for(const [dir,[dx,dy]] of Object.entries(delta)) {
+      let x=at.x+dx,y=at.y+dy; const cell=grid[y]?.[x];
+      if(!cell || cell==='~' || cell==='#' || (cell==='=' && at.phase>=3)) continue;
+      const phase=(at.phase+1)%6, sx=cell==='='?at.sx:x, sy=cell==='='?at.sy:y;
+      const path=[...at.path,dir];
+      if(cell==='C') return path;
+      if(phase===3 && cell==='=') {x=sx;y=sy;}
+      const key=[x,y,phase,sx,sy].join(',');
+      if(!seen.has(key)){seen.add(key);queue.push({x,y,phase,sx,sy,path});}
+    }
+  }
+  return null;
+}
+
+export function gerarMare(seed=1) {
+  const original=Number(seed)>>>0; let state=original;
+  const random=()=>{state=(Math.imul(state,1664525)+1013904223)>>>0;return state/4294967296;};
+  for(let attempt=0;attempt<24;attempt++) {
+    const grid=Array.from({length:8},()=>Array.from({length:8},()=>random()<.48?'~':random()<.2?'#':'.'));
+    // Um corredor monotônico garante distância; baixios ainda exigem validar a maré.
+    let x=0,y=7; grid[y][x]='S';
+    while(x<7 || y>0){if(x<7 && (y===0 || random()<.5))x++;else y--;grid[y][x]=random()<.22?'=':'.';}
+    grid[0][7]='C';
+    const rows=grid.map(r=>r.join('')), solution=resolverMare(rows);
+    if(solution && solution.length>=14) return {seed:original,grid:rows,solution,fallback:false};
+  }
+  const grid=['.......C','.~~~~~~~','........','~~~~~~~.','........','.~~~~~~~','........','S~~~~~~~'];
+  return {seed:original,grid,solution:resolverMare(grid),fallback:true};
+}
+
 const crab = ['r...r...r','rr.rr..rr','..rrrrrr.','.rwwwwr..','..wkwkw..','.rrrrrrr.','r.r..r..r'];
 
-function mare(level, api) {
-  const grid = shores[level - 1];
+function mare(level, api, options = {}) {
+  const generated = options.mode === 'generated' ? gerarMare(options.seed) : null;
+  const grid = generated ? generated.grid : shores[level - 1];
   let x = 0, y = 0, sandX = 0, sandY = 0;
   grid.forEach((row, j) => { if (row.includes('S')) { x = row.indexOf('S'); y = j; } });
   sandX = x; sandY = y;
@@ -150,6 +203,7 @@ function mare(level, api) {
     }
   }
   return {
+    snapshot() { return {grid: [...grid], x, y, steps, high, done, seed: generated?.seed}; },
     press: move, release() {},
     update(dt) { clock += dt; flash = Math.max(0, flash - dt); },
     draw(ctx) {
@@ -183,7 +237,8 @@ const bird = [
 ];
 const wires = [30, 53, 75];
 
-function fio(level, api) {
+function fio(level, api, options = {}) {
+  const endless = options.mode === 'endless';
   let col = 2, row = 1, score = 0, target = 0, clock = 0, hop = 0, faceLeft = false;
   let gust = 0, nextGust = [5.7, 4.9, 4.1][level - 1], danger = -1, done = false;
   const moths = [[6,0],[4,2],[1,1],[7,2],[3,0]];
@@ -196,9 +251,9 @@ function fio(level, api) {
     if (nx !== col) faceLeft = nx < col;
     col = nx; row = ny; hop = 0.17;
     if (moths[target][0] === col && moths[target][1] === row) {
-      score++; api.tone(560 + 50 * score, 0.09);
-      if (score === 5) { done = true; api.finish(true, 'Cinco mariposas antes da ventania.'); }
-      else target++;
+      score++; api.tone(560 + 50 * Math.min(score, 12), 0.09);
+      if (!endless && score === 5) { done = true; api.finish(true, 'Cinco mariposas antes da ventania.'); }
+      else target = (target + 1) % moths.length;
     }
   }
   return {
@@ -209,12 +264,12 @@ function fio(level, api) {
       if (danger >= 0) {
         gust -= dt;
         if (gust <= 0) {
-          if (row === danger) { done = true; api.finish(false, 'A rajada levou o bem-te-vi. Mariposas: ' + score + '/5.'); }
-          danger = -1; nextGust = [4.3, 3.5, 2.8][level - 1];
+          if (row === danger) { done = true; api.finish(false, 'A rajada levou o bem-te-vi. Mariposas: ' + score + (endless ? '.' : '/5.')); }
+          danger = -1; nextGust = endless ? Math.max(2.8, 4.3 - score * 0.04) : [4.3, 3.5, 2.8][level - 1];
         }
       } else {
         nextGust -= dt;
-        if (nextGust <= 0) { danger = row; gust = warning; api.tone(210, 0.14); }
+        if (nextGust <= 0) { danger = row; gust = endless ? Math.max(0.9, warning - score * 0.015) : warning; api.tone(210, 0.14); }
       }
     },
     draw(ctx) {
@@ -240,32 +295,43 @@ function fio(level, api) {
       sprite(ctx, flap ? ['w...w','ww.ww','.wkw.','..k..'] : ['.w.w.','wwkww','..k..'], {w:'#fff0c9',k:ink}, birdX(mx) - 2, wires[my] - 4);
       sprite(ctx, bird, {k:ink,w:'#fff0ca',b:'#655042',y:'#f6d052'}, birdX(col) - 5, wires[row] - 7 - Math.round(Math.sin((0.17-hop)/0.17*Math.PI)*2), faceLeft);
     },
-    hud() { return 'Mariposas ' + score + '/5' + (danger >= 0 ? ' · Fio tremendo!' : ''); }
+    score() { return score; },
+    hud() { return 'Mariposas ' + score + (endless ? '' : '/5') + (danger >= 0 ? ' · Fio tremendo!' : ''); }
   };
 }
 
 const skyline = [
   [81, 15], [75, 19], [85, 12], [78, 25], [83, 15], [73, 14]
 ];
-function pipa(level, api) {
+function pipa(level, api, options = {}) {
+  const endless = options.mode === 'endless';
   const held = new Set();
-  const speed = [14, 17, 20][level - 1];
+  const baseSpeed = [14, 17, 20][level - 1];
   const n = [4, 5, 6][level - 1];
   const towers = Array.from({length: n}, (_, i) => ({
     x: 90 + i * 70,
-    top: [48, 34, 41, 29, 44, 30][i] - (level - 1) * 2,
-    cable: i % 2 === 1
+    top: [48, 42, 46, 38, 44, 40][i],
+    cable: i % 2 === 1, counted: false
   }));
   const end = towers[n-1].x + 43;
   let scroll = 0, clock = 0, y = 37, vertical = 0, passed = 0, done = false;
   const kx = 30;
-  function fail() { done = true; api.finish(false, 'A rabiola enroscou. Lajes ' + passed + '/' + n + '.'); }
+  function fail() { done = true; api.finish(false, 'A rabiola enroscou. Obstáculos ' + passed + (endless ? '' : '/' + n) + '.'); }
   return {
     press(dir) { held.add(dir); },
     release(dir) { held.delete(dir); },
     update(dt) {
       if (done) return;
-      clock += dt; scroll += dt * speed;
+      // Subpassos limitam atravessamentos de obstáculos em quadros lentos.
+      if (dt > 0.025) { for(let left=dt;left>0 && !done;left-=0.025) this.update(Math.min(left,0.025)); return; }
+      clock += dt; scroll += dt * (endless ? Math.min(23, baseSpeed + passed * 0.15) : baseSpeed);
+      if(endless) {
+        while(towers[towers.length-1].x-scroll<180) {
+          const last=towers[towers.length-1];
+          towers.push({x:last.x+70,top:38+(Math.floor(last.x/70)%4)*3,cable:!last.cable,counted:false});
+        }
+        while(towers[0].x-scroll < -20) towers.shift();
+      }
       const control = Number(held.has('down')) - Number(held.has('up'));
       const breeze = Math.sin(clock * 1.33 - 0.4) * [2.5, 4.2, 6][level - 1];
       vertical += (control * 31 + breeze - vertical) * Math.min(1, 6 * dt);
@@ -273,11 +339,11 @@ function pipa(level, api) {
       for (const tower of towers) {
         const dx = tower.x - scroll - kx;
         // A ponta da rabiola se estende para trás, a três pixels do corpo.
-        if (dx >= -13 && dx <= 7 && y + 5 >= tower.top) { fail(); return; }
-        if (tower.cable && dx >= -14 && dx <= 10 && y - 4 <= 11) { fail(); return; }
+        if (dx >= -13 && dx <= 7 && y + 10 >= tower.top - 2) { fail(); return; }
+        if (tower.cable && dx >= -14 && dx <= 9 && y - 4 <= 11) { fail(); return; }
       }
-      passed = towers.filter(t => t.x - scroll < kx - 14).length;
-      if (scroll >= end - kx) { done = true; api.finish(true, 'Última laje! A rabiola chegou inteira.'); }
+      for(const tower of towers) if(!tower.counted && tower.x-scroll<kx-14){tower.counted=true;passed++;}
+      if (!endless && scroll >= end - kx) { done = true; api.finish(true, 'Última laje! A rabiola chegou inteira.'); }
     },
     draw(ctx) {
       const sky = '#7fd5d1', brick = '#b15a43', ink = '#283642', white = '#fff2c8', red = '#d95542';
@@ -286,11 +352,14 @@ function pipa(level, api) {
         const cx = ((145 + i*61 - Math.floor(scroll * 0.18)) % 137 + 137) % 137 - 18, cy = 12 + i * 8;
         rect(ctx, white, cx, cy, 11, 2); rect(ctx, white, cx + 4, cy - 2, 4, 2);
       }
+      for(let hx=0;hx<96;hx++) {const h=65+Math.round(7*Math.sin(hx*.08)+3*Math.sin(hx*.19));rect(ctx,'#64b8b0',hx,h,1,96-h);}
       let bx = -Math.floor(scroll * 0.65) % 100 - 25;
       for (let i = 0; bx < 96; i++) {
         const [top, width] = skyline[i % skyline.length];
         rect(ctx, white, bx, top + 2, width, 96 - top);
         rect(ctx, brick, bx - 1, top, width + 2, 3);
+        for(let wx=bx+3;wx<bx+width-2;wx+=5){rect(ctx,'#a9b7a0',wx,top+6,3,8);rect(ctx,white,wx+1,top+6,1,8);rect(ctx,brick,wx-1,top+14,5,1);}
+        for(let tx=bx;tx<bx+width;tx+=3)rect(ctx,'#ce8060',tx,top,2,1);
         bx += width + 2;
       }
       for (const tower of towers) {
@@ -301,10 +370,8 @@ function pipa(level, api) {
         rect(ctx, ink, ax - 6, tower.top, 13, 2);
         for (let i = -1; i <= 1; i++) rect(ctx, ink, ax + i * 4, tower.top - 2, 1, 4);
         if (tower.cable) {
-          // Um pequeno trecho do fio superior pede uma passagem entre ele e a antena.
-          line(ctx, ink, ax - 10, 8, ax, 10);
-          line(ctx, ink, ax, 10, ax + 10, 8);
-          rect(ctx, ink, ax - 10, 0, 1, 9); rect(ctx, ink, ax + 10, 0, 1, 9);
+          // Pássaro ativo em tinta escura; morros e casas são apenas cenário.
+          sprite(ctx, ['kk.......kk','.kk.....kk.','..kk...kk..','...kkkkk...','....kkk....'], {k:ink}, ax-5, 7);
         }
       }
       const topY = Math.round(y);
@@ -315,7 +382,9 @@ function pipa(level, api) {
       rect(ctx, red, kx + 8, topY + 7 + tail, 2, 2);
       sprite(ctx, ['....r....','...rrw...','..rrrww..','.rrrrwww.','rrrrrwwww','.wwwwrrr.','..wwwrr..','...wwr...','....w....'], {w:white,r:red}, kx - 4, topY - 4);
     },
-    hud() { return 'Lajes ' + passed + '/' + n + ' · ' + (vertical < -8 ? 'Subindo' : vertical > 8 ? 'Descendo' : 'Ao vento'); }
+    score() { return passed; },
+    snapshot() { return {y,passed,done,obstacles:towers.length}; },
+    hud() { return 'Obstáculos ' + passed + (endless ? '' : '/' + n) + ' · ' + (vertical < -8 ? 'Subindo' : vertical > 8 ? 'Descendo' : 'Ao vento'); }
   };
 }
 
