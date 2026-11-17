@@ -20,13 +20,29 @@ No **Sem Parar**, não existem metas de vitória nem prazo final. Cada alimento 
 
 ## Rastro de Prata: solução demonstrável
 
-`gerarRastro(seed)` usa uma grade **7 × 7**, como Puxado, e um gerador pseudoaleatório determinístico. Constrói candidatos com trilha simples de 27 a 34 casas, três folhas em pontos distintos e pedras fora do certificado. Exige pelo menos **seis bifurcações** (casas com três ou mais saídas), para que a solução não seja apenas seguir um corredor. Casas abertas adjacentes criam escolhas de percurso; entrar cedo no vaso continua bloqueado e cruzar o próprio rastro continua impossível.
+`gerarRastro(seed)` usa uma grade **7 × 7**, como Puxado, e um gerador pseudoaleatório determinístico. Na família estreita, constrói candidatos com trilha simples de 27 a 34 casas, três folhas em pontos distintos e pedras fora do certificado. Exige pelo menos **seis bifurcações** (casas com três ou mais saídas), para que a solução não seja apenas seguir um corredor. Casas abertas adjacentes criam escolhas de percurso; entrar cedo no vaso continua bloqueado e cruzar o próprio rastro continua impossível.
 
 Um certificado longo sozinho poderia esconder um atalho. Por isso, uma busca adicional testa todas as possibilidades de vitória com até **21 comandos**: acompanha posição, casas usadas, folhas restantes e entrada no vaso. O limite inferior de distância considera todas as ordens das folhas restantes e só elimina ramos que não podem caber nesse comprimento. Um candidato com solução curta é rejeitado. Se a busca atingir seu orçamento de 30.000 estados, ela é inconclusiva e o candidato também é rejeitado, nunca anunciado como validado. Como desfazer passos apaga o sufixo e devolve suas folhas, qualquer vitória pode ser representada pelo caminho simples que esse solver examina.
 
-São no máximo **96 candidatos**, cada caminhada com tamanho limitado. Se nenhum passar, o gerador utiliza uma configuração previamente verificada, refletida/rotacionada conforme a semente, mantendo as mesmas restrições e o certificado de solução. A configuração de reserva também é coberta nos testes de ausência de atalho. Uma fase aceita tem solução executável e nenhuma vitória com menos de 22 comandos. Isso é um critério objetivo de complexidade, não uma garantia de dificuldade subjetiva idêntica entre jogadores.
+São no máximo **96 candidatos na família estreita e 288 na aberta**, cada caminhada com tamanho limitado. Se nenhum passar, o gerador utiliza uma configuração previamente verificada da própria família, refletida/rotacionada conforme a semente, mantendo as mesmas restrições e o certificado de solução. A família estreita conserva sua reserva original; a aberta tem duas configurações próprias e até oito orientações de cada uma. Esgotar o orçamento de uma fase aberta nunca a converte silenciosamente em estreita. A configuração de reserva também é coberta nos testes de ausência de atalho. Uma fase aceita tem solução executável e nenhuma vitória com menos de 22 comandos. Isso é um critério objetivo de complexidade, não uma garantia de dificuldade subjetiva idêntica entre jogadores.
 
 A mesma semente reconstrói a mesma fase ao reiniciar. A interface principal troca a semente apenas quando o jogador solicita outra fase. As três fases autorais e os sprites continuam intactos.
+
+### Família aberta, sem retirar a anterior
+
+A família anterior, **estreita**, permanece no conjunto com seu algoritmo, configuração e fluxo pseudoaleatório originais: trilhas de 27–34 casas e pelo menos seis bifurcações. Pode ser reproduzida explicitamente com `gerarRastro(seed, 'estreito')`. Um teste fixa o certificado e o mapa das primeiras 100 sementes dessa família, evitando substituição silenciosa em alterações futuras.
+
+A nova família **aberta** constrói certificados de 32–39 casas e exige simultaneamente:
+
+- pelo menos **39 das 49 casas livres**;
+- pelo menos **22 bifurcações**, com três ou mais saídas;
+- pelo menos **12 blocos 2 × 2 inteiramente livres**, criando praças e áreas de decisão em vez de apenas corredores;
+- três folhas e vaso alcançáveis sem cruzar o rastro, com certificado real validado;
+- busca conclusiva rejeitando qualquer vitória de até 21 comandos, com o mesmo orçamento de 30.000 estados.
+
+A seleção padrão usa um terço das sementes para a família aberta e dois terços para a estreita. Ambas permanecem acessíveis; a semente reproduz a seleção e o mapa no reinício. Para diagnóstico e testes, `gerarRastro(seed, 'aberto')` e `options.family: 'aberto'` selecionam a família explicitamente. Os metadados `familia`, `areaLivre`, `bifurcacoes`, `pracas` e `fallback` permitem medir o resultado, sem prometer dificuldade subjetiva absoluta. Mais espaço oferece alternativas de ordem e decisões de caminho, mas não torna automaticamente toda fase mais difícil para todo jogador.
+
+Em 1.000 sementes sequenciais da seleção padrão, foram obtidos 985 mapas distintos; a amostra registrou 667 estreitas (14 reservas) e 333 abertas (16 reservas). As abertas tiveram em média cerca de **42,7 casas livres e 32 bifurcações**, contra 32,5 e 17,3 na família anterior. Geração ocorre apenas ao criar uma fase, nunca por quadro. Medições Node são indicadores locais, não garantias de desempenho em celulares.
 
 ### Traçar o rastro com mouse ou toque
 
@@ -44,4 +60,4 @@ Execute:
 node --test tests/pao.test.mjs tests/esquina-modos.test.mjs
 ```
 
-A suíte verifica identidades, utensílios, toque, trocas, queimas únicas, três erros, metas separadas e vitória imediata nos três níveis; simula 20 minutos de Sem Parar; percorre **1.000 sementes** por controles reais, valida repetibilidade e variedade; desenha os mapas autorais; resolve os três autorais e 100 gerados com gestos de eventos espaçados; verifica bloqueio, início no caracol, cancelamento, preservação ao soltar e devolução de folha ao desfazer; e rejeita atalhos em 150 sementes, incluindo a reserva. Testes automatizados não substituem a inspeção visual final no navegador e em dispositivos reais.
+A suíte verifica identidades, utensílios, toque, trocas, queimas únicas, três erros, metas separadas e vitória imediata nos três níveis; simula 20 minutos de Sem Parar; percorre **1.000 sementes** por controles reais, valida repetibilidade e variedade; desenha os mapas autorais; resolve os três autorais e 100 gerados com gestos de eventos espaçados; verifica bloqueio, início no caracol, cancelamento, preservação ao soltar e devolução de folha ao desfazer; e rejeita atalhos em 150 sementes, incluindo a reserva. A família aberta é testada separadamente em 200 sementes, incluindo execução por gesto, áreas livres, bifurcações, ausência de atalhos e reserva da mesma família. Testes automatizados não substituem a inspeção visual final no navegador e em dispositivos reais.

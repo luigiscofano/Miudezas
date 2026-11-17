@@ -67,6 +67,8 @@ São **seis jogos com Sem Parar e três com Caminho Novo**, além do Rádio com 
 | Três Petelecos | Caminho Novo | Percurso validado com a física e os controles de lançamento reais. |
 | Pisca no Mato | Sem Parar | Maior sequência concluída; errar encerra. |
 
+No **Rastro de Prata**, Caminho Novo combina a família estreita já existente com uma família mais aberta: áreas de escolha, bifurcações e praças aumentam as alternativas, mas o rastro exige planejamento. A família aberta mantém solução certificada e rejeita atalhos curtos; ambas continuam disponíveis no gerador.
+
 Caminho Novo toma a dificuldade **Puxado** como referência de desafio, preservando as três fases autorais. Os geradores usam sementes reproduzíveis, tentativas limitadas e configurações de reserva validadas. A prova de solução é executada antes da entrega da fase, não presumida apenas pela aparência do mapa. Consulte [Quintal](docs/jogos/quintal/README.md), [Esquina](docs/jogos/esquina/README.md) e [Varanda](docs/jogos/varanda/README.md) para regras, limites e verificações.
 
 **Uma volta de exemplo.** Escolha Animado, jogue Goteira e avance. O próximo cartão é Maré Miúda no mesmo nível. Fechar o navegador nesse cartão permite retomar na segunda parada. Se sair no meio da partida, ela recomeça naquela parada. O avanço registra um resultado por jogo.

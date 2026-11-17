@@ -1,4 +1,5 @@
 import {test} from 'node:test';
+import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {esquina, gerarRastro, validarRastro, buscarAtalhoRastro} from '../dist/esquina.js';
 
@@ -143,4 +144,38 @@ test('Rastro gerado rejeita atalhos e exige decisões numa grade de Puxado',()=>
     assert.ok(fase.solucao.length>=22);reservas+=fase.fallback;
   }
   assert.ok(reservas>0,'também exercita a reserva validada');
+});
+
+test('Rastro: família anterior permanece reproduzível sem substituir suas fases',()=>{
+  const fixture=[];
+  for(let seed=0;seed<100;seed++) {
+    const fase=gerarRastro(seed,'estreito');
+    fixture.push({mapa:fase.mapa,solucao:fase.solucao});
+    assert.equal(fase.familia,'estreito');
+  }
+  assert.equal(createHash('sha256').update(JSON.stringify(fixture)).digest('hex'),'9abe5b9f65ffddeb6224d2edf72668df58fafd174cfafb8aa74d2365ffbc6fa5');
+});
+test('Rastro: família aberta oferece áreas amplas e mantém prova e restrições reais',()=>{
+  const diferentes=new Set();let reservas=0;
+  for(let seed=0;seed<200;seed++) {
+    const fase=gerarRastro(seed,'aberto');
+    assert.equal(fase.familia,'aberto');assert.ok(fase.areaLivre>=39);
+    assert.ok(fase.bifurcacoes>=22);assert.ok(fase.pracas>=12);
+    assert.ok(validarRastro(fase.mapa,fase.solucao));
+    const atalho=buscarAtalhoRastro(fase.mapa);
+    assert.equal(atalho.conclusivo,true);assert.equal(atalho.encontrado,false);
+    const {jogo,resultados}=criar('rastro',3,{mode:'generated',seed,family:'aberto'});
+    assert.deepEqual(jogo.snapshot().mapa,fase.mapa);
+    percorrerGesto(jogo,fase.solucao);assert.equal(resultados[0]?.[0],true);
+    diferentes.add(fase.mapa.join(''));reservas+=fase.fallback;
+  }
+  assert.ok(diferentes.size>=180);assert.ok(reservas>0,'reserva também permanece aberta e certificada');
+});
+test('Rastro: seleção por semente inclui ambas as famílias e reinício é determinístico',()=>{
+  const familias=new Set();
+  for(let seed=0;seed<30;seed++) {
+    const fase=gerarRastro(seed);familias.add(fase.familia);
+    assert.deepEqual(fase,gerarRastro(seed));
+  }
+  assert.deepEqual([...familias].sort(),['aberto','estreito']);
 });
