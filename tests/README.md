@@ -40,6 +40,12 @@ A suíte automatizada não substitui inspeção visual, teste em aparelho real n
 
 ## Verificação integrada de gestos e pausa
 
-A suíte desta revisão tem 88 testes aprovados. `navegacao.test.mjs` liga o Gude real ao canvas instrumentado e despacha ponteiros: puxar mantém a partida, cancelamento não lança, soltar lança. Eventos de foco transitório, perda real de foco, aba oculta, captura perdida e retorno às fases são verificados separadamente. Isso é automação DOM, não sessão em navegador móvel físico. O cancelamento do pad também solta direções contínuas sem disparar um peteleco.
+Execute a suíte completa para conferir a contagem atual. `navegacao.test.mjs` liga o Gude real ao canvas instrumentado e despacha ponteiros: puxar mantém a partida, cancelamento não lança, soltar lança. Eventos de foco transitório, perda real de foco, aba oculta, captura perdida e retorno às fases são verificados separadamente. Isso é automação DOM, não sessão em navegador móvel físico. O cancelamento do pad também solta direções contínuas sem disparar um peteleco.
 
 Medição Node de 100 sementes, sem aquecimento: p95 de geração Rastro 7,56 ms, Maré 12,89 ms e Gude 10,99 ms. O máximo observado em Gude foi 71,14 ms; a mesma semente repetida ficou entre 2,86 e 24,08 ms. São amostras deste ambiente, não garantias para celulares. A validação ocorre ao criar a fase, nunca a cada quadro.
+
+## Diversidade dos caminhos
+
+Gude é verificado por posições iniciais, quadrantes, famílias de rota, orientações e sequências de direção, além do certificado físico. Em 400 sementes desta revisão: 229 origens, quatro quadrantes, 16 sequências e nenhum fallback. Isso evita considerar simples deslocamentos de pedras como diversidade suficiente.
+
+Rastro preserva a família estreita e acrescenta a aberta. Mil sementes resultaram em 667 mapas da família estreita e 333 da aberta, com 985 mapas únicos; 16 das abertas usaram fallback próprio (4,8%). O banco aberto possui dois modelos e oito orientações. A suíte inclui execução por gesto de 200 mapas abertos e regressão de 100 sementes estreitas. A área livre e as bifurcações são critérios verificáveis; dificuldade subjetiva ainda depende de teste humano.

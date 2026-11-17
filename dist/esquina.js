@@ -356,9 +356,21 @@ export function buscarAtalhoRastro(mapa, limite = 21, orcamento = 30000) {
   return {encontrado, conclusivo: !esgotado, nos};
 }
 
-function reservaRastro(seed) {
-  const base = ['#....L.', '...S.#.', '.......', '..L####', '..#####', '#....#P', '#L.#...'];
-  const comandos = ['left','left','up','right','right','right','right','right','down','down','left','left','left','left','down','left','up','left','down','down','right','down','down','right','up','right','right','down','right','right','up'];
+function medirRastro(casas) {
+  const bifurcacoes = casas.filter((c, i) => c !== '#' && vizinhosRastro(i, 7).filter(v => casas[v.posicao] !== '#').length >= 3).length;
+  const areaLivre = casas.filter(c => c !== '#').length;
+  let pracas = 0;
+  for (let y = 0; y < 6; y++) for (let x = 0; x < 6; x++) {
+    const i = y * 7 + x;
+    if ([i, i + 1, i + 7, i + 8].every(j => casas[j] !== '#')) pracas++;
+  }
+  return {bifurcacoes, areaLivre, pracas};
+}
+
+function reservaRastro(seed, aberto = false) {
+  const segundaReserva = aberto && ((Number(seed) >>> 3) & 1) !== 0;
+  const base = segundaReserva ? ['#..L#S.','##.....','.....#P','..#....','..#..L.','.#.#...','L......'] : aberto ? ['......L','..####.','L..#...','.......','.....##','L#..P#.','.....S.'] : ['#....L.', '...S.#.', '.......', '..L####', '..#####', '#....#P', '#L.#...'];
+  const comandos = segundaReserva ? ['right','down','left','left','down','left','up','up','left','down','down','left','left','down','down','down','down','right','right','right','right','right','right','up','up','left','down','left','up','left','up','right','right','right','up'] : aberto ? ['left','left','up','left','down','left','left','up','up','right','right','up','up','left','down','left','up','up','up','right','right','right','right','right','right','down','down','down','left','left','left','down','right','down'] : ['left','left','up','right','right','right','right','right','down','down','left','left','left','left','down','left','up','left','down','down','right','down','down','right','up','right','right','down','right','right','up'];
   const giro = (Number(seed) >>> 0) % 4, espelho = ((Number(seed) >>> 0) & 4) !== 0;
   const transformar = (x, y) => {
     if (espelho) x = 6 - x;
@@ -376,10 +388,11 @@ function reservaRastro(seed) {
   const mapa = Array.from({length: 7}, (_, y) => casas.slice(y * 7, y * 7 + 7).join(''));
   const solucao = trajeto.slice(1).map((casa, i) => vizinhosRastro(trajeto[i], 7).find(v => v.posicao === casa).direcao);
   if (!validarRastro(mapa, solucao)) throw new Error('Reserva inválida de Rastro.');
-  return {mapa, solucao, bifurcacoes: 17, minimoPassos: 22, fallback: true};
+  return {mapa, solucao, ...medirRastro(casas), minimoPassos: 22, fallback: true};
 }
 
-export function gerarRastro(seed = 1) {
+export function gerarRastro(seed = 1, familia = (Number(seed) >>> 0) % 3 === 1 ? 'aberto' : 'estreito') {
+  const aberto = familia === 'aberto';
   let estado = Number(seed) >>> 0;
   const aleatorio = () => {
     estado = (Math.imul(1664525, estado) + 1013904223) >>> 0;
@@ -387,9 +400,9 @@ export function gerarRastro(seed = 1) {
   };
   const lado = 7;
   // Um certificado longo não basta: o solver também rejeita soluções curtas.
-  for (let tentativa = 0; tentativa < 96; tentativa++) {
+  for (let tentativa = 0; tentativa < (aberto ? 288 : 96); tentativa++) {
     const trilha = [Math.floor(aleatorio() * 49)], usadas = new Set(trilha);
-    const tamanho = 27 + Math.floor(aleatorio() * 8);
+    const tamanho = (aberto ? 32 : 27) + Math.floor(aleatorio() * 8);
     while (trilha.length < tamanho) {
       const vizinhas = vizinhosRastro(trilha.at(-1), lado).filter(v => !usadas.has(v.posicao));
       if (!vizinhas.length) break;
@@ -397,23 +410,23 @@ export function gerarRastro(seed = 1) {
       trilha.push(proxima); usadas.add(proxima);
     }
     if (trilha.length < tamanho) continue;
-    const casas = Array.from({length: 49}, (_, i) => usadas.has(i) || aleatorio() < 0.12 ? '.' : '#');
+    const casas = Array.from({length: 49}, (_, i) => usadas.has(i) || aleatorio() < (aberto ? 0.6 : 0.12) ? '.' : '#');
     casas[trilha[0]] = 'S'; casas[trilha.at(-1)] = 'P';
     for (const fracao of [0.25, 0.5, 0.75]) casas[trilha[Math.floor((trilha.length - 1) * fracao)]] = 'L';
-    const bifurcacoes = casas.filter((c, i) => c !== '#' && vizinhosRastro(i, lado).filter(v => casas[v.posicao] !== '#').length >= 3).length;
-    if (bifurcacoes < 6) continue;
+    const {bifurcacoes, areaLivre, pracas} = medirRastro(casas);
+    if (bifurcacoes < (aberto ? 22 : 6) || (aberto && (areaLivre < 39 || pracas < 12))) continue;
     const mapa = Array.from({length: lado}, (_, y) => casas.slice(y * lado, (y + 1) * lado).join(''));
     const solucao = trilha.slice(1).map((casa, i) => vizinhosRastro(trilha[i], lado).find(v => v.posicao === casa).direcao);
     if (!validarRastro(mapa, solucao)) continue;
     const atalho = buscarAtalhoRastro(mapa);
     if (!atalho.conclusivo || atalho.encontrado) continue;
-    return {mapa, solucao, bifurcacoes, minimoPassos: 22, fallback: false};
+    return {mapa, solucao, bifurcacoes, areaLivre, pracas, familia, minimoPassos: 22, fallback: false};
   }
-  return reservaRastro(seed);
+  return {...reservaRastro(seed, aberto), familia};
 }
 
 function rastro(level, api, options = {}) {
-  const gerado = options.mode === 'generated' ? gerarRastro(options.seed) : null;
+  const gerado = options.mode === 'generated' ? gerarRastro(options.seed, options.family) : null;
   const maze = gerado ? gerado.mapa : gardens[level - 1], side = maze.length, tiles = maze.join('');
   const round = roundEnd(api);
   const path = [tiles.indexOf('S')], walked = new Set(path), leaves = new Set();
