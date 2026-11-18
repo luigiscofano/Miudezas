@@ -401,7 +401,8 @@ function gude(level, api, options={}) {
   };
 }
 
-const corpoVaga = ['....kk....','..wwggww..','.wwggggww.','llggggggkk','llggggggkk','..kk..kk..'];
+// Matriz da primeira versão disponível no GitHub, preservando a lógica atual.
+const corpoVaga = ['....ww.....','...ww.w....','......w....','..ggggggg..','.lggggggkg.','.lggggggg..','...g..g....'];
 
 function pisca(level,api,options={}) {
   const infinito=options.mode==='endless';

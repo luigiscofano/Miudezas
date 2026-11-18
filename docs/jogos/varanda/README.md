@@ -57,4 +57,4 @@ Os detalhes usam a grade nativa de 96 × 96, cores chapadas e bordas sem suaviza
 
 ## Visual original de Pisca restaurado
 
-O refinamento visual de Pisca do PR #29 foi retirado: voltaram a matriz original dos vaga-lumes e o fundo com vegetação lateral, sem o capim adicional. A reversão é restrita ao desenho dentro da partida. Ícones, Sem Parar, recordes, toque, sequência, duração da luz e os outros jogos permanecem intactos.
+A primeira matriz dos vaga-lumes disponível no GitHub foi recuperada do commit `9cc7bbb` (PR #1), com 11 × 7 pixels e asas erguidas. Ela substitui a matriz intermediária de 10 × 6; o fundo com vegetação lateral continua sem o capim adicional. A reversão é restrita ao desenho dentro da partida. Ícones, Sem Parar, recordes, toque, sequência, duração da luz e os outros jogos permanecem intactos.
