@@ -441,3 +441,13 @@ Pisca no Mato mantém o visual original dos vaga-lumes e da vegetação lateral,
 ### Segundo refinamento aprovado: Maré e Rastro
 
 Maré Miúda recebeu espuma costeira, areia discreta, baixios destacados, pedras facetadas e concha preenchida. Rastro de Prata recebeu apenas brilho nas bordas dos ladrilhos, preservando as folhas finas B. Este lote não modifica os outros oito jogos, incluindo o visual restaurado de Pisca.
+
+## Ícones aprovados na seleção
+
+Rádio de Pilha, Três Petelecos e Pisca no Mato usam seus ícones em pixel art nos cartões de **Escolha um jogo**. As outras sete miniaturas permanecem como estavam. A mudança é só de apresentação: introduções, resultados, partidas, controles e dados salvos continuam iguais.
+
+| Rádio de Pilha | Três Petelecos | Pisca no Mato |
+|---|---|---|
+| ![Ícone Rádio de Pilha](dist/arte/icones/radio.svg) | ![Ícone Três Petelecos](dist/arte/icones/gude.svg) | ![Ícone Pisca no Mato](dist/arte/icones/pisca.svg) |
+
+[Arquivos, proporções e manutenção dos ícones](dist/arte/icones/README.md).
