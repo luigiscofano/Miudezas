@@ -86,3 +86,5 @@ Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavizaç
 ### Maré: padrões avançados misturados
 
 `gerarMare()` conserva as prioridades de enseadas e arquipélagos e intercala dois conjuntos avançados nas demais sementes. A prova considera posição, maré e última areia segura. Pontes indispensáveis, custo de sincronização, escolhas alcançáveis e praças secas complementam o comprimento. A geração ocorre somente ao criar a fase, tem tentativas limitadas e reservas certificadas; repetir mantém a semente. Nenhum save, controle, desenho ou fase autoral foi modificado. Consulte [os critérios do Quintal](../docs/jogos/quintal/README.md).
+
+- `pipa-aves.js`: sprite, paleta, formação em V e colisões por pixels sólidos dos passarinhos da Pipa. Importado por `quintal.js`; os bandos são calculados ao criar obstáculos e não têm persistência própria.

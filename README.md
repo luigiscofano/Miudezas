@@ -487,3 +487,7 @@ Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavizaç
 ### Porta da lojinha na capa
 
 A entrada sob o toldo listrado usa verde discreto e maçaneta clara para se distinguir da fachada escura e da vitrine âmbar. A porta chega à calçada, sem parecer uma extensão solta da fachada. A revisão é apenas na imagem: proporção, controles, regras e dados dos jogos permanecem inalterados.
+
+### Pipa de Laje: passarinhos em V
+
+O obstáculo aéreo usa a formação aprovada: uma ponta inferior e pares de aves subindo pelos dois lados, com quantidade proporcional à altura. A colisão segue os pixels das aves, não preenche os espaços vazios do V. Postes, cenário, controles, dificuldade e progresso são preservados. [Regras, implementação e testes](docs/jogos/quintal/README.md#pipa-bando-em-v-aprovado).
