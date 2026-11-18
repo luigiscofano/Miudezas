@@ -383,6 +383,54 @@ export function buscarAtalhoRastro(mapa, limite = 21, orcamento = 30000) {
   return {encontrado, conclusivo: !esgotado, nos};
 }
 
+// Conta ordens realmente executáveis. A busca acompanha o rastro ocupado;
+// conectividade entre folhas, sozinha, não prova que a sequência é possível.
+export function analisarOrdensRastro(mapa, orcamento = 24000) {
+  const lado = mapa.length, casas = mapa.join(''), inicio = casas.indexOf('S'), vaso = casas.indexOf('P');
+  const folhas = [...casas].flatMap((tipo, i) => tipo === 'L' ? [i] : []);
+  const permutar = itens => itens.length ? itens.flatMap(item => permutar(itens.filter(i => i !== item)).map(resto => [item, ...resto])) : [[]];
+  const vizinhos = Array.from(casas, (_, i) => vizinhosRastro(i, lado).filter(v => casas[v.posicao] !== '#'));
+  const ordens = [];
+  let totalEstados = 0;
+  for (const ordem of permutar(folhas)) {
+    const visitadas = new Set([inicio]);
+    let estados = 0, conclusivo = true;
+    function buscar(posicao, proximaFolha) {
+      if (++estados > orcamento) { conclusivo = false; return false; }
+      if (posicao === vaso) return proximaFolha === folhas.length;
+      for (const {posicao: destino} of vizinhos[posicao]) {
+        if (visitadas.has(destino) || (destino === vaso && proximaFolha !== folhas.length)) continue;
+        if (casas[destino] === 'L' && destino !== ordem[proximaFolha]) continue;
+        visitadas.add(destino);
+        const venceu = buscar(destino, proximaFolha + (casas[destino] === 'L' ? 1 : 0));
+        visitadas.delete(destino);
+        if (venceu) return true;
+        if (!conclusivo) return false;
+      }
+      return false;
+    }
+    const possivel = buscar(inicio, 0);
+    totalEstados += estados;
+    if (!conclusivo) return {conclusivo: false, ordens: [], estados: totalEstados};
+    ordens.push({ordem, possivel});
+  }
+  return {conclusivo: true, ordens, estados: totalEstados};
+}
+
+function contarIlhasDePedra(casas) {
+  const restantes = new Set(casas.flatMap((c, i) => c === '#' ? [i] : []));
+  let ilhas = 0;
+  while (restantes.size) {
+    const fila = [restantes.values().next().value]; restantes.delete(fila[0]); ilhas++;
+    while (fila.length) {
+      for (const {posicao} of vizinhosRastro(fila.pop(), 7)) {
+        if (restantes.delete(posicao)) fila.push(posicao);
+      }
+    }
+  }
+  return ilhas;
+}
+
 function medirRastro(casas) {
   const bifurcacoes = casas.filter((c, i) => c !== '#' && vizinhosRastro(i, 7).filter(v => casas[v.posicao] !== '#').length >= 3).length;
   const areaLivre = casas.filter(c => c !== '#').length;
@@ -418,7 +466,85 @@ function reservaRastro(seed, aberto = false) {
   return {mapa, solucao, ...medirRastro(casas), minimoPassos: 22, fallback: true};
 }
 
-export function gerarRastro(seed = 1, familia = (Number(seed) >>> 0) % 3 === 1 ? 'aberto' : 'estreito') {
+// Topologias de reserva certificadas: cada uma tem obstáculos e ordens próprias.
+const modelosIrregulares = [
+  {mapa: ["..L....", ".##...L", ".####..", ".#S#..#", ".#...##", ".##...#", "L...#P."],
+    solucao: ["down", "right", "down", "down", "left", "left", "left", "up", "up", "up", "up", "up", "up", "right", "right", "right", "down", "right", "up", "right", "right", "down", "left", "down", "down", "left", "down", "down", "right", "down"]},
+  {mapa: ["....P..", ".#..#..", "S.L#..#", "..###..", ".#..#L.", ".#L.#.#", "......#"],
+    solucao: ["up", "up", "right", "right", "right", "down", "left", "down", "left", "down", "left", "down", "down", "down", "right", "right", "up", "up", "right", "down", "down", "right", "right", "up", "up", "right", "up", "left", "up", "up", "right", "up", "left", "left"]},
+  {mapa: ["....###", "L#....#", ".#.....", ".#L.#.L", ".#.S#..", "...#.#.", "##P...."],
+    solucao: ["left", "down", "left", "left", "up", "up", "up", "up", "up", "right", "right", "right", "down", "left", "down", "down", "right", "up", "right", "up", "right", "down", "right", "down", "left", "down", "right", "down", "down", "left", "left", "left", "left"]},
+  {mapa: ["#S....L", "#..#.#.", "####.P.", "##.#...", ".......", "L#####.", "......L"],
+    solucao: ["down", "right", "up", "right", "right", "right", "right", "down", "down", "down", "left", "down", "right", "down", "down", "left", "left", "left", "left", "left", "left", "up", "up", "right", "right", "right", "right", "up", "up", "right"]},
+  {mapa: ["......L", ".#...#.", "P#L..#.", ".S#....", ".#.#..#", ".#.#.##", "....L##"],
+    solucao: ["left", "down", "down", "down", "right", "right", "right", "right", "up", "up", "right", "up", "right", "up", "up", "up", "left", "left", "down", "down", "down", "left", "up", "left", "up", "right", "up", "left", "left", "left", "down", "down"]},
+  {mapa: ["...#SL.", ".#.....", "L.#....", "#...##.", "##P#.#.", "#....#.", ".....L."],
+    solucao: ["down", "left", "left", "up", "left", "left", "down", "down", "right", "down", "right", "right", "up", "right", "right", "up", "up", "right", "down", "down", "down", "down", "down", "down", "left", "left", "up", "left", "down", "left", "left", "up", "right", "up"]},
+  {mapa: ["#...L..", "##.S...", "#...#..", "L..#...", ".###.L.", ".####.#", ".....P#"],
+    solucao: ["right", "right", "down", "down", "left", "down", "right", "right", "up", "up", "up", "up", "left", "left", "left", "left", "down", "down", "left", "down", "left", "down", "down", "down", "right", "right", "right", "right", "right"]},
+  {mapa: ["...P.##", ".####..", "..#.#L.", "L..##..", ".###...", ".S...#.", ".....L."],
+    solucao: ["right", "right", "right", "up", "right", "up", "up", "up", "right", "down", "down", "down", "down", "down", "left", "left", "left", "left", "left", "left", "up", "up", "up", "right", "up", "left", "up", "up", "right", "right", "right"]}
+];
+
+function gerarRastroIrregular(seed) {
+  let estado = Number(seed) >>> 0;
+  const aleatorio = () => {
+    estado = (Math.imul(1664525, estado) + 1013904223) >>> 0;
+    return estado / 4294967296;
+  };
+  const modelo = modelosIrregulares[(Number(seed) >>> 0) % modelosIrregulares.length];
+  const giro = Math.floor(aleatorio() * 4), espelho = aleatorio() < 0.5;
+  const transformar = indice => {
+    let x = indice % 7, y = Math.floor(indice / 7);
+    if (espelho) x = 6 - x;
+    for (let i = 0; i < giro; i++) [x, y] = [6 - y, x];
+    return y * 7 + x;
+  };
+  const casasBase = Array(49);
+  [...modelo.mapa.join('')].forEach((c, i) => { casasBase[transformar(i)] = c; });
+  let posicao = modelo.mapa.join('').indexOf('S');
+  const trilha = [transformar(posicao)];
+  for (const dir of modelo.solucao) {
+    const [dx, dy] = directions[dir]; posicao += dx + 7 * dy; trilha.push(transformar(posicao));
+  }
+  const solucao = trilha.slice(1).map((casa, i) => vizinhosRastro(trilha[i], 7).find(v => v.posicao === casa).direcao);
+  const protegidas = new Set(trilha), externas = Array.from({length: 49}, (_, i) => i).filter(i => !protegidas.has(i));
+  function fase(casas, fallback = false) {
+    const mapa = Array.from({length: 7}, (_, y) => casas.slice(y * 7, y * 7 + 7).join(''));
+    const metricas = medirRastro(casas), ilhas = contarIlhasDePedra(casas);
+    if (ilhas < 3 || metricas.areaLivre < 30 || metricas.areaLivre > 38 || metricas.bifurcacoes < 10 || !validarRastro(mapa, solucao)) return null;
+    const atalho = buscarAtalhoRastro(mapa, 25, 12000);
+    if (!atalho.conclusivo || atalho.encontrado) return null;
+    const analise = analisarOrdensRastro(mapa, 6000);
+    if (!analise.conclusivo) return null;
+    const ordensPossiveis = analise.ordens.filter(o => o.possivel).length;
+    if (ordensPossiveis < 1 || ordensPossiveis > 3) return null;
+    return {mapa, solucao, ...metricas, ilhas, ordensPossiveis, familia: 'irregular', minimoPassos: 26, fallback};
+  }
+  // Muda a topologia fora da testemunha e a posição das folhas. A testemunha
+  // garante existência; duas buscas independentes rejeitam atalhos e exigem restrições na ordem das folhas.
+  for (let tentativa = 0; tentativa < 16; tentativa++) {
+    const casas = casasBase.map(c => c === 'L' ? '.' : c);
+    const mudancas = 1 + Math.floor(aleatorio() * 5);
+    for (let i = 0; i < mudancas; i++) {
+      const alvo = externas[Math.floor(aleatorio() * externas.length)];
+      casas[alvo] = casas[alvo] === '#' ? '.' : '#';
+    }
+    for (const fracao of [0.25, 0.5, 0.75]) {
+      const indice = Math.floor((trilha.length - 1) * fracao) + Math.floor(aleatorio() * 7) - 3;
+      casas[trilha[indice]] = 'L';
+    }
+    const candidata = fase(casas);
+    if (candidata) return candidata;
+  }
+  // Cada modelo de reserva tem prova própria. Nunca aceitar busca inconclusiva.
+  const reserva = fase(casasBase, true);
+  if (!reserva) throw new Error('Reserva irregular de Rastro não validada.');
+  return reserva;
+}
+
+export function gerarRastro(seed = 1, familia = (Number(seed) >>> 0) % 4 === 3 ? 'irregular' : (Number(seed) >>> 0) % 3 === 1 ? 'aberto' : 'estreito') {
+  if (familia === 'irregular') return gerarRastroIrregular(seed);
   const aberto = familia === 'aberto';
   let estado = Number(seed) >>> 0;
   const aleatorio = () => {
