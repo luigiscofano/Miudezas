@@ -40,9 +40,8 @@ test('Sobre reúne memória familiar, referência artística e orientação sobr
   const texto=a.elementos.filter(e=>e.tag==='p').map(e=>e.textContent||'').join(' ');
   for(const trecho of ['Meus dois pais viveram a vida toda na Tijuca','minha avó na Tijuca','Gabriel Fonseca','confortável e aconchegante','© 2026 Luigi Scofano de Araujo','não há conta nem sincronização automática'])assert.ok(texto.includes(trecho));
   assert.ok(!texto.includes('Obras e referências de terceiros pertencem aos respectivos titulares.'));
-  const fonte=a.elementos.find(e=>e.tag==='a');
-  assert.equal(fonte.href,'https://gabrielsculptor.com/about/');
-  assert.equal(fonte.rel,'noopener noreferrer');
+  assert.ok(texto.includes('Balões ou Ritual do Vento'));
+  assert.equal(a.elementos.filter(e=>e.tag==='a').length,0);
 });
 
 test('Novos padrões não sobrescrevem volumes salvos, inclusive zero e antigos padrões',()=>{
