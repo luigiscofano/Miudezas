@@ -1,14 +1,15 @@
 # Ícones aprovados da seleção
 
-Estes três desenhos substituem somente as miniaturas correspondentes na galeria de jogos. Nenhuma outra arte foi aprovada para integração nesta rodada.
+Estes quatro desenhos substituem somente as miniaturas correspondentes na galeria de jogos. Luz de Varanda foi adicionada após aprovação específica da opção A com ajuste restrito a uma perna.
 
 | Arquivo | Jogo | Referência |
 |---|---|---|
 | `radio.svg` | Rádio de Pilha | Ícone aprovado na rodada 3 |
 | `gude.svg` | Três Petelecos | Ícone aprovado na rodada 3 |
 | `pisca.svg` | Pisca no Mato | Vaga-lume original, preservado na rodada 3 |
+| `luz.svg` | Luz de Varanda | Opção A com perna esquerda afastada; cauda, rosto e luz preservados |
 
-![Rádio](radio.svg) ![Bolinha](gude.svg) ![Vaga-lume](pisca.svg)
+![Rádio](radio.svg) ![Bolinha](gude.svg) ![Vaga-lume](pisca.svg) ![Lagartixa](luz.svg)
 
 ## Construção e enquadramento
 

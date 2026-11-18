@@ -166,9 +166,9 @@ test('Ícones aprovados aparecem somente na seleção e preservam as demais mini
  assert.match(n.html(),/arte\/icones\/radio.svg/);
  for(const id of ['goteira','mare','fio','pipa','pao'])assert.ok(n.html().includes('arte/'+id+'.png'));
  n.executar("acao({dataset:{do:'seguinte'}})");
- for(const id of ['gude','pisca'])assert.ok(n.html().includes('arte/icones/'+id+'.svg'));
- for(const id of ['rastro','luz'])assert.ok(n.html().includes('arte/'+id+'.png'));
- for(const id of ['radio','gude','pisca']){
+ for(const id of ['gude','pisca','luz'])assert.ok(n.html().includes('arte/icones/'+id+'.svg'));
+ for(const id of ['rastro'])assert.ok(n.html().includes('arte/'+id+'.png'));
+ for(const id of ['radio','gude','pisca','luz']){
   const cena=n.executar(`foto(catalogo.find(j=>j.id==='${id}'))`);
   assert.ok(cena.includes('arte/'+id+'.png'));
  }
