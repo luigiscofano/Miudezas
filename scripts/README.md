@@ -18,3 +18,7 @@ Execute `node scripts/gerar-cenas-atuais.mjs` na raiz. O script usa as fábricas
 ## Áudio
 
 [Composição e exportação reproduzível](audio/README.md), com nove músicas, nove efeitos e gerador de formas de onda/mapas de notas.
+
+## Conferência da edição das janelas da capa
+
+`verificar-janelas-capa.py antes.png depois.png` (Python com Pillow) compara todos os pixels RGBA e rejeita qualquer alteração externa à faixa das janelas da primeira casa laranja. A região e o commit de referência estão no [README da capa](../dist/artes/capas/README.md).
