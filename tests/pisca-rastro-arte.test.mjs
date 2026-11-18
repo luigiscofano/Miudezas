@@ -26,14 +26,18 @@ test('Rastro: três folhas finas aprovadas preservam o estado e a escala', () =>
   });
   assert.deepEqual(jogo.snapshot(), antes);
 });
-test('Pisca: visual original restaurado preserva sequência e pontuação', () => {
+test('Pisca: primeiro visual restaurado preserva sequência e pontuação', () => {
   const jogo = varanda.pisca(1, api, {seed: 1}), antes = jogo.snapshot(), ctx = tela();
   jogo.draw(ctx);
   assert.equal(ctx.pixels.get('50,94'), '#0b3439');
   assert.equal(ctx.pixels.get('44,85'), '#0b3439');
   assert.deepEqual(jogo.snapshot(), antes);
   assert.equal(jogo.score(), 0);
-  // Amostras da asa original e da vegetação lateral, sem o capim adicional.
-  assert.equal(ctx.pixels.get('20,45'), '#a1d8ab');
+  // A matriz inicial é conferida inteira, evitando confundi-la com versões intermediárias.
+  const matriz = ['....ww.....','...ww.w....','......w....','..ggggggg..','.lggggggkg.','.lggggggg..','...g..g....'];
+  const paleta = {g: '#7caa58', w: '#a1d8ab', k: '#1c493c', l: '#739e55'};
+  matriz.forEach((linha, y) => [...linha].forEach((cor, x) => {
+    if (paleta[cor]) assert.equal(ctx.pixels.get(`${16 + x * 2},${43 + y * 2}`), paleta[cor]);
+  }));
   assert.equal(ctx.pixels.get('0,86'), '#48764d');
 });

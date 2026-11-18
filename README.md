@@ -436,7 +436,7 @@ Luz de Varanda e Três Petelecos: luz, texturas e sprites refinados sem mudar ob
 
 ### Visual de Pisca e Rastro
 
-Pisca no Mato mantém o visual original dos vaga-lumes e da vegetação lateral, restaurado a pedido do autor. Sem Parar, recordes e sequência continuam inalterados. Rastro de Prata apresenta três folhas finas com silhuetas distintas, na mesma paleta e escala. São mudanças de desenho: regras, controles, mapas e saves permanecem iguais.
+Pisca no Mato mantém o primeiro visual dos vaga-lumes preservado no GitHub (`9cc7bbb`) e da vegetação lateral, restaurado a pedido do autor. Sem Parar, recordes e sequência continuam inalterados. Rastro de Prata apresenta três folhas finas com silhuetas distintas, na mesma paleta e escala. São mudanças de desenho: regras, controles, mapas e saves permanecem iguais.
 
 ### Segundo refinamento aprovado: Maré e Rastro
 
