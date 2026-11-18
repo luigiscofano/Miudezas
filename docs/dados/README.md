@@ -1,6 +1,6 @@
 # Dados, recordes e compatibilidade
 
-O backup versão **3** acrescenta volumes independentes `miudezas.v1.volumeMusica` e `miudezas.v1.volumeEfeitos` (inteiros 0–100, padrões70/100). Versões 1 e 2 continuam aceitas; importar arquivo antigo não apaga os volumes atuais. O mute legado permanece em `miudezas.v1.som`. Valores inválidos são rejeitados antes de alterar dados.
+O backup versão **3** acrescenta volumes independentes `miudezas.v1.volumeMusica` e `miudezas.v1.volumeEfeitos` (inteiros 0–100, padrões10/25). Versões 1 e 2 continuam aceitas; importar arquivo antigo não apaga os volumes atuais. O mute legado permanece em `miudezas.v1.som`. Valores inválidos são rejeitados antes de alterar dados.
 
 
 O backup versão **2** acrescenta `miudezas.v1.recordes` às preferências de som e ao progresso da volta. O prefixo de armazenamento continua `v1` para preservar as chaves existentes; a versão do arquivo exportado é independente dele.
