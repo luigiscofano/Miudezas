@@ -10,37 +10,45 @@ from matplotlib.patches import Rectangle,Patch
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--musica',type=Path,default=Path('../miudezas-trilha-natural'))
-parser.add_argument('--efeitos',type=Path,default=Path('../miudezas-trilha-relaxante'))
+parser.add_argument('--efeitos',type=Path,default=Path('dist/audio/efeitos'))
+parser.add_argument('--fonte-efeitos',type=Path,default=Path(__file__).with_name('efeitos_8bit.py'))
+parser.add_argument('--somente-efeitos',action='store_true',help='Preserva dados e imagens musicais existentes')
 parser.add_argument('--saida',type=Path,default=Path('.'))
 args=parser.parse_args(); OUT=args.saida;OUT.mkdir(exist_ok=True,parents=True)
-source=(args.musica/'compor.py').read_text()
-# Executa somente definições e o agendamento original, com instrumentos substituídos
-# por registros. Assim, as microvariações de tempo usam a mesma semente do áudio.
-namespace={'__file__':str(args.musica/'compor.py')}
-exec(source[:source.index('tracks=[]; stats=[]')],namespace)
-events=[]
-def note(n,dur,kind='pluck'):return {'tipo':kind,'nota_midi':int(n),'duracao_s':float(int(dur*44100)/44100)}
-def drum(kind):return {'tipo':kind,'nota_midi':None,'duracao_s':{'kick':.18,'rim':.055,'hat':.055,'shaker':.09}[kind]}
-def add(buf,event,at,gain=.1,pan=0,wrap=True):
-    events.append({**event,'inicio_s':float((round(at*44100)%round(capture_length*44100))/44100),'ganho_evento':float(gain),'pan':float(pan)})
-namespace.update(note=note,drum=drum,add=add)
-# Mantém o loop de cada compasso literalmente, sem os passos de síntese/exportação.
-loop=source[source.index('    for bar,(root,chord)'):source.index('    # Reverb curto')]
-import textwrap
-loop=textwrap.dedent(loop)
-tracks=[]
-for index,theme in enumerate(namespace['THEMES']):
-    name,bpm,screen,motif,density=theme;events=[];capture_length=32*60/bpm
-    namespace.update(index=index,name=name,bpm=bpm,screen=screen,motif=motif,density=density,beat=60/bpm,buf=np.empty((1,2)))
-    exec(loop,namespace)
-    tracks.append({'arquivo':name,'tela':screen,'bpm':bpm,'duracao_s':32*60/bpm,'eventos':events})
-fxsource=(args.efeitos/'efeitos_acusticos.py').read_text()
-fx=next(ast.literal_eval(node.value) for node in ast.parse(fxsource).body if isinstance(node,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='FX' for t in node.targets))
+if not args.somente_efeitos:
+    source=(args.musica/'compor.py').read_text()
+    # Executa somente definições e o agendamento original, com instrumentos substituídos
+    # por registros. Assim, as microvariações de tempo usam a mesma semente do áudio.
+    namespace={'__file__':str(args.musica/'compor.py')}
+    exec(source[:source.index('tracks=[]; stats=[]')],namespace)
+    events=[]
+    def note(n,dur,kind='pluck'):return {'tipo':kind,'nota_midi':int(n),'duracao_s':float(int(dur*44100)/44100)}
+    def drum(kind):return {'tipo':kind,'nota_midi':None,'duracao_s':{'kick':.18,'rim':.055,'hat':.055,'shaker':.09}[kind]}
+    def add(buf,event,at,gain=.1,pan=0,wrap=True):
+        events.append({**event,'inicio_s':float((round(at*44100)%round(capture_length*44100))/44100),'ganho_evento':float(gain),'pan':float(pan)})
+    namespace.update(note=note,drum=drum,add=add)
+    # Mantém o loop de cada compasso literalmente, sem os passos de síntese/exportação.
+    loop=source[source.index('    for bar,(root,chord)'):source.index('    # Reverb curto')]
+    import textwrap
+    loop=textwrap.dedent(loop)
+    tracks=[]
+    for index,theme in enumerate(namespace['THEMES']):
+        name,bpm,screen,motif,density=theme;events=[];capture_length=32*60/bpm
+        namespace.update(index=index,name=name,bpm=bpm,screen=screen,motif=motif,density=density,beat=60/bpm,buf=np.empty((1,2)))
+        exec(loop,namespace)
+        tracks.append({'arquivo':name,'tela':screen,'bpm':bpm,'duracao_s':32*60/bpm,'eventos':events})
+else:
+    previous=json.loads((OUT/'eventos-sonoros.json').read_text())
+    tracks=previous['musicas']
+fxsource=args.fonte_efeitos.read_text()
+fx=next(ast.literal_eval(node.value) for node in ast.parse(fxsource).body if isinstance(node,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='eventos' for t in node.targets))
 effects=[]
-for title,items in fx:
-    name='acustico_'+title.split(' — ')[0].lower()
-    effects.append({'arquivo':name,'nome':title,'eventos':[{'inicio_s':t,'nota_midi':n,'ganho_evento':g,'tipo':'madeira' if n is None else 'corda','duracao_s':.12 if n is None else .6} for t,n,g in items]})
-manifest={'origem':'Interpretação Mais Natural e efeitos instrumentais V2','nota':'Eventos extraídos do código; não transcrição do WAV. Durações dos eventos não incluem reverberação. Notas são alvos MIDI da síntese, não medição da afinação.','compositor_sha256':hashlib.sha256(source.encode()).hexdigest(),'efeitos_sha256':hashlib.sha256(fxsource.encode()).hexdigest(),'musicas':tracks,'efeitos':effects,'wav_sha256':{}}
+for name,items in fx.items():
+    effects.append({'arquivo':name,'nome':name.capitalize().replace('Vitoria','Vitória'),'duracao_s':.85,'eventos':[{'inicio_s':t,'frequencia_inicial_hz':f0,'frequencia_final_hz':f1,'tipo':'pulso_8bit','duracao_s':dur} for t,f0,f1,dur in items]})
+manifest=previous.copy() if args.somente_efeitos else {'compositor_sha256':hashlib.sha256(source.encode()).hexdigest(),'musicas':tracks,'wav_sha256':{}}
+manifest.update({'origem':'Interpretação Mais Natural e efeitos 8-bit opção B','nota':'Eventos extraídos do código, não transcrição do WAV. Música usa alvos MIDI; efeitos usam frequências-alvo em Hz, inclusive varreduras lineares. Não é medição espectral.','efeitos_sha256':hashlib.sha256(fxsource.encode()).hexdigest(),'efeitos':effects})
+# Retira somente hashes dos efeitos substituídos; os masters musicais permanecem iguais.
+manifest['wav_sha256']={name:value for name,value in manifest['wav_sha256'].items() if not name.startswith('acustico_') and name not in {e['arquivo']+'.wav' for e in effects}}
 plt.rcParams.update({'font.family':'DejaVu Sans','font.size':9,'axes.spines.top':False,'axes.spines.right':False,'axes.titlesize':11})
 colors={'bass':'#2b5475','chord':'#438b73','pad':'#438b73','pluck':'#ad6b25','corda':'#ad6b25'}
 def waveform(items,folder,filename,title):
@@ -52,9 +60,10 @@ def waveform(items,folder,filename,title):
         left=y[:,0] if y.ndim==2 else y;step=max(1,len(left)//1200);count=len(left)//step
         chunks=left[:count*step].reshape(count,step);x=np.arange(count)*step/sr
         ax.fill_between(x,chunks.min(1),chunks.max(1),color='#35695b',alpha=.85,linewidth=.3)
-        ax.set_ylim(-1,1);ax.set_xlim(0,len(left)/sr);ax.set_title(item.get('tela',item.get('nome')).replace(' — ','\n'),loc='left')
+        ax.set_ylim(*((-0.1,0.1) if filename=='ondas-efeitos.png' else (-1,1)));ax.set_xlim(0,len(left)/sr);ax.set_title(item.get('tela',item.get('nome')).replace(' — ','\n'),loc='left')
         ax.set_xlabel('Tempo (s)');ax.set_ylabel('Amplitude PCM');ax.grid(alpha=.15)
-    fig.suptitle(title+'\nCanal esquerdo • escala comum −1 a +1 • sem normalização individual',fontsize=15)
+    scale='−0,1 a +0,1' if filename=='ondas-efeitos.png' else '−1 a +1'
+    fig.suptitle(title+'\nCanal esquerdo • escala comum '+scale+' • sem normalização individual',fontsize=15)
     fig.savefig(OUT/filename,dpi=140);plt.close(fig)
 def midi_label(n):return ['Dó','Dó♯','Ré','Ré♯','Mi','Fá','Fá♯','Sol','Sol♯','Lá','Lá♯','Si'][n%12]+str(n//12-1)
 def score(items,filename,title):
@@ -74,9 +83,21 @@ def score(items,filename,title):
     fig.suptitle(title+'\nPiano roll dos eventos do código • barras = duração programada, não duração do eco',fontsize=14)
     fig.legend(handles=[Patch(color=colors[k],label=v) for k,v in [('bass','Baixo'),('chord','Acordes'),('pluck','Melodia / cordas')]]+[Patch(color='#666',label='Percussão sem altura definida')],loc='outside lower center',ncol=4)
     fig.savefig(OUT/filename,dpi=140);plt.close(fig)
-waveform(tracks,args.musica,'ondas-musicas.png','Nove músicas — formas de onda dos WAV')
-waveform(effects,args.efeitos,'ondas-efeitos.png','Nove efeitos V2 — formas de onda dos WAV')
-score(tracks,'notas-musicas.png','Nove músicas — mapa de notas e articulação')
-score(effects,'notas-efeitos.png','Nove efeitos V2 — notas e toques de madeira')
+def effect_frequencies(items):
+    """Representa as frequências-alvo do sintetizador sem inventar notas de partitura."""
+    fig,axes=plt.subplots(3,3,figsize=(15,9),constrained_layout=True)
+    for ax,item in zip(axes.flat,items):
+        for event in item['eventos']:
+            start=event['inicio_s'];end=start+event['duracao_s']
+            ax.plot([start,end],[event['frequencia_inicial_hz'],event['frequencia_final_hz']],color='#ad6b25',linewidth=3,solid_capstyle='butt')
+        ax.set_xlim(-.01,.4);ax.set_ylim(0,1600);ax.set_xlabel('Tempo (s)');ax.set_ylabel('Frequência-alvo (Hz)');ax.set_title(item['nome'],loc='left');ax.grid(alpha=.18)
+    fig.suptitle('Efeitos 8-bit opção B • contornos de frequência do código\nLinhas inclinadas = varreduras lineares • intervalos vazios = silêncio entre pulsos',fontsize=15)
+    fig.savefig(OUT/'notas-efeitos.png',dpi=140);plt.close(fig)
+
+if not args.somente_efeitos:
+    waveform(tracks,args.musica,'ondas-musicas.png','Nove músicas — formas de onda dos WAV')
+    score(tracks,'notas-musicas.png','Nove músicas — mapa de notas e articulação')
+waveform(effects,args.efeitos,'ondas-efeitos.png','Nove efeitos 8-bit opção B — formas de onda dos WAV')
+effect_frequencies(effects)
 (OUT/'eventos-sonoros.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2))
-print('Criadas quatro imagens e manifesto com',sum(len(t['eventos']) for t in tracks),'eventos musicais.')
+print('Visualizações atualizadas; manifesto mantém',sum(len(t['eventos']) for t in tracks),'eventos musicais.')

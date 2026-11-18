@@ -1,6 +1,6 @@
 # Áudio de produção
 
-Nove trilhas em FLAC sem perdas, estéreo 44,1 kHz, e nove efeitos V2 em WAV. Arquivos carregados somente depois de interação com som habilitado. A preferência antiga `som` continua válida; por padrão permanece desligada.
+Nove trilhas em FLAC sem perdas, estéreo 44,1 kHz, e nove efeitos 8-bit opção B em WAV. Arquivos carregados somente depois de interação com som habilitado. A preferência antiga `som` continua válida; por padrão permanece desligada.
 
 [Direção, formas de onda e mapas de notas](../../docs/audio/README.md) · [Reprodução por código](../../scripts/audio/README.md) · [Player](../audio.js).
 

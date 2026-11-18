@@ -655,11 +655,15 @@ console.log(rodada.hud());
 
 ## Trilha sonora e configurações
 
-A identidade sonora, **Interpretação Mais Natural**, reúne nove músicas relaxantes com síncopes brasileiras e nove efeitos instrumentais V2. Cada tipo de tela tem seu tema. A síntese combina cordas dedilhadas, madeira e percussão delicada; os mapas abaixo documentam eventos reais do compositor, não uma transcrição inventada.
+A identidade sonora, **Interpretação Mais Natural**, reúne nove músicas relaxantes com síncopes brasileiras e nove efeitos 8-bit discretos (opção B). Cada tipo de tela tem seu tema. A música combina cordas dedilhadas e percussão delicada; os efeitos usam pulsos curtos de videogame, sem cordas ou acordes; os mapas abaixo documentam eventos reais do compositor, não uma transcrição inventada.
 
 ![Formas de onda das nove músicas](docs/audio/ondas-musicas.png)
 
 ![Notas e fraseado das músicas](docs/audio/notas-musicas.png)
+
+![Formas de onda dos efeitos 8-bit](docs/audio/ondas-efeitos.png)
+
+![Frequências-alvo dos efeitos 8-bit ao longo do tempo](docs/audio/notas-efeitos.png)
 
 [Ouvir/baixar as músicas](dist/audio/musicas/) · [Efeitos](dist/audio/efeitos/) · [Formas de onda, notas, acordes e explicação completa](docs/audio/README.md) · [Código de composição](scripts/audio/README.md).
 
@@ -682,7 +686,7 @@ Os seis recordes de Sem Parar, incluindo Luz de Varanda (`luz`), ficam em `miude
 
 Com `{"nivel":2,"resultados":[true,false]}`, a próxima parada é Último Fio em Animado. O resultado mais recente só entra no histórico ao escolher avançar. Repetir permite substituir a tentativa antes desse registro. A retomada depende da origem e do navegador. Outra cópia do site tem seu próprio histórico. Se o armazenamento estiver indisponível, a rodada segue em memória.
 
-As trilhas são FLAC sem perdas, carregadas sob demanda, com transição de 300 ms e cache limitado. Efeitos V2 usam WAV; sinais informativos preservam o oscilador de onda quadrada. O contexto de áudio é ativado após interação. Em Goteira, a nota sobe conforme o balde enche. Em Pisca no Mato, as duas alturas distinguem esquerda e direita. As transmissões do rádio têm legendas escritas.
+As trilhas são FLAC sem perdas, carregadas sob demanda, com transição de 300 ms e cache limitado. Efeitos 8-bit opção B usam WAV; sinais informativos preservam o oscilador de onda quadrada. O contexto de áudio é ativado após interação. Em Goteira, a nota sobe conforme o balde enche. Em Pisca no Mato, as duas alturas distinguem esquerda e direita. As transmissões do rádio têm legendas escritas.
 
 ---
 

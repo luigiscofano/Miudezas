@@ -22,7 +22,10 @@ export function criarAudio({contexto=()=>new (globalThis.AudioContext||globalThi
     if(cache.has(chave)){const b=cache.get(chave);cache.delete(chave);cache.set(chave,b);return b;}
     if(carregando.has(chave))return carregando.get(chave);
     const promessa=(async()=>{
-      const resposta=await buscar(new URL('./audio/'+chave,import.meta.url));
+      const url=new URL('./audio/'+chave,import.meta.url);
+      // Atualizar efeitos não deve reutilizar o arquivo instrumental de um cache antigo.
+      if(chave.startsWith('efeitos/'))url.searchParams.set('v','8bit-b');
+      const resposta=await buscar(url);
       if(!resposta.ok)throw new Error('Arquivo de áudio indisponível');
       const buffer=await ctx.decodeAudioData(await resposta.arrayBuffer());
       if(chave.startsWith('musicas/')&&buffer.getChannelData){

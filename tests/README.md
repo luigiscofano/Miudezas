@@ -138,3 +138,7 @@ Nesta entrega, a suíte inteira passou com 175 testes. Chromium local não pôde
 O teste do Sobre verifica os fatos familiares, a atribuição a Gabriel Fonseca, a ausência de link externo no diálogo e a manutenção da orientação sobre backup local. Usa DOM simulado; não equivale a teste em aparelho físico.
 
 A navegação verifica o aviso autoral no rodapé inicial e a preservação das duas opções de partida. O teste do Sobre verifica também a remoção da frase complementar solicitada.
+
+## Efeitos 8-bit opção B
+
+`audio.test.mjs` inclui validação do manifesto dos nove efeitos e dos arquivos de áudio. As figuras de efeitos e os contornos em Hz são gerados dos mesmos WAV/fontes; os dados e gráficos musicais permanecem inalterados nesta revisão.

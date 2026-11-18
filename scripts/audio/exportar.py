@@ -8,7 +8,7 @@ SOURCE=Path(__file__).parent
 NAMES=['inicio','galeria','nivel','jogo','pausa','roteiro','parada','resultado','resumo']
 with tempfile.TemporaryDirectory(prefix='miudezas-audio-') as temporary:
     work=Path(temporary);env={**os.environ,'AUDIO_OUT':str(work)}
-    for script in ['compor.py','efeitos_acusticos.py']:
+    for script in ['compor.py','efeitos_8bit.py']:
         subprocess.run(['python3',str(SOURCE/script)],env=env,check=True)
     manifest={}
     for file,name in zip(sorted(work.glob('0*.wav')),NAMES):
@@ -19,6 +19,7 @@ with tempfile.TemporaryDirectory(prefix='miudezas-audio-') as temporary:
         target=ROOT/'dist/audio/musicas'/(name+'.flac')
         subprocess.run(['ffmpeg','-v','error','-y','-i',str(temporary_wav),'-c:a','flac',str(target)],check=True)
         manifest[name]={'origem':file.name,'segundos':len(samples)/rate,'sha256':hashlib.sha256(target.read_bytes()).hexdigest()}
-    for file in work.glob('acustico_*.wav'):
-        shutil.copyfile(file,ROOT/'dist/audio/efeitos'/file.name.removeprefix('acustico_'))
+    for name in ['selecionar','confirmar','voltar','acerto','erro','coleta','recorde','vitoria','derrota']:
+        file=work/(name+'.wav')
+        shutil.copyfile(file,ROOT/'dist/audio/efeitos'/file.name)
     (ROOT/'dist/audio/manifesto.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2))

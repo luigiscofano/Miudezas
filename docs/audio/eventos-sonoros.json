@@ -1,8 +1,8 @@
 {
-  "origem": "Interpretação Mais Natural e efeitos instrumentais V2",
-  "nota": "Eventos extraídos do código; não transcrição do WAV. Durações dos eventos não incluem reverberação. Notas são alvos MIDI da síntese, não medição da afinação.",
+  "origem": "Interpretação Mais Natural e efeitos 8-bit opção B",
+  "nota": "Eventos extraídos do código, não transcrição do WAV. Música usa alvos MIDI; efeitos usam frequências-alvo em Hz, inclusive varreduras lineares. Não é medição espectral.",
   "compositor_sha256": "915cd4936dad0dfddcac34e3e013002a6943f106a5819a052d1f7124c1cd5add",
-  "efeitos_sha256": "0d0c29c77adeb0a1343a09b1468091cb399309812b7581d56ce4c5a41f7046f2",
+  "efeitos_sha256": "08d4f84ec96f6655691b59c472968decb74b188d1e06530a7e72d443e1e1cd02",
   "musicas": [
     {
       "arquivo": "01_inicio_Janela_na_Tijuca",
@@ -13647,189 +13647,198 @@
   ],
   "efeitos": [
     {
-      "arquivo": "acustico_selecionar",
-      "nome": "Selecionar — toque de madeira",
+      "arquivo": "selecionar",
+      "nome": "Selecionar",
+      "duracao_s": 0.85,
       "eventos": [
         {
           "inicio_s": 0,
-          "nota_midi": null,
-          "ganho_evento": 0.8,
-          "tipo": "madeira",
-          "duracao_s": 0.12
+          "frequencia_inicial_hz": 420,
+          "frequencia_final_hz": 420,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.045
         }
       ]
     },
     {
-      "arquivo": "acustico_confirmar",
-      "nome": "Confirmar — duas cordas",
+      "arquivo": "confirmar",
+      "nome": "Confirmar",
+      "duracao_s": 0.85,
       "eventos": [
         {
           "inicio_s": 0,
-          "nota_midi": 60,
-          "ganho_evento": 0.9,
-          "tipo": "corda",
-          "duracao_s": 0.6
+          "frequencia_inicial_hz": 560,
+          "frequencia_final_hz": 560,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.055
         },
         {
-          "inicio_s": 0.14,
-          "nota_midi": 67,
-          "ganho_evento": 0.75,
-          "tipo": "corda",
-          "duracao_s": 0.6
+          "inicio_s": 0.075,
+          "frequencia_inicial_hz": 840,
+          "frequencia_final_hz": 840,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.075
         }
       ]
     },
     {
-      "arquivo": "acustico_voltar",
-      "nome": "Voltar — corda grave",
+      "arquivo": "voltar",
+      "nome": "Voltar",
+      "duracao_s": 0.85,
       "eventos": [
         {
           "inicio_s": 0,
-          "nota_midi": 55,
-          "ganho_evento": 0.85,
-          "tipo": "corda",
-          "duracao_s": 0.6
-        }
-      ]
-    },
-    {
-      "arquivo": "acustico_acerto",
-      "nome": "Acerto — dedilhado",
-      "eventos": [
-        {
-          "inicio_s": 0,
-          "nota_midi": 64,
-          "ganho_evento": 0.8,
-          "tipo": "corda",
-          "duracao_s": 0.6
+          "frequencia_inicial_hz": 420,
+          "frequencia_final_hz": 420,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.055
         },
         {
-          "inicio_s": 0.12,
-          "nota_midi": 69,
-          "ganho_evento": 0.7,
-          "tipo": "corda",
-          "duracao_s": 0.6
+          "inicio_s": 0.075,
+          "frequencia_inicial_hz": 310,
+          "frequencia_final_hz": 310,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.065
         }
       ]
     },
     {
-      "arquivo": "acustico_erro",
-      "nome": "Erro — madeira abafada",
+      "arquivo": "acerto",
+      "nome": "Acerto",
+      "duracao_s": 0.85,
       "eventos": [
         {
           "inicio_s": 0,
-          "nota_midi": null,
-          "ganho_evento": 0.45,
-          "tipo": "madeira",
-          "duracao_s": 0.12
+          "frequencia_inicial_hz": 740,
+          "frequencia_final_hz": 740,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.065
         },
         {
           "inicio_s": 0.09,
-          "nota_midi": 48,
-          "ganho_evento": 0.45,
-          "tipo": "corda",
-          "duracao_s": 0.6
+          "frequencia_inicial_hz": 990,
+          "frequencia_final_hz": 990,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.095
         }
       ]
     },
     {
-      "arquivo": "acustico_coleta",
-      "nome": "Coleta — nota curta",
+      "arquivo": "erro",
+      "nome": "Erro",
+      "duracao_s": 0.85,
       "eventos": [
         {
           "inicio_s": 0,
-          "nota_midi": 72,
-          "ganho_evento": 0.75,
-          "tipo": "corda",
-          "duracao_s": 0.6
+          "frequencia_inicial_hz": 210,
+          "frequencia_final_hz": 210,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.065
+        },
+        {
+          "inicio_s": 0.09,
+          "frequencia_inicial_hz": 210,
+          "frequencia_final_hz": 170,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.09
         }
       ]
     },
     {
-      "arquivo": "acustico_recorde",
-      "nome": "Recorde — acorde aberto",
+      "arquivo": "coleta",
+      "nome": "Coleta",
+      "duracao_s": 0.85,
       "eventos": [
         {
           "inicio_s": 0,
-          "nota_midi": 60,
-          "ganho_evento": 0.6,
-          "tipo": "corda",
-          "duracao_s": 0.6
-        },
-        {
-          "inicio_s": 0.08,
-          "nota_midi": 64,
-          "ganho_evento": 0.6,
-          "tipo": "corda",
-          "duracao_s": 0.6
-        },
-        {
-          "inicio_s": 0.16,
-          "nota_midi": 67,
-          "ganho_evento": 0.6,
-          "tipo": "corda",
-          "duracao_s": 0.6
-        },
-        {
-          "inicio_s": 0.25,
-          "nota_midi": 71,
-          "ganho_evento": 0.55,
-          "tipo": "corda",
-          "duracao_s": 0.6
+          "frequencia_inicial_hz": 1120,
+          "frequencia_final_hz": 1500,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.055
         }
       ]
     },
     {
-      "arquivo": "acustico_vitoria",
-      "nome": "Vitoria — pequena cadência",
+      "arquivo": "recorde",
+      "nome": "Recorde",
+      "duracao_s": 0.85,
       "eventos": [
         {
           "inicio_s": 0,
-          "nota_midi": 55,
-          "ganho_evento": 0.6,
-          "tipo": "corda",
-          "duracao_s": 0.6
+          "frequencia_inicial_hz": 660,
+          "frequencia_final_hz": 660,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.06
         },
         {
-          "inicio_s": 0.15,
-          "nota_midi": 60,
-          "ganho_evento": 0.7,
-          "tipo": "corda",
-          "duracao_s": 0.6
+          "inicio_s": 0.085,
+          "frequencia_inicial_hz": 990,
+          "frequencia_final_hz": 990,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.065
         },
         {
-          "inicio_s": 0.28,
-          "nota_midi": 64,
-          "ganho_evento": 0.7,
-          "tipo": "corda",
-          "duracao_s": 0.6
-        },
-        {
-          "inicio_s": 0.42,
-          "nota_midi": 67,
-          "ganho_evento": 0.65,
-          "tipo": "corda",
-          "duracao_s": 0.6
+          "inicio_s": 0.17,
+          "frequencia_inicial_hz": 1320,
+          "frequencia_final_hz": 1320,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.1
         }
       ]
     },
     {
-      "arquivo": "acustico_derrota",
-      "nome": "Derrota — descanso",
+      "arquivo": "vitoria",
+      "nome": "Vitória",
+      "duracao_s": 0.85,
       "eventos": [
         {
           "inicio_s": 0,
-          "nota_midi": 59,
-          "ganho_evento": 0.6,
-          "tipo": "corda",
-          "duracao_s": 0.6
+          "frequencia_inicial_hz": 600,
+          "frequencia_final_hz": 600,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.08
+        },
+        {
+          "inicio_s": 0.105,
+          "frequencia_inicial_hz": 800,
+          "frequencia_final_hz": 800,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.085
         },
         {
           "inicio_s": 0.22,
-          "nota_midi": 55,
-          "ganho_evento": 0.6,
-          "tipo": "corda",
-          "duracao_s": 0.6
+          "frequencia_inicial_hz": 1000,
+          "frequencia_final_hz": 1000,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.13
+        }
+      ]
+    },
+    {
+      "arquivo": "derrota",
+      "nome": "Derrota",
+      "duracao_s": 0.85,
+      "eventos": [
+        {
+          "inicio_s": 0,
+          "frequencia_inicial_hz": 380,
+          "frequencia_final_hz": 380,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.085
+        },
+        {
+          "inicio_s": 0.115,
+          "frequencia_inicial_hz": 270,
+          "frequencia_final_hz": 270,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.09
+        },
+        {
+          "inicio_s": 0.24,
+          "frequencia_inicial_hz": 190,
+          "frequencia_final_hz": 170,
+          "tipo": "pulso_8bit",
+          "duracao_s": 0.12
         }
       ]
     }
@@ -13844,14 +13853,14 @@
     "07_parada_Ali_na_Esquina.wav": "20acd829e2d6add38b57b97846218c03c0be739b1e1408af43348eb7fafaafb9",
     "08_resultado_Respira_e_Tenta.wav": "6fb2fe9cb8ee3a0b24e26ca852b81e55f6cce9b3ebd0b7a31e5dc58d784c60cc",
     "09_resumo_De_Volta_em_Casa.wav": "877ce4eb289762487357dcac5deb49820001ac6db9e6d06e26100ae3252f1779",
-    "acustico_selecionar.wav": "f83253226b8a5296930a0dfd83ca274effba5717aa1cd66ded73f6a45fb21712",
-    "acustico_confirmar.wav": "dcf6965787d438e556dd9d9db5cecf65e5544f324a73f5b375d7491a01058947",
-    "acustico_voltar.wav": "f6adbf1a2c4406d7c0cea2e7e785717d6618e06ecfa1151de6cfa4f6eabc8005",
-    "acustico_acerto.wav": "046d04c252a953d1deb6b5346888f602c2a56d89ce07fc9a09154d848e0db744",
-    "acustico_erro.wav": "3bb985c4b42e0a5c7b722700995555a425f564bd7eb24e916925d73aff2c1390",
-    "acustico_coleta.wav": "750b798f16a6ad10abe5e95a004317f6c2652d296b913dd9e3fc34e77e4d39f4",
-    "acustico_recorde.wav": "012504c2c777ba56ec8ad91153410319b66324642f49ee5b6e3c085690d0b8a4",
-    "acustico_vitoria.wav": "f0322dfe4d23850eed788f9916fc2725cb7a9e72a2193285cb3be224bccaa836",
-    "acustico_derrota.wav": "50eb7f5846305bd8e7bc7347a302b5e989779fcdbe42afd4b5fbbee3fcb7c87d"
+    "selecionar.wav": "a8e2f03f7981cba2251cd51b1f359a05d4218f9d7a2c555ac589fac3f4506517",
+    "confirmar.wav": "ef83d96f63d7de7cdbaebaf2abd868b75f6e510168a66f170adb7de0f8313259",
+    "voltar.wav": "4f720fa8308568e8af4b20e3c00a3f4ecbba92ad6bb65f3eeea7db6e7b0e94c4",
+    "acerto.wav": "664f10667530b31686cfbad6adc5471072d36b60c3d5f9959dbd769d9475675a",
+    "erro.wav": "d64c8dcf9d89d7d9ef3be9f931d10903a724e21b3254a8a4b494ef3fe636ad36",
+    "coleta.wav": "530c47ba2513c6651b701b4282daa79591d0519a90eba6cf694ea7023c74f1c5",
+    "recorde.wav": "d8cc43f5991451efba94345ccbecdf19901621a77d77c9bcbac43f1ad5bef27b",
+    "vitoria.wav": "dbaa6d495c7b5a1572068c039d17e15628a7e1cba5aeec8af19654e822c1a261",
+    "derrota.wav": "194a7189ead4c37aa0ed4618009aa2bcee412d5dde29277a6d2b2ab742b18b4c"
   }
 }
