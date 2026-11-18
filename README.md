@@ -663,6 +663,8 @@ A identidade sonora, **Interpretação Mais Natural**, reúne nove músicas rela
 
 [Ouvir/baixar as músicas](dist/audio/musicas/) · [Efeitos](dist/audio/efeitos/) · [Formas de onda, notas, acordes e explicação completa](docs/audio/README.md) · [Código de composição](scripts/audio/README.md).
 
+O aviso **© 2026 Luigi Scofano de Araujo** aparece no rodapé inicial e no Sobre, sem alterar a licença do repositório.
+
 A **engrenagem** abre Configurações: música e efeitos têm controles independentes (padrões 10% e 25%), botão para restaurar os volumes e **Sobre o projeto**. O botão de som continua silenciando tudo e mantém a preferência anterior. O som começa somente após interação; ocultar a aba o suspende. Pisca e Rádio preservam suas pistas sonoras, com música de fundo atenuada. Configurações pausam a partida; fechar não retoma o jogo involuntariamente.
 
 ---

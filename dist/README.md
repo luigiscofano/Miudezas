@@ -104,4 +104,4 @@ Em dispositivos com mouse, a largura da janela durante a partida acompanha a alt
 
 O **Sobre o projeto** apresenta a memória familiar de Luigi na Tijuca, o cotidiano brasileiro e a referência à obra Balões ou Ritual do Vento, de Gabriel Fonseca. A fonte externa abre em nova aba com proteção de acesso à janela de origem. O texto não altera regras, som ou persistência.
 
-O aviso © 2026 Luigi Scofano de Araujo no Sobre identifica a autoria do projeto e ressalva as obras de terceiros. Ele não modifica a licença do repositório.
+O aviso © 2026 Luigi Scofano de Araujo aparece no Sobre e no rodapé da tela principal. O rodapé preserva as opções e a orientação de teclado ou toque. O aviso não modifica a licença do repositório nem os créditos artísticos.

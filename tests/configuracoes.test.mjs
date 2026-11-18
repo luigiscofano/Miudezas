@@ -38,7 +38,8 @@ test('Sobre reúne memória familiar, referência artística e orientação sobr
   const a=ambiente();
   criarConfiguracoes({documento:a.documento,ler:(k,p)=>p,salvar(){}});
   const texto=a.elementos.filter(e=>e.tag==='p').map(e=>e.textContent||'').join(' ');
-  for(const trecho of ['Meus dois pais viveram a vida toda na Tijuca','minha avó na Tijuca','Gabriel Fonseca','confortável e aconchegante','© 2026 Luigi Scofano de Araujo','respectivos titulares','não há conta nem sincronização automática'])assert.ok(texto.includes(trecho));
+  for(const trecho of ['Meus dois pais viveram a vida toda na Tijuca','minha avó na Tijuca','Gabriel Fonseca','confortável e aconchegante','© 2026 Luigi Scofano de Araujo','não há conta nem sincronização automática'])assert.ok(texto.includes(trecho));
+  assert.ok(!texto.includes('Obras e referências de terceiros pertencem aos respectivos titulares.'));
   const fonte=a.elementos.find(e=>e.tag==='a');
   assert.equal(fonte.href,'https://gabrielsculptor.com/about/');
   assert.equal(fonte.rel,'noopener noreferrer');
