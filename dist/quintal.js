@@ -149,10 +149,13 @@ function goteira(level, api, options = {}) {
   };
 }
 
+// Mantém a referência histórica da geração, independente de revisões das fases fixas.
+const costaReferenciaGeracao = ['~~~~~..C','~~~~~#..','~~~..=..','~~~#..~~','~..=.~~~','~..#~~~~','..=.~~~~','S..~~~~~'];
 const shores = [
   ['~~~~....','~~~~..C.','~~~...#.','~~~=....','..==~~~~','....~~~~','.S..~~~~','...~~~~~'],
   ['~~~~~...','~~~~~.C.','~~..=..#','~~..#~~~','~.=.~~~~','...~~~~~','S.#~~~~~','...~~~~~'],
-  ['~~~~~..C','~~~~~#..','~~~..=..','~~~#..~~','~..=.~~~','~..#~~~~','..=.~~~~','S..~~~~~']
+  // Mapa escolhido pela imagem da semente 1428316038; siri começa na última linha.
+  ['.=.~~~~#','C~.~~~~#','#~.~~~~~','..=~~~~~','.~~#~~~~','=#~.~~~~','..#.~~~~','#.=S#~~~']
 ];
 // Busca no estado completo: posição, fase da maré e última areia segura.
 export function resolverMare(grid) {
@@ -192,7 +195,7 @@ export function analisarMare(grid) {
   return {solution, passos: solution.length, passosSemMare: semMare?.length ?? Infinity,
     passosSemPedras: semPedras?.length ?? Infinity, baixiosObrigatorios};
 }
-const referenciaMare = analisarMare(shores[2]);
+const referenciaMare = analisarMare(costaReferenciaGeracao);
 export const criteriosMare = Object.freeze({
   passosMinimos: referenciaMare.passos,
   passosMaximos: referenciaMare.passos + 10,
@@ -273,7 +276,7 @@ export function gerarMare(seed = 1) {
   const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
   const orientation = Math.floor(random() * 8);
   for (let attempt = 0; attempt < 48; attempt++) {
-    const cells = shores[2].map(row => [...row]);
+    const cells = costaReferenciaGeracao.map(row => [...row]);
     // Mutações locais preservam a escala autoral, mas alteram os acessos às travessias.
     for (let edit = 0; edit < 6; edit++) {
       const x = Math.floor(random() * 8), y = Math.floor(random() * 8);
