@@ -4,7 +4,7 @@ Implementação: [`dist/varanda.js`](../../../dist/varanda.js). Os modos respeit
 
 | Jogo | Modos | Justificativa |
 | --- | --- | --- |
-| Luz de Varanda | Dificuldades autorais e Sem Parar | Botes errados passam a consumir três tentativas exclusivamente no novo modo; capturas medem o recorde. |
+| Luz de Varanda | Dificuldades autorais e Sem Parar | O terceiro bote errado encerra todos os modos; capturas medem o recorde em Sem Parar. |
 | Bolinha de Gude | Dificuldades autorais e Caminho Novo | Percurso completo, buraco e até três petelecos; outra fase pode ser gerada após a conclusão. |
 | Pisca no Mato | Dificuldades autorais e Sem Parar | A memória cresce uma piscada por rodada e errar encerra naturalmente a partida. |
 
@@ -86,3 +86,9 @@ As dificuldades mantêm os mesmos IDs, três tentativas, controles e formato de 
 Coordenadas e distâncias usam o tabuleiro lógico 96×96. Os caminhos acima são certificados, não movimentos automáticos. A progressão vem da quantidade de decisões, da ausência de tiro de reserva nas duas últimas fases e da disposição dos obstáculos, não da alteração artificial da física. Não se afirma que seja a única solução nem que a dificuldade subjetiva seja idêntica para todas as pessoas.
 
 Cada fase passa pelo mesmo motor com controles de teclado/toque, tolerância de ±15 ms e ±0,25 pixel lógico, a 30/60/120 atualizações por segundo. Os testes verificam também vitória única, três/quatro/cinco pedras e soluções com dois/três/três tiros. O teste genérico de força/cancelamento usa um terreno de controle explícito para não confundir a mecânica com a nova disposição das fases.
+
+## Luz de Varanda: limite de erros em todas as dificuldades
+
+Sossegado, Animado e Puxado conservam metas de 2, 3 e 4 mosquitos e prazos de 25, 24 e 23 segundos. Agora também perdem no terceiro bote sem captura. O HUD mostra tempo, meta e erros restantes. O erro só é contabilizado quando o bote termina; repetir comandos durante a mesma animação não consome tentativas adicionais. A derrota informa “Três botes errados”. Acertar não recupera tentativas. A meta ainda vence antes do prazo com até dois erros.
+
+Sem Parar mantém sua regra de três erros e não recebe cronômetro. Reiniciar zera erros, tempo e capturas; as demais regras, arte, controles, IDs, saves e backups permanecem. `tests/luz-erros.test.mjs` cobre os três níveis, entradas por toque e teclado no motor, contagem única, bloqueio após terminar, vitória com dois erros, derrota por tempo e reinício. Não constitui teste de aparelho físico.

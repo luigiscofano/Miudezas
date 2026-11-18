@@ -88,3 +88,7 @@ Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavizaç
 `gerarMare()` conserva as prioridades de enseadas e arquipélagos e intercala dois conjuntos avançados nas demais sementes. A prova considera posição, maré e última areia segura. Pontes indispensáveis, custo de sincronização, escolhas alcançáveis e praças secas complementam o comprimento. A geração ocorre somente ao criar a fase, tem tentativas limitadas e reservas certificadas; repetir mantém a semente. Nenhum save, controle, desenho ou fase autoral foi modificado. Consulte [os critérios do Quintal](../docs/jogos/quintal/README.md).
 
 - `pipa-aves.js`: sprite, paleta, formação em V e colisões por pixels sólidos dos passarinhos da Pipa. Importado por `quintal.js`; os bandos são calculados ao criar obstáculos e não têm persistência própria.
+
+### Limite de erros da lagartixa
+
+`varanda.js` usa o mesmo limite de três botes errados nas dificuldades autorais e em Sem Parar. A contagem ocorre apenas ao concluir um bote, e o estado encerrado impede novas contagens. O HUD conserva o tempo nas fases autorais e acrescenta os erros restantes; Sem Parar não recebe prazo. Nenhum formato de persistência mudou.

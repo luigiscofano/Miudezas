@@ -237,7 +237,7 @@ Espere a lagartixa apontar para um mosquito e dê o bote. Alcance a meta antes d
 |---|---|---|
 | **2 mosquitos** · 2 capturas em 25 s | **3 mosquitos** · 3 capturas em 24 s | **4 mosquitos** · 4 capturas em 23 s |
 
-A cabeça da lagartixa varre um arco. O jogador decide o instante do bote. Em níveis altos, a mira gira mais depressa e o ângulo de acerto também fica menor. Em **Sem Parar**, não há prazo de encerramento: cada mosquito capturado soma um ponto e o terceiro bote errado encerra a partida. As fases autorais mantêm suas metas e tempos.
+A cabeça da lagartixa varre um arco. O jogador decide o instante do bote. Em níveis altos, a mira gira mais depressa e o ângulo de acerto também fica menor. Em **Sem Parar**, não há prazo de encerramento: cada mosquito capturado soma um ponto e o terceiro bote errado encerra a partida. As fases autorais mantêm suas metas e tempos, mas também terminam em derrota no terceiro bote errado. O painel mostra os erros restantes em todos os modos. Um erro é contado uma única vez ao concluir um bote sem captura.
 
 Palco `#30234B` · [Implementação de Luz de Varanda](dist/varanda.js)
 
@@ -370,7 +370,7 @@ O áudio usa um oscilador de onda quadrada com envelope curto. O contexto de áu
 | Em Rastro de Prata, colher uma folha e voltar à casa anterior | O último segmento é desfeito e a folha volta à casa. |
 | Em Três Petelecos, começar a carregar um tiro e pausar ou cancelar o ponteiro | Nenhum tiro involuntário; ao continuar, a bolinha espera um novo comando. |
 | Na pausa, escolher Voltar às fases | A seleção do jogo é conservada, sem apagar saves ou recordes. |
-| Em Luz de Varanda Sem Parar, errar três botes | Uma única derrota, sem encerramento por tempo antes dela. |
+| Em Luz de Varanda, errar três botes em qualquer dificuldade | Uma única derrota; o prazo das fases autorais continua valendo. Sem Parar permanece sem cronômetro. |
 | Em Rastro, iniciar um arrasto fora do caracol | O gesto não move o caracol; teclado e botões continuam disponíveis. |
 | Alternar para outra aba durante uma rodada | A tela de pausa interrompe o avanço do jogo. |
 | Na Volta, avançar após Goteira, sair e retomar no mesmo navegador | A segunda parada é Maré Miúda no nível escolhido. |
