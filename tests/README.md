@@ -14,7 +14,7 @@ node --test tests/*.test.mjs
 | `capa.test.mjs` | Dimensões do PNG, proporção preservada e título acessível sem sobreposição. |
 | `pao.test.mjs` | Três dificuldades em 30/60/120 atualizações/s, identidades, utensílios, toque, reposições, troca, erro único, derrota e reinício. |
 | `esquina-modos.test.mjs` | Metas separadas e vitória imediata; 20 minutos de Sem Parar; geração de Rastro e execução de soluções pelos controles reais; consulte os testes para o lote e os critérios atuais. |
-| `quintal-modos.test.mjs` | Quarta/quinta gotas, alagamento, limites, Pipa contínua e colisão, Último Fio contínuo, 300 sementes de Maré com estados reais: 17–27 passos, custo de maré mínimo 3, dois baixios obrigatórios e pedras que bloqueiam atalhos. |
+| `quintal-modos.test.mjs` | Quarta/quinta gotas, alagamento, limites, Pipa contínua e colisão, Último Fio contínuo, 300 sementes de Maré com estados reais e critérios separados para famílias anteriores e avançadas; pedras devem bloquear atalhos. |
 | `varanda-modos.test.mjs` | Pisca contínuo; Luz contínua com derrota no terceiro bote errado; Gude com soluções executadas pelos controles e física. Consulte o arquivo para os lotes e critérios atuais. |
 | `pracinha.test.mjs` | Regressões do código legado e integridade do catálogo. Peteca/Gato não voltam ao aplicativo por esses testes. |
 
@@ -94,3 +94,7 @@ Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavizaç
 - `navegacao.test.mjs`: o gesto integrado começa na posição real da bolinha, sem presumir uma origem antiga fixa.
 
 Os testes executam o motor e os controles públicos em automação. Isso não equivale a validação em telefone físico; a comparação visual usa renderizações do próprio `draw()`.
+
+### Maré: muito difícil e muitíssimo difícil
+
+`mare-extrema.test.mjs` verifica lotes das duas faixas avançadas, execução das soluções no motor real, repetibilidade, critérios de planejamento e diversidade normalizada (sem contar rotações/reflexões como mapas distintos). A suíte mantém a regressão das famílias anteriores e o Puxado escolhido pela imagem. Esses critérios estimam dificuldade estrutural; não certificam a percepção de dificuldade por uma pessoa nem desempenho em todo aparelho.

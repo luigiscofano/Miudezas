@@ -61,7 +61,7 @@ A costa recebe espuma em um pixel apenas no encontro com areia. Pequenos pontos 
 
 ## Novos padrões: enseadas irregulares
 
-A ampliação **preserva a família anterior**: sementes cujo resto por três é 1 ou 2 usam exatamente o gerador precedente. Sementes divisíveis por três recebem a família `enseada-irregular`. Fases autorais, desenho, controles e armazenamento não mudam. As sementes da nova família representam mapas novos; o algoritmo não promete reproduzir mapas de versões antigas para esse subconjunto.
+A família original continua disponível; os critérios de distribuição completos, incluindo as ampliações posteriores, estão descritos nas seções abaixo. Sementes divisíveis por três recebem a família `enseada-irregular`. Fases autorais, desenho, controles e armazenamento não mudam. As sementes da nova família representam mapas novos; o algoritmo não promete reproduzir mapas de versões antigas para esse subconjunto.
 
 Em vez de apenas mudar pedras no corredor diagonal, a nova família constrói um caminho autoevitante, com início e concha em posições variáveis, curvas e retornos. O corredor não pode tocar lateralmente em si mesmo, evitando atalhos acidentais. Depois insere travessias rasas e pedras; somente a validação completa decide se o candidato pode ser entregue.
 
@@ -81,10 +81,37 @@ A solução mínima tem 21 comandos, contra 15 sem maré, e quatro baixios indis
 
 ## Arquipélagos: escolhas entre ilhas e travessias
 
-Uma terceira família amplia os padrões sem substituir as duas anteriores. Sementes divisíveis por três continuam usando enseadas irregulares; entre as demais, múltiplos de sete recebem `arquipelago`. As restantes conservam o gerador original. A semente de referência **1428316038** permanece na família irregular, com seu mapa inalterado.
+Uma terceira família amplia os padrões sem substituir as duas anteriores. Sementes divisíveis por três continuam usando enseadas irregulares; entre as demais, múltiplos de sete recebem `arquipelago`. As restantes alternam o gerador original e as faixas avançadas descritas abaixo. A semente de referência **1428316038** permanece na família irregular, com seu mapa inalterado.
 
 O arquipélago distribui nove pequenas ilhas de areia, interligadas por uma árvore de travessias rasas. As salas permitem circular e preparar o ciclo da maré, em vez de oferecer somente um corredor autoevitante. Pedras dentro das ilhas alteram desvios; pedras entre ilhas bloqueiam atalhos. A árvore e a posição das pontes variam por semente. A direção até a concha não implica que a travessia seguinte esteja disponível naquele momento.
 
 São exigidos **23–27 comandos mínimos**, **sete comandos adicionais de planejamento da maré**, **três baixios indispensáveis** e redução do caminho caso as pedras fossem retiradas. A certificação continua incluindo posição, ciclo da maré e última areia segura; não basta conexão geométrica. Há no máximo 48 tentativas, seguidas de uma reserva testada pelos mesmos critérios. Nenhum timer ou reflexo extra é introduzido.
 
 `tests/mare-variacoes.test.mjs` executa soluções de 100 sementes no jogo real, verifica reprodução, diversidade normalizada sem contar rotação/reflexão ou pedras decorativas, e pelo menos oito casas com três ou mais saídas em cada mapa. As duas famílias anteriores permanecem acessíveis. No benchmark local em Node, 100 gerações levaram aproximadamente 918 ms no total (mediana 7,3 ms; percentil 95 de 31,2 ms; máximo 60,6 ms), com uma reserva acionada. Esses tempos são observações da máquina de testes, não garantia de desempenho em celulares.
+
+## Mistura avançada: muito difícil e muitíssimo difícil
+
+Duas famílias adicionais se misturam em **Caminho Novo**, sem novos botões e sem substituir o Puxado fixo. A prioridade das famílias existentes é preservada: divisíveis por três continuam nas enseadas, e os demais divisíveis por sete nos arquipélagos. Somente no ramo restante, múltiplos de 13 recebem `muitissimo-dificil` e múltiplos de 11 recebem `muito-dificil`. As outras sementes conservam exatamente o resultado anterior. Assim, aproximadamente 91% das sementes mantêm a geração antiga; a referência **1428316038** não muda.
+
+| Critério certificado | Muito difícil | Muitíssimo difícil |
+|---|---|---|
+| Solução mínima | 30–48 comandos | 38–60 comandos |
+| Custo adicional causado pela maré | 12–17 comandos | Pelo menos 18 comandos |
+| Travessias individualmente indispensáveis | Pelo menos 5 | Pelo menos 6 |
+| Escolhas locais alcançáveis | Pelo menos 8 casas com três ou mais saídas | Mesmo mínimo |
+| Praças secas para circular e ajustar a maré | Pelo menos 2 blocos de areia 2×2 | Mesmo mínimo |
+| Relevância das pedras | Retirá-las encurta a solução mínima | Mesma condição |
+
+As famílias reutilizam a construção de ilhas e pontes, mas selecionam relações mais exigentes entre rotas, travessias obrigatórias e ciclo da água. O jogador precisa preparar a maré em várias passagens; uma direção geometricamente promissora pode estar fechada naquele momento. As praças oferecem rotas alternativas para ajustar o ciclo. O critério não é apenas alongar o corredor: remover a maré deve economizar a quantidade mínima indicada, e bloquear cada portal obrigatório impede a chegada.
+
+**Limite da interpretação:** quantidade de saídas e praças são indicadores de escolhas disponíveis, não uma contagem de decisões difíceis ou becos enganosos. O custo da maré é a diferença entre duas soluções mínimas sob regras distintas. São critérios verificáveis de planejamento, não avaliação humana universal de dificuldade. As duas faixas não se sobrepõem no custo da maré, mesmo quando seus comprimentos coincidem.
+
+A busca mantém o estado completo (posição, fase do ciclo, última areia segura). Cada geração tenta no máximo 64 candidatos, com filtro de comprimento antes da análise detalhada. Há duas reservas muito difíceis e oito muitíssimo difíceis; todas são revalidadas com os mesmos limites ao serem escolhidas. Uma reserva não dispensa a prova e não vira um mapa fácil. A geração não acontece a cada quadro, não altera timers e não exige reflexos adicionais.
+
+### Verificações e desempenho
+
+`node --test tests/mare-extrema.test.mjs tests/quintal-modos.test.mjs`
+
+Foram executadas 100 sementes de cada faixa no jogo real, além do lote misto de 300 sementes. O teste verifica reprodução, solução, pontes obrigatórias, custo da maré, escolhas, praças e diversidade após remover pedras decorativas e normalizar rotações/reflexões. O lote muito difícil teve 72 topologias normalizadas, 33–40 comandos e custo 12–17; o muitíssimo difícil teve 68 topologias, 39–40 comandos e custo 18–22. Trinta e quarenta sementes, respectivamente, usaram reservas: a taxa é explicitada porque a geração tem orçamento limitado.
+
+Benchmark local em Node, 100 gerações por faixa: muito difícil com mediana 8,3 ms, percentil 95 de 21,5 ms e máximo 29,0 ms; muitíssimo difícil com mediana 8,8 ms, percentil 95 de 15,5 ms e máximo 41,1 ms. São medições desta máquina, não garantias para celulares. O roteiro de revisão visual e toque continua necessário; não foi alterado por esses testes discretos.
