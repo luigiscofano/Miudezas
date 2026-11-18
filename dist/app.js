@@ -19,6 +19,7 @@ const totalJogos=catalogo.length, porPagina=6, totalPaginas=Math.ceil(totalJogos
 let tela='inicio',modo='avulso',nivel=1,selecionado=0,pagina=0,volta=null,partida=null,ultimo=null;
 let quadro=0,observador=null,tempoAnterior=0,comSom=ler('som',false)===true;
 const trilha=criarAudio();
+let janelaExterna=null;
 criarConfiguracoes({ler,salvar,aoMudar:({musica,efeitos})=>trilha.volumes(musica/100,efeitos/100),aoAbrir:()=>{if(tela==='preparando')voltarAsFases();else if(tela==='jogo')pausar();}});
 let recordeCelebrado=false;
 let limparCena=null,limparEnquadramento=null,geracaoGude=null;
@@ -43,7 +44,12 @@ function somUI(){
   somBotao.title=comSom?'Desligar som':'Ligar som';
   somBotao.setAttribute('aria-label',somBotao.title);
 }
-function ativarAudio(){void trilha.ativar(comSom);}
+function atualizarDisponibilidadeAudio(){
+  if(janelaExterna?.closed)janelaExterna=null;
+  // A janela separada mantém o som exclusivo, mesmo ao interagir na página original.
+  trilha.visibilidade(!document.hidden&&!janelaExterna);
+}
+function ativarAudio(){atualizarDisponibilidadeAudio();void trilha.ativar(comSom);}
 function tom(hz,seg=.06){
   if(['pisca','radio'].includes(atual().id)){trilha.sinal(hz,seg);return;}
   // Alertas de vento e níveis do balde conservam sua informação de altura.
@@ -301,7 +307,15 @@ function voltar(){
 function abrirJanela(destino){
   const u=new URL(location.href);u.search='';u.hash='';
   for(const [k,v] of Object.entries({janela:1,tela:destino,modo,nivel,jogo:selecionado,pag:pagina,tipo:tipoPartida,semente}))u.searchParams.set(k,v);
-  try{const p=window.open(u.href,'miudezas_jogo','popup=yes,width=492,height=492,resizable=yes,scrollbars=yes');if(p){p.focus();return true;}}catch{}
+  try{
+    const p=window.open(u.href,'miudezas_jogo','popup=yes,width=492,height=492,resizable=yes,scrollbars=yes');
+    if(p&&!p.closed){
+      janelaExterna=p;atualizarDisponibilidadeAudio();
+      // Falhar ao focar não significa que a janela deixou de existir.
+      try{p.focus();}catch{}
+      return true;
+    }
+  }catch{}
   return false;
 }
 function entrar(m){
@@ -367,9 +381,9 @@ document.addEventListener('keydown',e=>{
   bs[i<0?Math.max(0,bs.findIndex(b=>b.matches('.mode,.card,.action,.selected'))):(i+k+bs.length)%bs.length].focus({preventScroll:false});
 });
 document.addEventListener('keyup',e=>soltarDir('key'+e.code));
-document.addEventListener('visibilitychange',()=>{if(document.hidden){if(tela==='preparando')voltarAsFases();else pausar();}trilha.visibilidade(!document.hidden);});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(tela==='preparando')voltarAsFases();else pausar();}atualizarDisponibilidadeAudio();});
 window.addEventListener('pagehide',()=>{if(tela==='preparando')voltarAsFases();trilha.visibilidade(false);});
-window.addEventListener('pageshow',()=>trilha.visibilidade(!document.hidden));
+window.addEventListener('pageshow',atualizarDisponibilidadeAudio);
 window.addEventListener('blur',()=>{
   // Alguns navegadores móveis emitem blur transitório durante interação.
   // A perda real de foco e a aba oculta continuam pausando imediatamente.

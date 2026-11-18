@@ -112,7 +112,7 @@ O gesto principal atua sobre o objeto do jogo: em **Rastro de Prata**, comece no
 
 Teclado e botões direcionais continuam sendo alternativas ao arrasto; não é necessário dominar o gesto para jogar. A restrição de gestos nativos (`touch-action`) fica limitada ao tabuleiro interativo, sem bloquear a rolagem da página inteira. Confira também foco visível, leitura das instruções e funcionamento em telas estreitas.
 
-**Comandos gerais.** Setas e WASD têm a mesma função nas partidas. Nos menus, use setas para navegar e Enter para selecionar. Esc volta ou pausa. No celular, os botões sob a cena complementam os gestos próprios de cada jogo. O computador solicita uma janela de 492 × 492 quando a área tem ao menos 700 px de largura e o dispositivo aponta com precisão. Se o navegador bloquear a abertura, o jogo segue na página.
+**Comandos gerais.** Setas e WASD têm a mesma função nas partidas. Nos menus, use setas para navegar e Enter para selecionar. Esc volta ou pausa. No celular, os botões sob a cena complementam os gestos próprios de cada jogo. O computador solicita uma janela de 492 × 492 quando a área tem ao menos 700 px de largura e o dispositivo aponta com precisão. Ao abrir a janela separada, a página original suspende música e efeitos sem alterar as preferências de som ou volume. Ela permanece silenciosa enquanto essa janela estiver aberta; após fechá-la, um novo toque ou tecla na página original pode retomar o áudio. Se o navegador bloquear a abertura, o jogo e o áudio seguem na página.
 
 ---
 

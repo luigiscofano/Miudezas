@@ -264,3 +264,27 @@ test('Configurações durante preparação cancela o worker e não abre jogo atr
  assert.equal(n.html(),html);assert.equal(n.chamadas.length,0);assert.equal(n.frames.size,0);
  assert.equal(n.executar('partida'),null);
 });
+
+test('Janela separada silencia a origem, preserva preferências e libera áudio após fechar',()=>{
+ const n=navegador();
+ n.executar("globalThis.disponibilidade=[];globalThis.ativacoes=[];trilha.visibilidade=v=>disponibilidade.push(v);trilha.ativar=v=>ativacoes.push(v);comSom=true;globalThis.popup={closed:false,focus(){}};window.open=()=>popup");
+ assert.equal(n.executar("abrirJanela('galeria')"),true);
+ assert.equal(n.executar('disponibilidade.at(-1)'),false);
+ n.executar('ativarAudio()');n.eventos.pageshow();n.eventos.visibilitychange();
+ assert.equal(n.executar('disponibilidade.every(v=>v===false)'),true);
+ assert.equal(n.executar('comSom'),true);assert.deepEqual(n.gravacoes,[]);
+ n.executar('popup.closed=true;ativarAudio()');
+ assert.equal(n.executar('disponibilidade.at(-1)'),true);
+ assert.equal(n.executar('ativacoes.at(-1)'),true);
+ n.executar('comSom=false;ativarAudio()');assert.equal(n.executar('ativacoes.at(-1)'),false);
+});
+
+test('Bloqueio e erro de abertura conservam áudio; erro de foco não duplica trilhas',()=>{
+ for(const abertura of ['()=>null','()=>{throw Error("bloqueada")}','()=>({closed:true})']){
+  const n=navegador();n.executar(`globalThis.visivel=true;trilha.visibilidade=v=>visivel=v;window.open=${abertura}`);
+  assert.equal(n.executar("abrirJanela('galeria')"),false);
+  assert.equal(n.executar('visivel'),true);
+ }
+ const n=navegador();n.executar('globalThis.visivel=true;trilha.visibilidade=v=>visivel=v;window.open=()=>({closed:false,focus(){throw Error("foco")}})');
+ assert.equal(n.executar("abrirJanela('galeria')"),true);assert.equal(n.executar('visivel'),false);
+});
