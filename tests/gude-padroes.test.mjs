@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {criarTerrenoGude,validarTerrenoGude,varanda} from '../dist/varanda.js';
+import {criarTerrenoGude,validarTerrenoGude,encontrarAtalhoGude,varanda} from '../dist/varanda.js';
 
-const familias=['chicane','ferradura','ilha','degraus','ricochete'];
+const familias=['chicane','ferradura','ilha','degraus','bolso'];
+const sementes=[0,6,2,8,4];
 function executar(terreno,alterar=p=>p) {
   const resultados=[];
   const jogo=varanda.gude(3,{tone(){},finish(ok){resultados.push(ok);}},{terrenoValidado:terreno});
@@ -37,12 +38,14 @@ function assinatura(t){
 for(const [indice,familia] of familias.entries())test(`Novo Caminho: ${familia}, 20 sementes e força significativa`,()=>{
   const mapas=new Set(),inicios=new Set(),alvos=new Set();
   for(let n=0;n<20;n++){
-    const seed=(n*5+indice)*17,t=criarTerrenoGude(seed);
+    const seed=n*10+sementes[indice],t=criarTerrenoGude(seed);
     assert.equal(t.familia,'planejado-'+familia);
     assert.deepEqual(criarTerrenoGude(seed),t);
     // Inclui teclado ±15 ms e todos os 4³ erros de toque, a 30/60/120 Hz.
     assert.ok(validarTerrenoGude(t));
     assert.equal(t.solucao.length,3);
+    assert.equal(encontrarAtalhoGude(t),null,'sem atalho na amostragem dirigida de dois tiros');
+    for(let omitir=0;omitir<3;omitir++)assert.ok(!executar({...t,solucao:t.solucao.filter((_,i)=>i!==omitir)}).resultados.includes(true));
     assert.deepEqual(executar(t).resultados,[true]);
     let falhas=0;
     for(let i=0;i<3;i++)for(const fator of [.7,1.3]){
@@ -56,22 +59,52 @@ for(const [indice,familia] of familias.entries())test(`Novo Caminho: ${familia},
 });
 
 test('Cinco arquiteturas distintas mesmo retirando rotações e reflexões',()=>{
-  assert.equal(new Set(familias.map((_,i)=>assinatura(criarTerrenoGude(i*17)))).size,5);
+  assert.equal(new Set(familias.map((_,i)=>assinatura(criarTerrenoGude(sementes[i])))).size,5);
 });
 
-test('Ricochete certificado realmente inverte o movimento na borda',()=>{
-  const t=criarTerrenoGude(68),primeiro=t.solucao[0];
-  const {paradas}=executar(t);
-  const deslocamento=Math.hypot(paradas[0].x-t.inicio[0],paradas[0].y-t.inicio[1]);
-  assert.ok(5+68*primeiro.duracao>deslocamento+30,'o alcance inclui ida e volta, não um tiro direto renomeado');
+test('Bolso elimina o primeiro tiro decorativo e bloqueia a saída curta da versão anterior',()=>{
+  // Reproduz a crítica: [40,60] -> [30,60] dispensa o antigo ricochete.
+  const antigo={inicio:[40,60],alvo:[72,24],pedras:[[42,35,20,15],[42,71,20,12],[10,28,9,20]],
+    solucao:[{direcao:'left',duracao:(10-5)/68},{direcao:'up',duracao:(36-5)/68},{direcao:'right',duracao:(42-5)/68}]};
+  assert.deepEqual(executar(antigo).resultados,[true],'o atalho antigo é reproduzível');
+  const direcoes={left:[-1,0],right:[1,0],up:[0,-1],down:[0,1]};
+  for(let n=0;n<20;n++){
+    const t=criarTerrenoGude(4+n*10),{paradas}=executar(t);
+    const deslocamento=Math.hypot(paradas[0].x-t.inicio[0],paradas[0].y-t.inicio[1]);
+    assert.ok(deslocamento>50,'é preciso sair do bolso comprido');
+    assert.ok(Math.abs(deslocamento-(5+68*t.solucao[0].duracao))<.001,'o certificado não infla alcance com ida e volta');
+    assert.ok(!executar(t,(p,i)=>i===0?{...p,duracao:(10-5)/68}:p).resultados.includes(true));
+    for(const dt of [1/30,1/60,1/120]){
+      const resultados=[],j=varanda.gude(3,{tone(){},finish(ok){resultados.push(ok);}},{terrenoValidado:t});
+      for(const [i,p] of t.solucao.entries()){
+        const {x,y}=j.snapshot(),[dx,dy]=direcoes[p.direcao],alcance=i===0?10:5+68*p.duracao;
+        j.point(x,y,'down');j.point(x-dx*alcance/3.6,y-dy*alcance/3.6,'up');
+        for(let q=0;q<600&&j.moving;q++)j.update(dt);
+      }
+      assert.ok(!resultados.includes(true),'a saída curta também falha por toque');
+    }
+  }
+});
+
+test('A busca de atalhos devolve gestos reproduzíveis em um mapa fácil',()=>{
+  const terreno={inicio:[30,70],alvo:[70,30],pedras:[]};
+  const tiros=encontrarAtalhoGude(terreno);
+  assert.ok(tiros&&tiros.length<=2);
+  const resultados=[],j=varanda.gude(3,{tone(){},finish(ok){resultados.push(ok);}},{terrenoValidado:terreno});
+  for(const {angulo,alcance} of tiros){
+    const {x,y}=j.snapshot();j.point(x,y,'down');j.point(x-Math.cos(angulo)*alcance/3.6,y-Math.sin(angulo)*alcance/3.6,'up');
+    for(let q=0;q<600&&j.moving;q++)j.update(1/60);
+  }
+  assert.deepEqual(resultados,[true]);
 });
 
 test('Rejeitar todos os novos candidatos termina em fallback antigo certificado',async()=>{
   // Instrumenta apenas a decisão de aceitação: permite exercer uma falha rara
   // sem inserir opções de depuração ou trocar a física do jogo em produção.
   const fonte=await readFile(new URL('../dist/varanda.js',import.meta.url),'utf8');
-  const instrumentada=fonte.replace('export function validarTerrenoGude(terreno)', 'function validarOriginal(terreno)')+`
-    export const rejeitados=[];
+  const instrumentada=fonte.replace('export function validarTerrenoGude(terreno)', 'function validarOriginal(terreno)').replace('function montarPadraoGude(', 'function montarOriginal(')+`
+    export const rejeitados=[],candidatos=[];
+    function montarPadraoGude(...args){const t=montarOriginal(...args);candidatos.push(t);return t;}
     export function validarTerrenoGude(t){
       if(t.familia?.startsWith('planejado-')){rejeitados.push(t);return false;}
       return validarOriginal(t);
@@ -79,11 +112,12 @@ test('Rejeitar todos os novos candidatos termina em fallback antigo certificado'
   `;
   const modulo=await import('data:text/javascript;base64,'+Buffer.from(instrumentada).toString('base64'));
   for(let i=0;i<5;i++){
-    const antes=modulo.rejeitados.length,t=modulo.criarTerrenoGude(i*17);
-    assert.equal(modulo.rejeitados.length-antes,12);
+    const antes=modulo.candidatos.length,t=modulo.criarTerrenoGude(sementes[i]);
+    assert.equal(modulo.candidatos.length-antes,12);
     assert.ok(!t.familia.startsWith('planejado-'));
     assert.ok(validarTerrenoGude(t));
-    const base=modulo.rejeitados.at(-1);
+    const base=modulo.candidatos.at(-1);
+    assert.equal(encontrarAtalhoGude(base),null);
     assert.equal(base.orientacao,0);assert.ok(validarTerrenoGude(base),'a última tentativa conhecida também é executável');
   }
 });

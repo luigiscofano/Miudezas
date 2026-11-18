@@ -289,16 +289,16 @@ function contarErrosDeForcaGude(terreno) {
 // Cinco plantas com decisões espaciais próprias; as simetrias são variações,
 // não famílias adicionais. Pontos intermediários indicam onde parar cada tiro.
 const padroesPlanejadosGude = [
-  {familia:'chicane', pontos:[[22,72],[46,72],[46,24],[78,24]],
-    pedras:[[10,38,25,17],[57,40,25,18],[23,12,12,14]]},
+  {familia:'chicane', pontos:[[18,78],[76,78],[76,20],[90,20]],
+    pedras:[[5,5,62,61],[84,34,7,56],[76,5,15,7]]},
   {familia:'ferradura', pontos:[[28,60],[28,24],[72,24],[72,64]],
-    pedras:[[39,39,22,36],[9,15,8,25],[79,41,10,14]]},
+    pedras:[[39,39,22,36],[9,15,8,25],[79,41,10,14],[9,63,10,18],[34,4,9,9],[70,78,21,13],[46,82,18,8]]},
   {familia:'ilha', pontos:[[30,72],[75,72],[75,24],[45,24]],
-    pedras:[[35,35,29,24],[12,22,12,30],[43,81,21,9]]},
-  {familia:'degraus', pontos:[[26,26],[26,56],[68,56],[68,80]],
-    pedras:[[38,10,20,33],[10,65,45,15],[79,35,10,26]]},
-  {familia:'ricochete', pontos:[[40,60],[30,60],[30,24],[72,24]],
-    pedras:[[42,35,20,15],[42,71,20,12],[10,28,9,20]], ricochete:true}
+    pedras:[[35,35,29,24],[12,22,12,30],[43,81,21,9],[31,16,8,11],[4,70,13,19],[63,8,8,9],[71,80,8,9]]},
+  {familia:'degraus', pontos:[[20,20],[20,70],[76,70],[76,88]],
+    pedras:[[30,5,12,55],[47,48,43,12],[5,80,60,12],[84,65,8,25],[57,15,15,18]]},
+  {familia:'bolso', pontos:[[74,48],[18,48],[18,16],[64,16]],
+    pedras:[[28,27,62,12],[28,57,62,33],[84,44,8,8]]}
 ];
 
 function montarPadraoGude(padrao,seed,orientacao,escala=[1,1],deslocamento=[0,0]) {
@@ -308,37 +308,62 @@ function montarPadraoGude(padrao,seed,orientacao,escala=[1,1],deslocamento=[0,0]
     coordenada(x,0),coordenada(y,1),coordenada(x+w,0)-coordenada(x,0),coordenada(y+h,1)-coordenada(y,1)
   ]);
   const terreno=orientarTerrenoGude(pontos,pedras,orientacao,seed,'planejado-'+padrao.familia);
-  if(padrao.ricochete){
-    const passo=terreno.solucao[0], [dx,dy]=direcoes[passo.direcao];
-    const eixo=dx?0:1, sinal=dx||dy, borda=sinal<0?3:92;
-    // A borda física é assimétrica (3..92). Recalcular após orientar evita
-    // presumir um ricochete perfeito em um tabuleiro geométrico de 0..96.
-    const inicio=terreno.inicio[eixo], fim=inicio+sinal*Math.abs(pontos[1][0]-pontos[0][0]);
-    passo.duracao=(Math.abs(inicio-borda)+Math.abs(fim-borda)-5)/68;
-  }
   return terreno;
+}
+
+// Busca finita de atalhos em dois tiros pelo arrasto público. O primeiro tiro
+// amostra 24 direções: alcances 4..94 por pixel nas quatro cardinais e
+// 6..94 de quatro em quatro nas outras vinte; o segundo mira o buraco da posição real,
+// inclusive após ricochetes. Não é uma prova sobre todos os ângulos possíveis.
+export function encontrarAtalhoGude(terreno) {
+  function arrastar(jogo,angulo,alcance) {
+    const {x,y}=jogo.snapshot();
+    const px=x-Math.cos(angulo)*alcance/3.6,py=y-Math.sin(angulo)*alcance/3.6;
+    if(px<0||px>96||py<0||py>96)return false;
+    jogo.point(x,y,'down');jogo.point(px,py,'up');
+    for(let quadro=0;quadro<600&&jogo.moving;quadro++)jogo.update(1/60);
+    return true;
+  }
+  for(let graus=0;graus<360;graus+=15)for(let alcance=graus%90===0?4:6;alcance<=94;alcance+=graus%90===0?1:4){
+    let venceu=false;
+    const jogo=gude(3,{tone(){},finish(ok){venceu=ok;}},{terrenoValidado:terreno});
+    const angulo=graus*Math.PI/180;
+    if(!arrastar(jogo,angulo,alcance))continue;
+    const tiros=[{angulo,alcance}];
+    if(venceu)return tiros;
+    const {x,y}=jogo.snapshot(),dx=terreno.alvo[0]-x,dy=terreno.alvo[1]-y;
+    const distancia=Math.hypot(dx,dy),mira=Math.atan2(dy,dx);
+    if(distancia>94)continue;
+    if(arrastar(jogo,mira,distancia)&&venceu)return [...tiros,{angulo:mira,alcance:distancia}];
+  }
+  return null;
+}
+
+function pedrasSeparadasGude(pedras) {
+  return pedras.every(([x,y,w,h],i)=>x>=0&&y>=0&&x+w<=96&&y+h<=96&&
+    pedras.slice(i+1).every(([a,b,c,d])=>x+w+5<=a||a+c+5<=x||y+h+5<=b||b+d+5<=y));
 }
 
 // No máximo 12 variantes; a última é a planta conhecida na orientação original.
 // Mesmo a saída conhecida passa pelo certificado, nunca apenas por uma promessa.
 function criarPadraoPlanejadoGude(seed) {
-  const padrao=padroesPlanejadosGude[Math.floor((Number(seed)>>>0)/17)%padroesPlanejadosGude.length];
+  const padrao=padroesPlanejadosGude[(Number(seed)>>>0)%padroesPlanejadosGude.length];
   const random=aleatorioComSemente(seed);
   for(let tentativa=0;tentativa<12;tentativa++){
     const base=tentativa===11;
     const escala=base?[1,1]:[.94+random()*.12,.94+random()*.12];
     const deslocamento=base?[0,0]:[Math.floor(random()*5)-2,Math.floor(random()*5)-2];
     const terreno=montarPadraoGude(padrao,seed,base?0:Math.floor(random()*8),escala,deslocamento);
-    if(!validarTerrenoGude(terreno))continue;
+    if(!pedrasSeparadasGude(terreno.pedras)||!validarTerrenoGude(terreno))continue;
     const desafioForca=contarErrosDeForcaGude(terreno);
-    if(desafioForca>=4)return {...terreno,desafioForca};
+    if(desafioForca>=4&&!encontrarAtalhoGude(terreno))return {...terreno,desafioForca};
   }
   return null;
 }
 
 export function criarTerrenoGude(seed=1) {
-  // Preserva 16 de cada 17 sementes, inclusive suas famílias escalonadas.
-  if((Number(seed)>>>0)%17===0){
+  // Metade das sementes recebe plantas novas; a outra mantém as famílias antigas.
+  if((Number(seed)>>>0)%2===0){
     const planejado=criarPadraoPlanejadoGude(seed);
     if(planejado)return planejado;
   }

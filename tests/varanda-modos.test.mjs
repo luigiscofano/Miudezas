@@ -36,13 +36,14 @@ function assinaturaGeometrica(terreno){
  return variantes.sort()[0];
 }
 test('Gude valida 500 sementes usando controles, colisões e física reais',()=>{
- const normalizados=new Set();let iniciosInternos=0,alvosInternos=0;
+ const normalizadosAntigos=new Set(),contagens={};let iniciosInternos=0,alvosInternos=0;
  const layouts=new Set(),origens=new Set(),quadrantes=new Set(),rotas=new Set(),familias=new Set(),orientacoes=new Set(),quantidades=new Set();
  for(let seed=0;seed<500;seed++){
   const terreno=criarTerrenoGude(seed);assert.ok(validarTerrenoGude(terreno));
   assert.deepEqual(criarTerrenoGude(seed),terreno);
   layouts.add(JSON.stringify([terreno.inicio,terreno.alvo,terreno.pedras]));
-  normalizados.add(assinaturaGeometrica(terreno));
+  if(seed%2)normalizadosAntigos.add(assinaturaGeometrica(terreno));
+  contagens[terreno.familia]=(contagens[terreno.familia]||0)+1;
   if(terreno.inicio.every(v=>v>=28&&v<=68))iniciosInternos++;
   if(terreno.alvo.every(v=>v>=28&&v<=68))alvosInternos++;
   if(terreno.familia!=='seguranca')for(let i=0;i<terreno.pedras.length;i++)for(let k=i+1;k<terreno.pedras.length;k++){
@@ -63,9 +64,11 @@ test('Gude valida 500 sementes usando controles, colisões e física reais',()=>
   }
   assert.equal(a.resultados.length,1);assert.equal(a.resultados[0].ok,true);jogo.draw(quadro);
  }
- assert.ok(layouts.size>490);assert.ok(origens.size>350);assert.ok(normalizados.size>300);assert.ok(iniciosInternos>150);assert.ok(alvosInternos>50);assert.equal(quadrantes.size,4);
+ assert.ok(layouts.size>490);assert.ok(origens.size>350);assert.ok(normalizadosAntigos.size>200);assert.ok(iniciosInternos>75);assert.ok(alvosInternos>25);assert.equal(quadrantes.size,4);
+ for(const f of ['chicane','ferradura','ilha','degraus','bolso'])assert.equal(contagens['planejado-'+f],50);
+ assert.equal(Object.entries(contagens).filter(([f])=>!f.startsWith('planejado-')).reduce((s,[,n])=>s+n,0),250);
  assert.equal(rotas.size,24);assert.equal(orientacoes.size,8);
- assert.deepEqual([...familias].sort(),['cotovelo','escalonado-retorno','escalonado-travessia','planejado-chicane','planejado-degraus','planejado-ferradura','planejado-ilha','planejado-ricochete','retorno','travessia']);assert.deepEqual([...quantidades].sort(),[3,4,5,6,7,8]);
+ assert.deepEqual([...familias].sort(),['cotovelo','escalonado-retorno','escalonado-travessia','planejado-bolso','planejado-chicane','planejado-degraus','planejado-ferradura','planejado-ilha','retorno','travessia']);assert.deepEqual([...quantidades].sort(),[3,4,5,6,7,8]);
 });
 test('Gude reinício reconstrói mapa; dificuldades autorais têm alvos fixos',()=>{
  for(const level of [1,2,3])assert.deepEqual(varanda.gude(level,api()).snapshot().terreno.alvo,[[22,80],[52,69],[15,45]][level-1]);
@@ -107,12 +110,12 @@ test('Certificado rejeita mapa trivial e área inferior às pedras do Puxado',()
 });
 
  test('Sementes fora do novo subconjunto mantêm mapas anteriores byte a byte',()=>{
- const anteriores={1:'ca429dcb4f54cae65d096574174b39154d6ce26801b2879e80655c66a7498699',2:'69e6f847765f1a1d288d0b1d812c1764984f90f4fec0f8bab5a4715947f46573',4:'4cfaaed9b37860c56f9927911cd9722ae30c016eae25fa4c09ed58172284809e',5:'77e2369c9aa78674bbd5369236e533f83b0d4d10c4b22add42fce286280d2f49'};
+ const anteriores={3:'ea33ff351c5fd1c895724b27bee2e818f56355fd8c02ac13349be6829e5fe1a7',9:'2e7ff0f08252a70085d0975d6e0d24f0a1f32a206148d62a69b5ddc526925267',1:'ca429dcb4f54cae65d096574174b39154d6ce26801b2879e80655c66a7498699',5:'77e2369c9aa78674bbd5369236e533f83b0d4d10c4b22add42fce286280d2f49'};
  for(const [seed,hash]of Object.entries(anteriores))assert.equal(createHash('sha256').update(JSON.stringify(criarTerrenoGude(Number(seed)))).digest('hex'),hash);
  });
  test('Subconjunto escalonado varia geometria e exige calibrar força',()=>{
  const geometrias=new Set(),familias=new Set();let internos=0,novos=0;
- for(let seed=0;seed<300;seed+=3){
+ for(let seed=3;seed<600;seed+=6){
  const t=criarTerrenoGude(seed);if(!t.familia.startsWith('escalonado-'))continue;
  novos++;familias.add(t.familia);geometrias.add(assinaturaGeometrica(t));
  if(t.inicio.every(v=>v>=28&&v<=68))internos++;
