@@ -1,6 +1,6 @@
 # Cenas atuais dos jogos
 
-Estas imagens acompanham as dez fichas de **Jogos e level design** no README principal. Complementam, sem apagar, os ícones aprovados e as miniaturas armazenadas.
+Estas imagens acompanham as dez fichas de **Jogos e level design** no README principal. Complementam, sem apagar, os ícones e as miniaturas armazenadas.
 
 ## Origem e fidelidade
 
@@ -47,7 +47,7 @@ Reexecute após alterar a arte ou o level design e confira visualmente os dez ar
 
 ### rastro
 
-Cena atualizada com o pote aprovado em 18/11/2026: boca circular, sombras escuras e retirada somente da faixa clara atrás do destino. Renderizada pelo mesmo método descrito acima, após essa alteração visual.
+Cena atualizada com o pote em 18/11/2026: boca circular, sombras escuras e retirada somente da faixa clara atrás do destino. Renderizada pelo mesmo método descrito acima, após essa alteração visual.
 
 ![Cena atual de rastro](rastro.svg)
 

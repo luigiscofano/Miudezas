@@ -79,17 +79,17 @@ node --test tests/pao.test.mjs tests/esquina-modos.test.mjs tests/rastro-padroes
 
 A suíte verifica identidades, utensílios, toque, trocas, queimas únicas, três erros, metas separadas e vitória imediata nos três níveis; simula 20 minutos de Sem Parar; percorre **1.000 sementes** por controles reais, valida repetibilidade e variedade; desenha os mapas autorais; resolve os três autorais e 100 gerados com gestos de eventos espaçados; verifica bloqueio, início no caracol, cancelamento, preservação ao soltar e devolução de folha ao desfazer; e rejeita atalhos em 150 sementes, incluindo a reserva. A família aberta é testada separadamente em 200 sementes, incluindo execução por gesto, áreas livres, bifurcações, ausência de atalhos e reserva da mesma família. O teste adicional de padrões valida 300 fases irregulares, incluindo execução por gestos rápidos, ausência de atalhos, seis ordens de coleta, diversidade normalizada e fallback. Testes automatizados não substituem a inspeção visual final no navegador e em dispositivos reais.
 
-## Acabamento visual aprovado
+## Acabamento visual
 
-Rádio de Pilha ganhou relevo de um pixel, grade e apoio; Pão na Chapa ganhou acabamento metálico e detalhe no miolo do pão. Utensílios, estados, fumaça, metas e três erros permanecem iguais. Rastro de Prata não foi alterado: sua proposta ainda depende de aprovação.
+Rádio de Pilha ganhou relevo de um pixel, grade e apoio; Pão na Chapa ganhou acabamento metálico e detalhe no miolo do pão. Utensílios, estados, fumaça, metas e três erros permanecem iguais. Nessa revisão, o desenho de Rastro de Prata permaneceu inalterado.
 
 Os detalhes usam a grade nativa de 96 × 96, cores chapadas e bordas sem suavização. São apenas desenho: não representam novos obstáculos nem mudam colisões, controles, fases ou saves. As propostas foram comparadas com renderizações do próprio `draw()` antes da aplicação.
 
-## Folhas aprovadas de Rastro
+## Folhas de Rastro
 
 As três folhas finas têm silhuetas levemente diferentes e a mesma paleta. A ordem das folhas no mapa define sua variante, calculada uma vez ao iniciar a fase; reiniciar mantém a aparência. A diferença é decorativa: todas são recolhidas pelas mesmas regras e mantêm o mesmo valor.
 
-### Rastro: segunda prévia aprovada
+### Rastro: segundo refinamento visual
 
 Cada ladrilho recebe uma linha clara de um pixel junto à borda superior, mantendo o centro livre para folhas e rastro. As folhas finas B, os sprites, mapas, gerador e regras permanecem iguais.
 
@@ -98,6 +98,6 @@ Cada ladrilho recebe uma linha clara de um pixel junto à borda superior, manten
 Para facilitar a leitura no celular, o vaso agora ocupa 11 × 10 pixels em vez de 8 × 7. A abertura escura e a cerâmica mantêm as mesmas cores. O desenho cabe com margem dentro da menor casa (13 pixels), sem encostar na divisória nem cobrir células vizinhas. A vitória continua exigindo recolher as folhas e entrar na casa P.
 
 
-### Pão francês aprovado
+### Pão francês
 
-Pão na Chapa usa a versão aprovada baseada na referência enviada: pão francês alongado, com dois cortes diagonais e cores chapadas. O sprite tem 13 × 16 pixels, desenhado em escala 2 na chapa. As quatro paletas mostram antes do ponto, no ponto, tostado e queimado, preservando a fumaça. Ovo, utensílios, áreas de toque, tempos, metas, reposições e alternância de lados não mudam. Os testes de identidade verificam o novo desenho em ambos os lados; a suíte mantém os testes dos três níveis, vitória, queima e três erros.
+Pão na Chapa usa um sprite de pão francês alongado, com dois cortes diagonais e cores chapadas. O sprite tem 13 × 16 pixels, desenhado em escala 2 na chapa. As quatro paletas mostram antes do ponto, no ponto, tostado e queimado, preservando a fumaça. Ovo, utensílios, áreas de toque, tempos, metas, reposições e alternância de lados não mudam. Os testes de identidade verificam o novo desenho em ambos os lados; a suíte mantém os testes dos três níveis, vitória, queima e três erros.

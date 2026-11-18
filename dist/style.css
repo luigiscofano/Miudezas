@@ -20,7 +20,7 @@ body.popup .desktop{padding:0}body.popup .window{width:min(492px,100vw,100svh);h
 .overview .route-grid{flex:1;min-height:0;overflow-y:auto;align-content:start;padding:2px}
 .summary-cards{grid-template-columns:repeat(8,minmax(0,1fr))}
 
-/* A assinatura aprovada ocupa a barra sem alterar as áreas de toque. */
+/* A assinatura ocupa a barra sem alterar as áreas de toque. */
 .bar>.brand-logo{width:100px;height:auto;max-height:24px;object-fit:contain}
 
 /* Controles exclusivos da chapa: os demais jogos conservam o painel original. */

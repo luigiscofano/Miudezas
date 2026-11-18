@@ -6,7 +6,7 @@ import {varanda} from '../dist/varanda.js';
 const jogos = ['luz', 'gude'];
 const cores = ['#44345f', '#df9553'];
 for (const [indice, id] of jogos.entries()) {
-  test(`Arte aprovada: ${id} conserva estado e pixels característicos`, () => {
+  test(`Arte: ${id} conserva estado e pixels característicos`, () => {
     const jogo = varanda[id](1, {tone() {}, finish() {}}, {seed: 1});
     const antes = jogo.snapshot?.();
     const hud = jogo.hud?.();

@@ -2,15 +2,15 @@
 
 ![Capa completa](miudezas-tijuca.png)
 
-`miudezas-tijuca.png`: PNG, 1672 × 941 pixels. Composição aprovada, sem recorte. Revisão pontual: removidas as janelas sobrepostas às portas das casas verde, laranja e amarela; as demais janelas permanecem.
+`miudezas-tijuca.png`: PNG, 1672 × 941 pixels. Composição, sem recorte. Revisão pontual: removidas as janelas sobrepostas às portas das casas verde, laranja e amarela; as demais janelas permanecem.
 
-## Elementos aprovados
+## Elementos
 
 Título Miudezas com iluminação pixelada; árvores enraizadas no solo; Cristo sutil no topo da montanha; Ritual do Vento com pequenas dobras sugeridas no alto das formas; bem-te-vi e nota musical; pipa na posição original com linha partindo de trás de uma casa.
 
 ## Inventário
 
-Esta pasta contém um único recurso visual: [miudezas-tijuca.png](miudezas-tijuca.png), **PNG de 1672 × 941 pixels**, dimensão conferida no arquivo. É uma composição estática aprovada, não uma captura atual de partida nem uma folha de sprites.
+Esta pasta contém um único recurso visual: [miudezas-tijuca.png](miudezas-tijuca.png), **PNG de 1672 × 941 pixels**, dimensão conferida no arquivo. É uma composição estática, não uma captura atual de partida nem uma folha de sprites.
 
 ## Integração
 

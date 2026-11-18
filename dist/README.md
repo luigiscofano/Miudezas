@@ -25,7 +25,7 @@ Uma fábrica recebe o nível de 1 a 3, uma API com callbacks de som e conclusão
 
 ## Capa da abertura
 
-![Capa aprovada](artes/capas/miudezas-tijuca.png)
+![Capa](artes/capas/miudezas-tijuca.png)
 
 A [pasta artes](artes/README.md) guarda a composição oficial. A capa é exibida inteira, sem esticamento; regras e progresso não foram alterados.
 
@@ -45,15 +45,15 @@ Consulte [dados](../docs/dados/README.md) e [testes](../tests/README.md). Simula
 
 A arte do caranguejo em `quintal.js` é desenhada na grade nativa, sem arquivos externos ou filtros. Consulte [a documentação do quintal](../docs/jogos/quintal/README.md#arte-do-caranguejo).
 
-### Arte aprovada em `quintal.js`
+### Arte em `quintal.js`
 
-Goteira, Último Fio e Pipa de Laje: detalhes discretos no cenário, sem alterar a jogabilidade. A arte aprovada de Maré já estava incorporada. A resolução lógica permanece 96 × 96, sem suavização ou nova dependência.
+Goteira, Último Fio e Pipa de Laje: detalhes discretos no cenário, sem alterar a jogabilidade. A arte de Maré já estava incorporada. A resolução lógica permanece 96 × 96, sem suavização ou nova dependência.
 
-### Arte aprovada em `esquina.js`
+### Arte em `esquina.js`
 
 Rádio de Pilha e Pão na Chapa: acabamento discreto em pixels, preservando todos os controles e objetivos. A resolução lógica permanece 96 × 96, sem suavização ou nova dependência.
 
-### Arte aprovada em `varanda.js`
+### Arte em `varanda.js`
 
 Luz de Varanda e Três Petelecos: luz, texturas e sprites refinados sem mudar obstáculos ou física. A resolução lógica permanece 96 × 96, sem suavização ou nova dependência.
 
@@ -61,27 +61,27 @@ Pisca preserva o primeiro desenho dos vaga-lumes preservado no GitHub (`9cc7bbb`
 
 ### Refinamento seletivo dos tabuleiros
 
-`quintal.js` e `esquina.js` acrescentam os detalhes aprovados de Maré e Rastro somente dentro de `draw()`. Grade, controles, geradores, colisões, soluções e saves continuam independentes da ornamentação.
+`quintal.js` e `esquina.js` acrescentam os detalhes de Maré e Rastro somente dentro de `draw()`. Grade, controles, geradores, colisões, soluções e saves continuam independentes da ornamentação.
 
 ### Imagens da seleção
 
-O campo opcional `icone` do catálogo é usado pela galeria e pela pausa. Sem esse campo, mantém-se a miniatura existente. `foto(j, extra, selecao)` só escolhe o ícone quando `selecao` é verdadeiro; os outros fluxos preservam as cenas. Os dez assets aprovados estão em [arte/icones](arte/icones/README.md). Não há alteração de CSS, navegação ou persistência.
+O campo opcional `icone` do catálogo é usado pela galeria e pela pausa. Sem esse campo, mantém-se a miniatura existente. `foto(j, extra, selecao)` só escolhe o ícone quando `selecao` é verdadeiro; os outros fluxos preservam as cenas. Os dez assets estão em [arte/icones](arte/icones/README.md). Não há alteração de CSS, navegação ou persistência.
 
 O sprite `vasoDestino` de Rastro ocupa 12 × 10 pixels visíveis dentro da casa P: pote de barro deitado, abertura circular em pixels e sombras escuras. Somente a faixa clara do ladrilho de destino é omitida para não atravessar a silhueta. A mudança é exclusivamente visual; o identificador, controles e regras de vitória não mudam.
 
 
-### Pão francês aprovado
+### Pão francês
 
-Pão na Chapa usa a versão aprovada baseada na referência enviada: pão francês alongado, com dois cortes diagonais e cores chapadas. O sprite tem 13 × 16 pixels, desenhado em escala 2 na chapa. As quatro paletas mostram antes do ponto, no ponto, tostado e queimado, preservando a fumaça. Ovo, utensílios, áreas de toque, tempos, metas, reposições e alternância de lados não mudam. Os testes de identidade verificam o novo desenho em ambos os lados; a suíte mantém os testes dos três níveis, vitória, queima e três erros.
+Pão na Chapa usa um sprite de pão francês alongado, com dois cortes diagonais e cores chapadas. O sprite tem 13 × 16 pixels, desenhado em escala 2 na chapa. As quatro paletas mostram antes do ponto, no ponto, tostado e queimado, preservando a fumaça. Ovo, utensílios, áreas de toque, tempos, metas, reposições e alternância de lados não mudam. Os testes de identidade verificam o novo desenho em ambos os lados; a suíte mantém os testes dos três níveis, vitória, queima e três erros.
 
 
 ### Tela de pausa coesa
 
-A pausa usa a mesma imagem da seleção: ícone aprovado quando disponível e miniatura original nos demais jogos. A imagem é contida sem recorte. “Continuar” e “Voltar às fases” permanecem na primeira linha; “Voltar ao menu” ocupa a segunda linha, centralizado e com a mesma largura dos demais botões. O ajuste é exclusivo da pausa e mantém navegação, progresso e controles. O teste de navegação verifica a arte e as três ações dos dez jogos.
+A pausa usa a mesma imagem da seleção: ícone quando disponível e miniatura original nos demais jogos. A imagem é contida sem recorte. “Continuar” e “Voltar às fases” permanecem na primeira linha; “Voltar ao menu” ocupa a segunda linha, centralizado e com a mesma largura dos demais botões. O ajuste é exclusivo da pausa e mantém navegação, progresso e controles. O teste de navegação verifica a arte e as três ações dos dez jogos.
 
-### Goteira, Pipa e Pão na Chapa: últimos ícones aprovados
+### Goteira, Pipa e Pão na Chapa: últimos ícones
 
-Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavização: balde com alça simples e pipa inclinada. São compartilhados pela seleção e pela pausa; não alteram cenas jogáveis, colisões, controles ou saves. Pão na Chapa usa a versão intermediária aprovada de 32 × 32 pixels, com pão francês e ovo baseados nos sprites reais.
+Os dois ícones usam a grade de 24 × 24 pixels, ampliada sem suavização: balde com alça simples e pipa inclinada. São compartilhados pela seleção e pela pausa; não alteram cenas jogáveis, colisões, controles ou saves. Pão na Chapa usa a versão intermediária de 32 × 32 pixels, com pão francês e ovo baseados nos sprites reais.
 
 ### Maré: padrões avançados misturados
 
@@ -100,4 +100,4 @@ Em dispositivos com mouse, a largura da janela durante a partida acompanha a alt
 
 ## Música e configurações
 
-[audio.js](audio.js) gerencia as trilhas aprovadas, efeitos V2, pistas essenciais, cache limitado e suspensão. [configuracoes.js](configuracoes.js) e [configuracoes.css](configuracoes.css) criam a engrenagem acessível, volumes e Sobre. A navegação fornece tela/jogo ao player; não há trabalho sonoro por quadro. [Guia completo](../docs/audio/README.md). O diálogo pausa a partida e isola o teclado.
+[audio.js](audio.js) gerencia as trilhas, efeitos V2, pistas essenciais, cache limitado e suspensão. [configuracoes.js](configuracoes.js) e [configuracoes.css](configuracoes.css) criam a engrenagem acessível, volumes e Sobre. A navegação fornece tela/jogo ao player; não há trabalho sonoro por quadro. [Guia completo](../docs/audio/README.md). O diálogo pausa a partida e isola o teclado.

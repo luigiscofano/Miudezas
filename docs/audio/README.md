@@ -2,7 +2,7 @@
 
 A trilha combina leveza de videogame, harmonia com sétimas e nonas, síncopes brasileiras, cordas dedilhadas sintetizadas e percussão delicada inspirada em madeira, ganzá e platinelas. O objetivo é acompanhar o bairro e seus jogos sem transformar a experiência em uma sequência de alarmes.
 
-A direção musical aprovada é **Interpretação Mais Natural**. Os efeitos aprovados pertencem à **V2 instrumental**. As imagens desta pasta documentam os arquivos dessa direção, e não as alternativas anteriores.
+A direção musical é **Interpretação Mais Natural**. Os efeitos pertencem à **V2 instrumental**. As imagens desta pasta documentam os arquivos dessa direção, e não as alternativas anteriores.
 
 ---
 
@@ -40,7 +40,7 @@ Isso é **síntese com interpretação programada**, não gravação de músicos
 
 Os gráficos leem diretamente os WAV individuais do compositor. Mostram o envelope mínimo/máximo do **canal esquerdo**, em blocos de amostras, preservando os picos desses blocos. A escala vertical é a mesma em todos: amplitude PCM entre −1 e +1. Não há normalização individual para fazer uma faixa parecer mais forte.
 
-Essas imagens mostram amplitude ao longo do tempo. **Não são partituras, espectrogramas ou gráficos de frequência.** O volume final percebido também depende do ganho de reprodução, do dispositivo e da mixagem do jogo. A prévia enviada para aprovação usou ganho de apresentação adicional de aproximadamente +2 dB; os gráficos usam os masters individuais antes desse ganho.
+Essas imagens mostram amplitude ao longo do tempo. **Não são partituras, espectrogramas ou gráficos de frequência.** O volume final percebido também depende do ganho de reprodução, do dispositivo e da mixagem do jogo. A amostra de reprodução usou ganho de apresentação adicional de aproximadamente +2 dB; os gráficos usam os masters individuais antes desse ganho.
 
 ---
 

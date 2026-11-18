@@ -13,7 +13,7 @@ with tempfile.TemporaryDirectory(prefix='miudezas-audio-') as temporary:
     manifest={}
     for file,name in zip(sorted(work.glob('0*.wav')),NAMES):
         rate,samples=read(file)
-        # Ganho exato da prévia aprovada, antes do controle individual do jogador.
+        # Ganho exato da amostra de referência, antes do controle individual do jogador.
         samples=(samples.astype(float)*1.2589).clip(-32768,32767).astype(np.int16)
         temporary_wav=work/(name+'.wav');write(temporary_wav,rate,samples)
         target=ROOT/'dist/audio/musicas'/(name+'.flac')

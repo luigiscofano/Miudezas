@@ -10,12 +10,12 @@ Todos os jogos ativos possuem `icone` em [catalogo.js](../../catalogo.js). A fun
 | Maré Miúda | [mare.svg](mare.svg) | 72 × 56 | Caranguejo da proposta 5 |
 | Último Fio | [fio.svg](fio.svg) | 72 × 56 | Bem-te-vi da proposta 5 |
 | Pipa de Laje | [pipa.svg](pipa.svg) | 144 × 112 | Pipa inclinada; matriz-base 24 × 24 |
-| Rádio de Pilha | [radio.svg](radio.svg) | 72 × 56 | Proposta aprovada na rodada 3 |
+| Rádio de Pilha | [radio.svg](radio.svg) | 72 × 56 | Ícone do rádio e de seus componentes |
 | Pão na Chapa | [pao.svg](pao.svg) | 144 × 112 | Versão intermediária: pão francês e ovo, matriz-base 32 × 32 |
 | Rastro de Prata | [rastro.svg](rastro.svg) | 72 × 56 | Caracol da proposta 5, sem folha |
-| Luz de Varanda | [luz.svg](luz.svg) | 72 × 56 | Opção A, com perna esquerda afastada |
-| Três Petelecos | [gude.svg](gude.svg) | 72 × 56 | Proposta aprovada na rodada 3 |
-| Pisca no Mato | [pisca.svg](pisca.svg) | 72 × 56 | Vaga-lume preservado na rodada 3 |
+| Luz de Varanda | [luz.svg](luz.svg) | 72 × 56 | Lagartixa com perna esquerda afastada |
+| Três Petelecos | [gude.svg](gude.svg) | 72 × 56 | Bolinha e buraco de destino |
+| Pisca no Mato | [pisca.svg](pisca.svg) | 72 × 56 | Vaga-lume com sinais luminosos |
 
 <img src="goteira.svg" width="144" alt="Balde de Goteira"> <img src="mare.svg" width="144" alt="Caranguejo de Maré Miúda"> <img src="fio.svg" width="144" alt="Bem-te-vi de Último Fio"> <img src="pipa.svg" width="144" alt="Pipa de Laje"> <img src="radio.svg" width="144" alt="Rádio de Pilha">
 
@@ -29,6 +29,6 @@ Os arquivos usam retângulos contíguos e `shape-rendering="crispEdges"`, sem fi
 
 ## Revisão sem efeitos colaterais
 
-Após editar um ícone aprovado, verificar galeria e pausa, incluindo telas estreitas. Conferir que introduções e resultados continuam usando os PNGs. Não alterar regras, controles, colisões ou saves para ajustar uma imagem. A suíte de navegação verifica as referências das telas; isso não substitui inspeção visual. Referências históricas de aprovação acima documentam as decisões existentes, não uma nova aprovação.
+Após editar um ícone, verificar galeria e pausa, incluindo telas estreitas. Conferir que introduções e resultados continuam usando os PNGs. Não alterar regras, controles, colisões ou saves para ajustar uma imagem. A suíte de navegação verifica as referências das telas; isso não substitui inspeção visual. O histórico registra a evolução dos recursos visuais.
 
 [Acervo visual](../README.md) · [Design e arte em código](../../../docs/design/README.md)

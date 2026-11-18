@@ -2,8 +2,8 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 
-// O arquivo aprovado deve continuar íntegro e a abertura não pode esticá-lo.
-test('Capa aprovada existe nas dimensões originais', () => {
+// O arquivo deve continuar íntegro e a abertura não pode esticá-lo.
+test('Capa existe nas dimensões originais', () => {
   const imagem=readFileSync(new URL('../dist/artes/capas/miudezas-tijuca.png',import.meta.url));
   assert.equal(imagem.subarray(1,4).toString(),'PNG');
   assert.equal(imagem.readUInt32BE(16),1672);

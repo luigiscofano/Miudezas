@@ -6,7 +6,7 @@ import {quintal} from '../dist/quintal.js';
 const jogos = ['goteira', 'fio', 'pipa'];
 const cores = ['#4b6388', '#f8be92', '#55a79f'];
 for (const [indice, id] of jogos.entries()) {
-  test(`Arte aprovada: ${id} conserva estado e pixels característicos`, () => {
+  test(`Arte: ${id} conserva estado e pixels característicos`, () => {
     const jogo = quintal[id](1, {tone() {}, finish() {}}, {seed: 1});
     const antes = jogo.snapshot?.();
     const hud = jogo.hud?.();

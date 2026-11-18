@@ -1,6 +1,6 @@
 # Síntese reproduzível
 
-`compor.py` é a composição aprovada **Interpretação Mais Natural**: nove ciclos originais. `efeitos_acusticos.py` gera os nove efeitos V2 aprovados. Comentários explicam o fraseado e a síntese. Nenhum sample externo ou credencial.
+`compor.py` é a composição **Interpretação Mais Natural**: nove ciclos originais. `efeitos_acusticos.py` gera os nove efeitos V2. Comentários explicam o fraseado e a síntese. Nenhum sample externo ou credencial.
 
 Requer Python 3, NumPy, SciPy e ffmpeg. Opcionalmente Matplotlib para figuras. Instale as dependências no seu ambiente Python isolado. Da raiz:
 

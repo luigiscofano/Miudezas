@@ -11,14 +11,14 @@ O catálogo ativo contém **dez jogos**, em duas páginas de até seis miniatura
 - [Varanda](jogos/varanda/README.md): Luz, Três Petelecos e Pisca.
 - [Dados, recordes e backup](dados/README.md): schema 2, seis recordes e compatibilidade com arquivos antigos.
 - [Design e arte em código](design/README.md): inventário real de assets, sprites e aplicações.
-- [Evolução visual](evolucao-visual.md): histórico das decisões aprovadas, separado do manual atual.
+- [Evolução visual](evolucao-visual.md): histórico das decisões, separado do manual atual.
 - [Testes](../tests/README.md): cobertura automática e roteiro manual.
 
 ## Referências visuais
 
 ![Capa Miudezas](../dist/artes/capas/miudezas-tijuca.png)
 
-Esta é a arte aprovada, não uma captura da interface. Consulte [artes](../dist/artes/README.md) e [miniaturas](../dist/arte/README.md). Capturas antigas `inicio.jpg` e `pracinha.jpg` foram retiradas para não representar jogos indisponíveis. Novas capturas devem mostrar a versão efetivamente publicada, sem cursor e sem dados privados.
+Esta é a arte, não uma captura da interface. Consulte [artes](../dist/artes/README.md) e [miniaturas](../dist/arte/README.md). Capturas antigas `inicio.jpg` e `pracinha.jpg` foram retiradas para não representar jogos indisponíveis. Novas capturas devem mostrar a versão efetivamente publicada, sem cursor e sem dados privados.
 
 ## Evolução dos modos e controles
 

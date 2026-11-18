@@ -7,13 +7,13 @@ O pacote estático é **exatamente `dist/`**, sem compilação e sem backend. O 
 1. Em **Settings → Pages**, selecione **GitHub Actions** como origem.
 2. Em **Actions → Publicar Miudezas no GitHub Pages → Run workflow**, escolha `main`.
 3. Confira o sucesso do job e abra a URL devolvida pelo deployment. O endereço esperado é `https://luigiscofano.github.io/Miudezas/`; só considerá-lo publicado após a verificação.
-4. Depois de cada atualização aprovada/integrada, acompanhe a execução automática do workflow; a execução manual fica disponível para republicação. Reversão: reverta o commit por PR e publique novamente.
+4. Depois de cada atualização integrada, acompanhe a execução automática do workflow; a execução manual fica disponível para republicação. Reversão: reverta o commit por PR e publique novamente.
 
 A publicação Pages é pública; repositórios privados precisam de um plano elegível. O proprietário autorizou tornar este repositório público se necessário para migrar. Não há credenciais, banco ou documentos de usuários no pacote. O arquivo `.openai/hosting.json` registra somente a associação com a antiga hospedagem, não uma credencial, e não faz parte do artefato Pages.
 
 ## Preservação de visual e funcionalidades
 
-A migração de hospedagem preservou a identidade visual e a execução estática. Depois dela, mudanças aprovadas evoluíram regras, catálogo, controles e navegação: o catálogo atual tem dez jogos, com seis modos Sem Parar e três Caminho Novo. Este guia descreve o estado atual, não afirma que o código permaneceu inalterado desde a migração. Fontes e imagens são locais. Os caminhos `./` funcionam tanto na raiz antiga quanto no prefixo `/Miudezas/`. A janela de jogo usa a URL atual e conserva esse prefixo; o bloqueio de popup tem fallback na página. Som sintetizado, Canvas e módulos JavaScript continuam executados no navegador. Não há serviço de servidor a substituir.
+A migração de hospedagem preservou a identidade visual e a execução estática. Depois dela, mudanças evoluíram regras, catálogo, controles e navegação: o catálogo atual tem dez jogos, com seis modos Sem Parar e três Caminho Novo. Este guia descreve o estado atual, não afirma que o código permaneceu inalterado desde a migração. Fontes e imagens são locais. Os caminhos `./` funcionam tanto na raiz antiga quanto no prefixo `/Miudezas/`. A janela de jogo usa a URL atual e conserva esse prefixo; o bloqueio de popup tem fallback na página. Som sintetizado, Canvas e módulos JavaScript continuam executados no navegador. Não há serviço de servidor a substituir.
 
 O endereço antigo deve permanecer disponível como cópia de segurança. Não remover a antiga publicação para forçar a migração.
 

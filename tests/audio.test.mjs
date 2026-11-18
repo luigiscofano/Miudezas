@@ -10,7 +10,7 @@ function ambiente({falha=false,adiar=false}={}){
  return {som,ctx,fontes,pedidos,pendentes,ganhos,get criados(){return criados;}};
 }
 const limpar=()=>new Promise(r=>setImmediate(r));
-test('Arquivos aprovados cobrem todas as telas e os nove efeitos',()=>{
+test('Arquivos cobrem todas as telas e os nove efeitos',()=>{
  for(const tela of TRILHAS)assert.ok(existsSync(new URL('../dist/audio/musicas/'+tela+'.flac',import.meta.url)));
  for(const nome of EFEITOS)assert.ok(existsSync(new URL('../dist/audio/efeitos/'+nome+'.wav',import.meta.url)));
  const manifest=JSON.parse(readFileSync(new URL('../dist/audio/manifesto.json',import.meta.url)));

@@ -163,7 +163,7 @@ test('Cancelar direções solta movimentos contínuos sem disparar petelecos',()
 });
 
 
-test('Ícones aprovados aparecem na seleção e preservam miniaturas de outras telas',()=>{
+test('Ícones aparecem na seleção e preservam miniaturas de outras telas',()=>{
  const n=navegador();n.executar('galeria()');
  for(const id of ['radio','mare','fio','goteira','pipa','pao'])assert.ok(n.html().includes('arte/icones/'+id+'.svg'));
  n.executar("acao({dataset:{do:'seguinte'}})");

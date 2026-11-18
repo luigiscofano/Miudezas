@@ -21,7 +21,7 @@ Casario estreito com janelas altas, telhas em pixels e morros ao fundo distingue
 
 Nas três fases autorais, passagens altas e baixas alternam seus centros entre as alturas 22 e 46. Pequenos bandos acima e postes abaixo delimitam aberturas sem uma altitude fixa segura. Sossegado, Animado e Puxado usam velocidades de 14, 17 e 20 pixels/s, respectivamente, e margens verticais de 8, 7 e 6 pixels em torno do centro; o número de obstáculos continua 4, 5 e 6. Há 70 pixels entre obstáculos para permitir reposicionamento. Os testes verificam derrota sem comandos e trajetórias vencedoras que sobem e descem, a 30/60/120 Hz.
 
-O modo **Sem Parar não foi recalibrado nesta revisão**: mantém seu corredor próximo da altura 22, progressão e velocidade limitada a 23 pixels/s. Sua simulação de quatro minutos continua aprovada. Obstáculos que saíram da tela são descartados; o total ativo permanece limitado. Subpassos de no máximo 25 ms evitam atravessar obstáculos por um quadro lento.
+O modo **Sem Parar não foi recalibrado nesta revisão**: mantém seu corredor próximo da altura 22, progressão e velocidade limitada a 23 pixels/s. Sua simulação de quatro minutos continua passando nos testes. Obstáculos que saíram da tela são descartados; o total ativo permanece limitado. Subpassos de no máximo 25 ms evitam atravessar obstáculos por um quadro lento.
 
 ## Fio de Varal
 
@@ -51,17 +51,17 @@ Esses são testes de lógica e simulação. Não substituem a inspeção visual 
 
 ### Arte do caranguejo
 
-A matriz aprovada tem 11 × 8 pixels e fica dentro de cada casa de 12 × 12. Pinças, olhos e carapaça permanecem legíveis sem suavização. O espelhamento e o clarão de retorno à areia são preservados. Movimento, maré, mapas e persistência não dependem dessa matriz.
+A matriz tem 11 × 8 pixels e fica dentro de cada casa de 12 × 12. Pinças, olhos e carapaça permanecem legíveis sem suavização. O espelhamento e o clarão de retorno à areia são preservados. Movimento, maré, mapas e persistência não dependem dessa matriz.
 
-## Acabamento visual aprovado
+## Acabamento visual
 
-Goteira recebeu moldura da janela, piso e reflexos no balde; Último Fio ganhou nuvens e telhados; Pipa de Laje recebeu uma segunda camada de morros e detalhes de fachadas e lajes. A dificuldade recém-recalibrada da Pipa permanece intacta. A arte aprovada do caranguejo já estava publicada e não foi duplicada.
+Goteira recebeu moldura da janela, piso e reflexos no balde; Último Fio ganhou nuvens e telhados; Pipa de Laje recebeu uma segunda camada de morros e detalhes de fachadas e lajes. A dificuldade recém-recalibrada da Pipa permanece intacta. A arte do caranguejo já estava publicada e não foi duplicada.
 
 Os detalhes usam a grade nativa de 96 × 96, cores chapadas e bordas sem suavização. São apenas desenho: não representam novos obstáculos nem mudam colisões, controles, fases ou saves. As propostas foram comparadas com renderizações do próprio `draw()` antes da aplicação.
 
-### Maré: segunda prévia aprovada
+### Maré: segundo refinamento visual
 
-A costa recebe espuma em um pixel apenas no encontro com areia. Pequenos pontos sugerem areia, riscos diferenciam baixios, pedras ganham faces e a concha recebe preenchimento claro. O caranguejo aprovado é preservado. Nenhum detalhe cria passagem ou obstáculo: a matriz de terreno continua sendo a única fonte de colisões e movimentos.
+A costa recebe espuma em um pixel apenas no encontro com areia. Pequenos pontos sugerem areia, riscos diferenciam baixios, pedras ganham faces e a concha recebe preenchimento claro. O caranguejo é preservado. Nenhum detalhe cria passagem ou obstáculo: a matriz de terreno continua sendo a única fonte de colisões e movimentos.
 
 ## Novos padrões: enseadas irregulares
 
@@ -120,9 +120,9 @@ Foram executadas 100 sementes de cada faixa no jogo real, além do lote misto de
 
 Benchmark local em Node, 100 gerações por faixa: muito difícil com mediana 8,3 ms, percentil 95 de 21,5 ms e máximo 29,0 ms; muitíssimo difícil com mediana 8,8 ms, percentil 95 de 15,5 ms e máximo 41,1 ms. São medições desta máquina, não garantias para celulares. O roteiro de revisão visual e toque continua necessário; não foi alterado por esses testes discretos.
 
-## Pipa: bando em V aprovado
+## Pipa: bando em V
 
-A coluna de aves foi substituída por uma formação com ponta inferior e pares ascendentes, abrindo um V. A altura determina de duas a cinco fileiras (uma ave na ponta e até quatro pares): 3, 5, 7 ou 9 aves; a prévia aprovada mostra 3, 7 e 9. Cada ave mantém o sprite rudimentar de 7 × 4 pixels. Postes, casario, pipa, vento, velocidades 14/17/20, margens 8/7/6, controles e saves não mudam.
+A coluna de aves foi substituída por uma formação com ponta inferior e pares ascendentes, abrindo um V. A altura determina de duas a cinco fileiras (uma ave na ponta e até quatro pares): 3, 5, 7 ou 9 aves; a documentação visual mostra exemplos com 3, 7 e 9 aves. Cada ave mantém o sprite rudimentar de 7 × 4 pixels. Postes, casario, pipa, vento, velocidades 14/17/20, margens 8/7/6, controles e saves não mudam.
 
 `dist/pipa-aves.js` reúne formação, paleta, sprite e colisão. O corpo da pipa é comparado aos pixels sólidos das aves, nas mesmas coordenadas inteiras do desenho. Não existe uma caixa sólida cobrindo o interior vazio do V. A rabiola mantém a regra anterior contra postes; a linha decorativa não causa colisão com aves. Os subpassos de até 25 ms continuam evitando saltos na física. Os bandos e seus limites laterais são calculados ao criar o obstáculo, não a cada quadro.
 

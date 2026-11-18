@@ -1,6 +1,6 @@
 # Artes de Miudezas
 
-## Capa oficial aprovada
+## Capa oficial
 
 ![Miudezas: Tijuca em pixel art](capas/miudezas-tijuca.png)
 
@@ -21,7 +21,7 @@ São **quatro PNGs** nesta árvore. Os READMEs apenas os referenciam, sem criar 
 
 ## Marca
 
-![Logo aprovada](marca/miudezas-logo.png)
+![Logo](marca/miudezas-logo.png)
 
 [Logotipo principal e ícone verde](marca/README.md), com arquivos separados e orientação de uso.
 

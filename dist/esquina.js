@@ -312,7 +312,7 @@ const gardens = [
 const directions = {left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1]};
 const leaf = [["....gg.","...ghgg","..ghigg",".ghigg.","ghigg..","gig....","i......"],["...g...","..ghg..",".ghigg.","ghiggg.",".gigg..","..ig...","..i...."],[".....g.","...gghg","..ghigg",".ghigg.","ghigg..",".ig....","i......"]];
 const rock = ['..rr..', '.rrrr.', 'rrrrrr', '.rrrr.'];
-// Pote aprovado: boca arredondada e sombras escuras, dentro das casas de 13 pixels.
+// Pote: boca arredondada e sombras escuras, dentro das casas de 13 pixels.
 const vasoDestino = [
   '....hhhhhh..',
   '...hbbbbbbh.',
@@ -666,7 +666,7 @@ function rastro(level, api, options = {}) {
       const col = i % side, row = Math.floor(i / side);
       rect(ctx, (col + row) % 2 ? clay : peach, border + col * size, border + row * size, size - 1, size - 1);
       // Pequeno acabamento no ladrilho mantém o centro livre para a rota.
-      // A faixa clara não aparece atrás do pote, conforme a arte aprovada.
+      // A faixa clara não aparece atrás do pote, conforme a arte.
       if (tiles[i] !== 'P') rect(ctx, (col + row) % 2 ? '#cb8a86' : '#f2b593', border + col * size + 1, border + row * size + 1, size - 3, 1);
       const [x,y] = tileCenter(i);
       if (tiles[i] === 'L' && !leaves.has(i)) sprite(ctx, leaf[variantesFolhas.get(i)], {g: '#72a364', h: '#b7cb85', i: '#3f634b'}, x - 3, y - 3);
