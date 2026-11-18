@@ -5,7 +5,7 @@ export const EFEITOS = Object.freeze(['selecionar','confirmar','voltar','acerto'
 export function criarAudio({contexto=()=>new (globalThis.AudioContext||globalThis.webkitAudioContext)(), buscar=(url)=>fetch(url)}={}) {
   let ctx=null, master=null, fxBus=null, musica=null, habilitado=false, visivel=true, tela='inicio', jogo='', revisao=0,ciclo=0;
   const cache=new Map(), carregando=new Map(), fontes=new Set();
-  let ultimoEfeito=-Infinity,volumeMusica=.10,volumeEfeitos=.25,geracaoEfeitos=0,prioridadePendente=0;
+  let ultimoEfeito=-Infinity,volumeMusica=.10,volumeEfeitos=.05,geracaoEfeitos=0,prioridadePendente=0;
   const efeitosAtivos=new Map();
   const ativo=()=>habilitado&&visivel&&ctx?.state==='running';
   function encerrar(fonte){try{fonte.stop();}catch{} fontes.delete(fonte);}
