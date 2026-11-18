@@ -27,11 +27,11 @@ As cinco posições de mariposas se repetem, sem vitória automática na quinta.
 
 ## Maré Miúda: prova executável de solução
 
-O gerador usa um PRNG determinístico e tenta no máximo 48 candidatos. Para cada candidato, uma busca em largura considera **posição, número de passos módulo seis e última posição segura em areia**. Ela reproduz as regras reais: bloquear baixios na maré alta, alterar a maré a cada três passos, retornar à última areia se a subida ocorrer sobre um baixio e reconhecer a concha antes da mudança de maré.
+A família original, preservada em dois terços das sementes, usa um PRNG determinístico e tenta no máximo 48 candidatos. A família adicional é descrita abaixo. Para cada candidato, uma busca em largura considera **posição, número de passos módulo seis e última posição segura em areia**. Ela reproduz as regras reais: bloquear baixios na maré alta, alterar a maré a cada três passos, retornar à última areia se a subida ocorrer sobre um baixio e reconhecer a concha antes da mudança de maré.
 
 A referência é a própria fase **Puxado**: solução mínima de 17 comandos, contra 14 sem maré, e dois baixios individualmente indispensáveis. Cada mapa deve exigir **17 a 27 comandos**, custo adicional da maré de **pelo menos três comandos** e **dois baixios obrigatórios** (bloquear qualquer um impede chegar à concha). Além disso, remover as pedras precisa reduzir o caminho mínimo: pedras meramente decorativas não satisfazem esse critério. Essas verificações rejeitam atalhos secos e mapas solucionáveis sem lidar com o ciclo da maré.
 
-O gerador faz mutações locais do mapa autoral, incluindo acessos e obstáculos, e oito orientações possíveis. Não é um gerador irrestrito: conserva deliberadamente a escala e a estrutura de desafio do Puxado. Em 300 sementes verificadas houve 299 mapas e 49 sequências de solução distintos, com 17 a 23 comandos. Comparabilidade aqui é medida por essas métricas de regras, não uma promessa de dificuldade subjetiva idêntica. Após o limite de tentativas, um corredor fixo validado sob os mesmos critérios (também orientado pela semente) fornece uma saída segura. O retorno contém a semente, a solução e a indicação de fallback. Reiniciar com a mesma semente reproduz a mesma fase; gerar outra é responsabilidade do aplicativo. A solução não depende de física nem de tempo de reação: o jogo avança por comandos discretos.
+A família original faz mutações locais do mapa autoral, incluindo acessos e obstáculos, e oito orientações possíveis. Não é um gerador irrestrito: conserva deliberadamente a escala e a estrutura de desafio do Puxado. Na validação anterior à ampliação, em 300 sementes dessa família houve 299 mapas e 49 sequências de solução distintos, com 17 a 23 comandos. Comparabilidade aqui é medida por essas métricas de regras, não uma promessa de dificuldade subjetiva idêntica. Após o limite de tentativas, um corredor fixo validado sob os mesmos critérios (também orientado pela semente) fornece uma saída segura. O retorno contém a semente, a solução e a indicação de fallback. Reiniciar com a mesma semente reproduz a mesma fase; gerar outra é responsabilidade do aplicativo. A solução não depende de física nem de tempo de reação: o jogo avança por comandos discretos.
 
 ## Verificações
 
@@ -58,3 +58,17 @@ Os detalhes usam a grade nativa de 96 × 96, cores chapadas e bordas sem suaviza
 ### Maré: segunda prévia aprovada
 
 A costa recebe espuma em um pixel apenas no encontro com areia. Pequenos pontos sugerem areia, riscos diferenciam baixios, pedras ganham faces e a concha recebe preenchimento claro. O caranguejo aprovado é preservado. Nenhum detalhe cria passagem ou obstáculo: a matriz de terreno continua sendo a única fonte de colisões e movimentos.
+
+## Novos padrões: enseadas irregulares
+
+A ampliação **preserva a família anterior**: sementes cujo resto por três é 1 ou 2 usam exatamente o gerador precedente. Sementes divisíveis por três recebem a família `enseada-irregular`. Fases autorais, desenho, controles e armazenamento não mudam. As sementes da nova família representam mapas novos; o algoritmo não promete reproduzir mapas de versões antigas para esse subconjunto.
+
+Em vez de apenas mudar pedras no corredor diagonal, a nova família constrói um caminho autoevitante, com início e concha em posições variáveis, curvas e retornos. O corredor não pode tocar lateralmente em si mesmo, evitando atalhos acidentais. Depois insere travessias rasas e pedras; somente a validação completa decide se o candidato pode ser entregue.
+
+Cada enseada nova exige **23 a 27 comandos na solução mínima**, **pelo menos cinco comandos adicionais devido à maré** e **três baixios individualmente obrigatórios**. Retirar as pedras deve encurtar a solução. São limites mais exigentes que os mínimos anteriores (17 comandos, custo de maré 3 e dois baixios), sem aumentar a velocidade nem exigir reflexos: a maré continua avançando somente por movimentos válidos. Mais planejamento é medido por esses critérios, não por uma promessa de dificuldade subjetiva universal.
+
+A busca certificadora inclui posição, fase do ciclo e última areia segura, tal como a partida. A geração tenta no máximo **96 candidatos** e, se necessário, escolhe entre quatro reservas irregulares, orientadas pela semente e verificadas pelos mesmos critérios. O fallback não é uma fase fácil sem maré.
+
+`node --test tests/mare-padroes.test.mjs` verifica hashes de seis sementes antigas, reprodução e reinício, execução das soluções em 100 novas sementes e uso de reservas. No lote 0, 3, …, 297 houve **95 topologias distintas**, mesmo removendo pedras decorativas e normalizando rotações/reflexões, com 55 posições iniciais e 38 posições de concha; oito sementes usaram reserva. A diversidade é de percurso, não só de orientação ou cor.
+
+Esses testes exercitam lógica discreta. Não constituem avaliação humana de dificuldade nem benchmark de todos os celulares; os limites de tentativas evitam buscas ilimitadas, mas o custo de geração ainda varia com o dispositivo.

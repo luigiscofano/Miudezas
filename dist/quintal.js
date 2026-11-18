@@ -214,8 +214,61 @@ function orientarMare(grid, orientation) {
   }
   return cells.map(row => row.join(''));
 }
+// Enseadas quebradas acrescentam curvas e retornos sem substituir a família autoral.
+const reservasMareIrregular = [
+  ['~S~~~~~#','~.~~~~~#','~.#~~#~~','.=~~~~~~','.~~~~~~~','.~~~~~~~','=.#...=.','~..=~~~C'],
+  ['C~~#~#~#','.=~#~~~~','~..~~~~~','S#.~~~~~','.#=.~~#~','.~~.~~~~','=~=.~~~~','...~~~~~'],
+  ['~~#~~~~~','~~~~~~~~','~~~~#~~~','~~~~#~~#','~#S.~~~~','~~~.=...','.=.~~#~=','C~..=...'],
+  ['~...=~~#','~=##..~~','~..~~S~~','~~.~~~~~','~~=#~~~~','~..#~~~~','..~~~~~~','C~#~~~~~']
+];
+function mareIrregularValida(metrics) {
+  return mareDesafiadora(metrics) && metrics.passos >= 23 &&
+    metrics.passos - metrics.passosSemMare >= 5 && metrics.baixiosObrigatorios >= 3;
+}
+function criarEnseadaIrregular(random) {
+  const cells = Array.from({length: 8}, () => Array(8).fill('~'));
+  let x = Math.floor(random() * 8), y = Math.floor(random() * 8);
+  const path = [[x, y]];
+  cells[y][x] = '.';
+  // Não encostar o corredor em si mesmo impede atalhos antes da validação completa.
+  for (let step = 0; step < 23; step++) {
+    const neighbors = Object.values(delta).map(([dx, dy]) => [x + dx, y + dy])
+      .filter(([nx, ny]) => cells[ny]?.[nx] === '~' && Object.values(delta)
+        .filter(([dx, dy]) => cells[ny + dy]?.[nx + dx] === '.').length === 1);
+    if (!neighbors.length) break;
+    [x, y] = neighbors[Math.floor(random() * neighbors.length)];
+    cells[y][x] = '.';
+    path.push([x, y]);
+  }
+  if (path.length < 17) return null;
+  for (let i = 3; i < path.length - 2; i += 4) {
+    const [px, py] = path[i]; cells[py][px] = '=';
+  }
+  cells[path[0][1]][path[0][0]] = 'S'; cells[y][x] = 'C';
+  for (let i = 0; i < 12; i++) {
+    const px = Math.floor(random() * 8), py = Math.floor(random() * 8);
+    if (cells[py][px] === '~') cells[py][px] = '#';
+  }
+  return cells.map(row => row.join(''));
+}
+function gerarMareIrregular(seed) {
+  let state = (seed ^ 0x9e3779b9) >>> 0;
+  const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
+  for (let attempt = 0; attempt < 96; attempt++) {
+    const grid = criarEnseadaIrregular(random);
+    if (!grid) continue;
+    const metrics = analisarMare(grid);
+    if (mareIrregularValida(metrics)) return {seed, grid, solution: metrics.solution, metrics, fallback: false, family: 'enseada-irregular'};
+  }
+  const grid = orientarMare(reservasMareIrregular[Math.floor(random() * reservasMareIrregular.length)], Math.floor(random() * 8));
+  const metrics = analisarMare(grid);
+  if (!mareIrregularValida(metrics)) throw new Error('Reserva irregular da maré inválida.');
+  return {seed, grid, solution: metrics.solution, metrics, fallback: true, family: 'enseada-irregular'};
+}
 export function gerarMare(seed = 1) {
   const original = Number(seed) >>> 0;
+  // Dois terços das sementes conservam exatamente a geração anterior.
+  if (original % 3 === 0) return gerarMareIrregular(original);
   let state = original;
   const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
   const orientation = Math.floor(random() * 8);
