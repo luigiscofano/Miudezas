@@ -144,14 +144,14 @@ Os caminhos existentes foram mantidos para não quebrar o jogo. A organização 
 
 | Uso | Cor | Onde aparece |
 |---|---|---|
-| Tinta | `#2E3535` | Texto principal, contorno da janela e botões |
-| Papel | `#FFF5DF` | Fundo das telas de leitura |
-| Creme | `#F7E9CD` | Barra superior, rodapé e controles secundários |
-| Borda | `#B9AD8E` | Separação de grupos e opções |
-| Verde | `#386251` | Ação principal e nível selecionado |
-| Texto secundário | `#655D50` | Instruções e detalhes |
-| Ouro | `#F4BF64` | Resposta ao pressionar o controle |
-| Área de trabalho | `#DCE1D4` | Fundo pontilhado em volta da janela |
+| Tinta | <img src="docs/imagens/paleta/tinta.svg" width="72" height="24" alt="Amostra Tinta: #2E3535"> `#2E3535` | Texto principal, contorno da janela e botões |
+| Papel | <img src="docs/imagens/paleta/papel.svg" width="72" height="24" alt="Amostra Papel: #FFF5DF"> `#FFF5DF` | Fundo das telas de leitura |
+| Creme | <img src="docs/imagens/paleta/creme.svg" width="72" height="24" alt="Amostra Creme: #F7E9CD"> `#F7E9CD` | Barra superior, rodapé e controles secundários |
+| Borda | <img src="docs/imagens/paleta/borda.svg" width="72" height="24" alt="Amostra Borda: #B9AD8E"> `#B9AD8E` | Separação de grupos e opções |
+| Verde | <img src="docs/imagens/paleta/verde.svg" width="72" height="24" alt="Amostra Verde: #386251"> `#386251` | Ação principal e nível selecionado |
+| Texto secundário | <img src="docs/imagens/paleta/texto-secundario.svg" width="72" height="24" alt="Amostra Texto secundário: #655D50"> `#655D50` | Instruções e detalhes |
+| Ouro | <img src="docs/imagens/paleta/ouro.svg" width="72" height="24" alt="Amostra Ouro: #F4BF64"> `#F4BF64` | Resposta ao pressionar o controle |
+| Área de trabalho | <img src="docs/imagens/paleta/area-de-trabalho.svg" width="72" height="24" alt="Amostra Área de trabalho: #DCE1D4"> `#DCE1D4` | Fundo pontilhado em volta da janela |
 
 As cores de cada palco aparecem nas fichas abaixo. São as cores de enquadramento definidas pelo catálogo. Os sprites e fundos internos têm paletas próprias nas funções de desenho. [Folha de estilos](dist/style.css) · [Catálogo](dist/catalogo.js) · [Acervo visual](dist/arte/README.md)
 
