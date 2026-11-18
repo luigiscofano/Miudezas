@@ -332,6 +332,9 @@ O caminho ocupa as casas percorridas. Refazer o último passo desfaz também a c
 
 Palco `#C18E86` · [Implementação de Rastro de Prata](dist/esquina.js)
 
+
+O destino usa o pote de barro aprovado: abertura circular, contorno regular e sombras escuras, sem a faixa clara atrás dele. A cena atual acima reproduz essa versão; fases, controles e progresso permanecem iguais.
+
 ---
 
 ### 08 · Luz de Varanda

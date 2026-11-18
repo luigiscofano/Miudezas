@@ -120,3 +120,7 @@ O teste da lagartixa também verifica se o catálogo informa o terceiro erro em 
 ### Enquadramento dos jogos no computador
 
 Em dispositivos com mouse, a largura da janela durante a partida acompanha a altura livre do tabuleiro quadrado. Isso remove as faixas laterais sem esticar os pixels, cortar a cena ou mudar coordenadas de controle. O ajuste reage ao redimensionamento e à altura do HUD, e é desfeito ao pausar ou voltar aos menus. Telas de toque mantêm o enquadramento anterior. Os testes de navegação cobrem os dez jogos, larguras de 492 a 1920 pixels, saída/retomada e preservação do toque; a simulação DOM não substitui avaliação em aparelho físico.
+
+### Pote de Rastro de Prata
+
+`rastro-vaso.test.mjs` confere o sprite de 12 × 10 pixels visíveis dentro do destino nas três dificuldades e em sementes geradas, a ausência da faixa clara somente nessa casa e a preservação do estado após desenhar.

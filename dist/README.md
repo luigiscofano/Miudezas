@@ -67,7 +67,7 @@ Pisca preserva o primeiro desenho dos vaga-lumes preservado no GitHub (`9cc7bbb`
 
 O campo opcional `icone` do catálogo é usado pela galeria e pela pausa. Sem esse campo, mantém-se a miniatura existente. `foto(j, extra, selecao)` só escolhe o ícone quando `selecao` é verdadeiro; os outros fluxos preservam as cenas. Os dez assets aprovados estão em [arte/icones](arte/icones/README.md). Não há alteração de CSS, navegação ou persistência.
 
-O sprite `vasoDestino` de Rastro usa 11 × 10 pixels e é centralizado dentro da casa P. A ampliação é exclusivamente visual; o identificador e as regras de vitória não mudam.
+O sprite `vasoDestino` de Rastro ocupa 12 × 10 pixels visíveis dentro da casa P: pote de barro deitado, abertura circular em pixels e sombras escuras. Somente a faixa clara do ladrilho de destino é omitida para não atravessar a silhueta. A mudança é exclusivamente visual; o identificador, controles e regras de vitória não mudam.
 
 
 ### Pão francês aprovado
