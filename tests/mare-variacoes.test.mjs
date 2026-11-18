@@ -6,8 +6,8 @@ function canon(grid){const all=[];for(let flip=0;flip<2;flip++){let rows=flip?gr
 test('arquipélagos: 100 soluções reais, desvios e diversidade além de orientação',()=>{
  const shapes=new Set();let minJunctions=64;
  for(let i=1,count=0;count<100;i++){
-  if(i%3===0)continue;count++;
-  const seed=i*7,map=gerarMare(seed);assert.equal(map.family,'arquipelago');assert.deepEqual(map,gerarMare(seed));
+  count++;
+  const seed=(i-1)*10+2,map=gerarMare(seed);assert.equal(map.family,'arquipelago');assert.deepEqual(map,gerarMare(seed));
   assert.ok(map.metrics.passos>=23&&map.metrics.passos<=27);
   assert.ok(map.metrics.passos-map.metrics.passosSemMare>=7);
   assert.ok(map.metrics.baixiosObrigatorios>=3);assert.ok(map.metrics.passosSemPedras<map.metrics.passos);
@@ -21,5 +21,5 @@ test('arquipélagos: 100 soluções reais, desvios e diversidade além de orient
 });
 test('as duas famílias anteriores continuam disponíveis; referência solicitada preservada',()=>{
  assert.equal(gerarMare(1428316038).family,'enseada-irregular');
- assert.equal(gerarMare(3).family,'enseada-irregular');assert.equal(gerarMare(1).family,undefined);
+ assert.equal(gerarMare(1).family,'enseada-irregular');assert.equal(gerarMare(0).family,undefined);
 });

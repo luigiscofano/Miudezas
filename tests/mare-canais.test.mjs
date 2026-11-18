@@ -1,7 +1,7 @@
 import {createHash} from 'node:crypto';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {gerarMare, quintal, resolverMare, validarCanaisMare} from '../dist/quintal.js';
+import {gerarMare, gerarMareLegada, selecionarFamiliaMare, familiasMare, quintal, resolverMare, validarCanaisMare} from '../dist/quintal.js';
 import {padroesMare, reservasMareCanais} from '../dist/mare-canais.js';
 const directions = {up: [0,-1], down: [0,1], left: [-1,0], right: [1,0]};
 const passable = cell => '.SC='.includes(cell ?? '!');
@@ -71,9 +71,7 @@ for (const [family, pattern] of Object.entries(padroesMare)) {
     const geometry = new Set(), shapes = new Set(), solutions = new Set(), starts = new Set(), ends = new Set();
     let fallbacks = 0;
     for (let i = 1, count = 0; count < 100; i++) {
-      const seed = i * pattern.divisor;
-      if ([3,7,13,11].some(divisor => seed % divisor === 0) ||
-          Object.values(padroesMare).find(p => seed % p.divisor === 0) !== pattern) continue;
+      const seed = (i - 1) * 10 + familiasMare.indexOf(family);
       const map = gerarMare(seed);
       assert.equal(map.family, family);
       count++;
@@ -97,11 +95,11 @@ for (const [family, pattern] of Object.entries(padroesMare)) {
       fallbacks += Number(map.fallback);
       play(seed, map);
     }
-    assert.ok(shapes.size >= 35, `${shapes.size} topologias`);
-    assert.ok(geometry.size >= 35, `${geometry.size} geometrias sem contar posições dos baixios`);
+    assert.ok(shapes.size >= 80, `${shapes.size} topologias`);
+    assert.ok(geometry.size >= 80, `${geometry.size} geometrias sem contar posições dos baixios`);
     assert.ok(solutions.size >= 70);
     assert.ok(starts.size >= 15 && ends.size >= 15);
-    assert.ok(fallbacks > 0 && fallbacks < 85, `${fallbacks} reservas`);
+    assert.ok(fallbacks < 30, `${fallbacks} reservas`);
   });
   test(`${family}: todas as oito reservas satisfazem os mesmos critérios`, () => {
     for (const grid of reservasMareCanais[family]) {
@@ -118,16 +116,28 @@ test('validação rejeita ausência de maré, pedras irrelevantes e estreito dis
   assert.equal(validarCanaisMare(reservasMareCanais['canais-ramificados'][0], 'estreito-duplo'), null);
 });
 
-test('269 sementes anteriores conservam resultado completo e referência autoral', () => {
+test('gerador legado conserva as 269 sementes de regressão anteriores', () => {
   const hash = createHash('sha256');
   let count = 0;
   for (let seed = 0; seed < 300; seed++) {
-    const map = gerarMare(seed);
-    if (padroesMare[map.family]) continue;
+    const map = gerarMareLegada(seed);
+    if (!map.family && [17,19,23,29,31].some(divisor => seed % divisor === 0)) continue;
     hash.update(JSON.stringify(map)); count++;
   }
   assert.equal(count, 269);
   // Calculado sobre o commit 37e7d3c, antes de introduzir os canais.
   assert.equal(hash.digest('hex'), 'f6766af43331eaed4630ac2dd92bc98b2b3358fd3a729c0c5b046c078b8c6dfa');
   assert.equal(gerarMare(1428316038).family, 'enseada-irregular');
+});
+
+test('dez famílias equilibradas e cinco padrões novos em metade das sementes', () => {
+  const counts = Object.fromEntries(familiasMare.map(family => [family, 0]));
+  for (let seed = 0; seed < 10000; seed++) counts[selecionarFamiliaMare(seed)]++;
+  assert.deepEqual(Object.values(counts), Array(10).fill(1000));
+  assert.equal(Object.keys(padroesMare).reduce((sum, family) => sum + counts[family], 0), 5000);
+  assert.equal(selecionarFamiliaMare(1428316038), 'enseada-irregular');
+  assert.deepEqual(gerarMare(1428316038), gerarMareLegada(1428316038));
+  for (const seed of [0,1,5,9,4294967295]) {
+    assert.deepEqual(gerarMare(seed), gerarMare(seed + 4294967296));
+  }
 });

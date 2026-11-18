@@ -1,11 +1,11 @@
 // Canais irregulares: árvores, anéis e estreitos com duas casas rasas consecutivas.
 const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 export const padroesMare = Object.freeze({
-  'canais-ramificados': Object.freeze({divisor: 17, aneis: 0, duplo: false}),
-  'anel-de-mare': Object.freeze({divisor: 19, aneis: 1, duplo: false}),
-  'bacias-gemeas': Object.freeze({divisor: 23, aneis: 2, duplo: false}),
-  'estreito-duplo': Object.freeze({divisor: 29, aneis: 0, duplo: true}),
-  'anel-e-estreito': Object.freeze({divisor: 31, aneis: 1, duplo: true})
+  'canais-ramificados': Object.freeze({aneis: 0, duplo: false}),
+  'anel-de-mare': Object.freeze({aneis: 1, duplo: false}),
+  'bacias-gemeas': Object.freeze({aneis: 2, duplo: false}),
+  'estreito-duplo': Object.freeze({aneis: 0, duplo: true}),
+  'anel-e-estreito': Object.freeze({aneis: 1, duplo: true})
 });
 export const criteriosMareCanais = Object.freeze({minPassos: 30, maxPassos: 60, custoMare: 8, portais: 3, tentativas: 128});
 // Confere a assinatura espacial também nas reservas: anéis e estreitos não são rótulos.
@@ -77,6 +77,39 @@ function escavarCanal(cells, from, to) {
   }
   return inner;
 }
+function distanciasCanais(cells, start, blocked = null) {
+  const distances = new Int16Array(64).fill(-1), queue = [start];
+  distances[start] = 0;
+  for (let head = 0; head < queue.length; head++) {
+    const at = queue[head], x = at % 8, y = Math.floor(at / 8);
+    for (const [dx, dy] of dirs) {
+      const nx = x + dx, ny = y + dy, next = ny * 8 + nx;
+      if (next !== blocked && '.='.includes(cells[ny]?.[nx] ?? '!') && distances[next] < 0) {
+        distances[next] = distances[at] + 1;
+        queue.push(next);
+      }
+    }
+  }
+  return distances;
+}
+function escolherExtremos(cells, position, double, random) {
+  const start = Math.floor(random() * 16), [sx, sy] = position(start);
+  const distances = distanciasCanais(cells, sy * 8 + sx);
+  let cut = null;
+  if (double) {
+    // Se o par estiver num anel dispensável, rejeita antes das buscas de estados.
+    for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) {
+      if (cells[y][x] === '=' && dirs.some(([dx, dy]) => cells[y + dy]?.[x + dx] === '=')) cut = y * 8 + x;
+    }
+  }
+  const withoutPair = double ? distanciasCanais(cells, sy * 8 + sx, cut) : null;
+  const ends = Array.from({length: 16}, (_, node) => position(node)).filter(([x, y]) =>
+    distances[y * 8 + x] >= 20 && (!withoutPair || withoutPair[y * 8 + x] < 0));
+  if (!ends.length) return false;
+  const [cx, cy] = ends[Math.floor(random() * ends.length)];
+  cells[sy][sx] = 'S'; cells[cy][cx] = 'C';
+  return true;
+}
 export function criarCanaisMare(random, loops, double) {
   // Dezesseis encontros, com espaçamentos 2/2/3 sorteados em cada eixo.
   // As árvores e os anéis mudam as conexões, não apenas a orientação do tabuleiro.
@@ -101,10 +134,9 @@ export function criarCanaisMare(random, loops, double) {
   for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) {
     if (cells[y][x] === '~' && random() < 0.65) cells[y][x] = '#';
   }
-  const start = Math.floor(random() * 16), end = Math.floor(random() * 16);
-  if (start === end) return null;
-  const [sx, sy] = position(start), [cx, cy] = position(end);
-  cells[sy][sx] = 'S'; cells[cy][cx] = 'C';
+  // Escolhe extremos afastados e separados pelo estreito; o certificado ainda decide
+  // a dificuldade temporal. Conectividade geométrica sozinha não aprova o mapa.
+  if (!escolherExtremos(cells, position, double, random)) return null;
   return cells.map(row => row.join(''));
 }
 

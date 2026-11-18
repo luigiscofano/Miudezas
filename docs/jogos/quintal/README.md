@@ -31,7 +31,7 @@ As cinco posições de mariposas se repetem, sem vitória automática na quinta.
 
 ## Maré Miúda: prova executável de solução
 
-A família original, preservada nas sementes não destinadas às famílias adicionais, usa um PRNG determinístico e tenta no máximo 48 candidatos. A família adicional é descrita abaixo. Para cada candidato, uma busca em largura considera **posição, número de passos módulo seis e última posição segura em areia**. Ela reproduz as regras reais: bloquear baixios na maré alta, alterar a maré a cada três passos, retornar à última areia se a subida ocorrer sobre um baixio e reconhecer a concha antes da mudança de maré.
+A família original, que recebe uma das dez faixas da distribuição atual, usa um PRNG determinístico e tenta no máximo 48 candidatos. A família adicional é descrita abaixo. Para cada candidato, uma busca em largura considera **posição, número de passos módulo seis e última posição segura em areia**. Ela reproduz as regras reais: bloquear baixios na maré alta, alterar a maré a cada três passos, retornar à última areia se a subida ocorrer sobre um baixio e reconhecer a concha antes da mudança de maré.
 
 A referência histórica da geração é o mapa anterior de **Puxado**, mantido separado das fases fixas: solução mínima de 17 comandos, contra 14 sem maré, e dois baixios individualmente indispensáveis. Cada mapa deve exigir **17 a 27 comandos**, custo adicional da maré de **pelo menos três comandos** e **dois baixios obrigatórios** (bloquear qualquer um impede chegar à concha). Além disso, remover as pedras precisa reduzir o caminho mínimo: pedras meramente decorativas não satisfazem esse critério. Essas verificações rejeitam atalhos secos e mapas solucionáveis sem lidar com o ciclo da maré.
 
@@ -65,7 +65,7 @@ A costa recebe espuma em um pixel apenas no encontro com areia. Pequenos pontos 
 
 ## Novos padrões: enseadas irregulares
 
-A família original continua disponível; os critérios de distribuição completos, incluindo as ampliações posteriores, estão descritos nas seções abaixo. Sementes divisíveis por três recebem a família `enseada-irregular`. Fases autorais, desenho, controles e armazenamento não mudam. As sementes da nova família representam mapas novos; o algoritmo não promete reproduzir mapas de versões antigas para esse subconjunto.
+A família original continua disponível; os critérios de distribuição completos, incluindo as ampliações posteriores, estão descritos nas seções abaixo. Na seleção legada, sementes divisíveis por três recebiam a família `enseada-irregular`; a seleção atual equilibrada está descrita abaixo. Fases autorais, desenho, controles e armazenamento não mudam. As sementes da nova família representam mapas novos; o algoritmo não promete reproduzir mapas de versões antigas para esse subconjunto.
 
 Em vez de apenas mudar pedras no corredor diagonal, a nova família constrói um caminho autoevitante, com início e concha em posições variáveis, curvas e retornos. O corredor não pode tocar lateralmente em si mesmo, evitando atalhos acidentais. Depois insere travessias rasas e pedras; somente a validação completa decide se o candidato pode ser entregue.
 
@@ -73,7 +73,7 @@ Cada enseada nova exige **23 a 27 comandos na solução mínima**, **pelo menos 
 
 A busca certificadora inclui posição, fase do ciclo e última areia segura, tal como a partida. A geração tenta no máximo **96 candidatos** e, se necessário, escolhe entre quatro reservas irregulares, orientadas pela semente e verificadas pelos mesmos critérios. O fallback não é uma fase fácil sem maré.
 
-`node --test tests/mare-padroes.test.mjs` verifica hashes de seis sementes antigas, reprodução e reinício, execução das soluções em 100 novas sementes e uso de reservas. No lote 0, 3, …, 297 houve **95 topologias distintas**, mesmo removendo pedras decorativas e normalizando rotações/reflexões, com 55 posições iniciais e 38 posições de concha; oito sementes usaram reserva. A diversidade é de percurso, não só de orientação ou cor.
+`node --test tests/mare-padroes.test.mjs` verifica hashes de seis sementes antigas, reprodução e reinício, execução das soluções em 100 novas sementes e uso de reservas. No lote histórico 0, 3, …, 297, anterior ao equilíbrio da distribuição, houve **95 topologias distintas**, mesmo removendo pedras decorativas e normalizando rotações/reflexões, com 55 posições iniciais e 38 posições de concha; oito sementes usaram reserva. A diversidade é de percurso, não só de orientação ou cor.
 
 Esses testes exercitam lógica discreta. Não constituem avaliação humana de dificuldade nem benchmark de todos os celulares; os limites de tentativas evitam buscas ilimitadas, mas o custo de geração ainda varia com o dispositivo.
 
@@ -85,7 +85,7 @@ A solução mínima tem 21 comandos, contra 15 sem maré, e quatro baixios indis
 
 ## Arquipélagos: escolhas entre ilhas e travessias
 
-Uma terceira família amplia os padrões sem substituir as duas anteriores. Sementes divisíveis por três continuam usando enseadas irregulares; entre as demais, múltiplos de sete recebem `arquipelago`. As restantes alternam o gerador original e as faixas avançadas descritas abaixo. A semente de referência **1428316038** permanece na família irregular, com seu mapa inalterado.
+Uma terceira família amplia os padrões sem substituir as duas anteriores. Na seleção legada, divisíveis por três usavam enseadas irregulares; entre as demais, múltiplos de sete recebiam `arquipelago`. A distribuição atual reserva uma das dez faixas para cada família. A semente de referência **1428316038** permanece na família irregular, com seu mapa inalterado.
 
 O arquipélago distribui nove pequenas ilhas de areia, interligadas por uma árvore de travessias rasas. As salas permitem circular e preparar o ciclo da maré, em vez de oferecer somente um corredor autoevitante. Pedras dentro das ilhas alteram desvios; pedras entre ilhas bloqueiam atalhos. A árvore e a posição das pontes variam por semente. A direção até a concha não implica que a travessia seguinte esteja disponível naquele momento.
 
@@ -95,7 +95,7 @@ São exigidos **23–27 comandos mínimos**, **sete comandos adicionais de plane
 
 ## Mistura avançada: muito difícil e muitíssimo difícil
 
-Duas famílias adicionais se misturam em **Caminho Novo**, sem novos botões e sem substituir o Puxado fixo. A prioridade das famílias existentes é preservada: divisíveis por três continuam nas enseadas, e os demais divisíveis por sete nos arquipélagos. Somente no ramo restante, múltiplos de 13 recebem `muitissimo-dificil` e múltiplos de 11 recebem `muito-dificil`. Antes da ampliação de canais descrita a seguir, as outras sementes conservavam exatamente o resultado anterior (aproximadamente 91% das sementes); a referência **1428316038** não muda.
+Duas famílias adicionais se misturam em **Caminho Novo**, sem novos botões e sem substituir o Puxado fixo. A seleção legada priorizava divisíveis por três nas enseadas, por sete nos arquipélagos, depois por 13 no `muitissimo-dificil` e por 11 no `muito-dificil`. Esses construtores e seus critérios permanecem; a distribuição atual equilibrada está descrita a seguir. A referência **1428316038** não muda.
 
 | Critério certificado | Muito difícil | Muitíssimo difícil |
 |---|---|---|
@@ -112,17 +112,19 @@ As famílias reutilizam a construção de ilhas e pontes, mas selecionam relaç�
 
 A busca mantém o estado completo (posição, fase do ciclo, última areia segura). Cada geração tenta no máximo 64 candidatos, com filtro de comprimento antes da análise detalhada. Há duas reservas muito difíceis e oito muitíssimo difíceis; todas são revalidadas com os mesmos limites ao serem escolhidas. Uma reserva não dispensa a prova e não vira um mapa fácil. A geração não acontece a cada quadro, não altera timers e não exige reflexos adicionais.
 
-Cinco padrões adicionais de **canais irregulares** entram somente depois das prioridades 3, 7, 13 e 11. No ramo restante, o primeiro divisor aplicável entre 17, 19, 23, 29 e 31 escolhe o padrão. A família original continua no restante. Não há nova opção na interface; repetir conserva a semente. Saves, fases autorais, desenhos e regras permanecem intactos.
+Cinco padrões adicionais de **canais irregulares** agora recebem **50% das sementes**, divididos igualmente. A seleção usa o resto da semente uint32 por dez: 0 original; 1 enseada irregular; 2 arquipélago; 3 muito difícil; 4 muitíssimo difícil; 5 canais ramificados; 6 anel de maré; 7 bacias gêmeas; 8 estreito duplo; 9 anel e estreito. Em **10 mil sementes consecutivas houve exatamente mil por família**. A única exceção é a referência 1428316038, que continua na enseada original.
+
+**Compatibilidade de sementes:** repetir dentro desta versão mantém exatamente o mesmo mapa, mas compartilhar uma semente de versão antiga pode mostrar outro tabuleiro. No lote 0–299 comparado com a versão publicada anterior, **27 mapas permaneceram idênticos e 273 mudaram**. `gerarMareLegada()` conserva os cinco construtores e a seleção publicada para auditoria, inclusive os hashes históricos. Não há nova opção na interface nem migração de saves; fases autorais, desenhos, regras e armazenamento não mudam. A distribuição inicial deste PR usava divisores sucessivos e destinava apenas cerca de 10% às novas famílias; ela foi substituída para tornar a variedade efetivamente frequente.
 
 | Padrão | Estrutura certificada | Planejamento exigido |
 |---|---|---|
-| `canais-ramificados` (17) | Árvore com pelo menos uma bifurcação | Distinguir ramais e becos, sincronizando os gargalos obrigatórios. |
-| `anel-de-mare` (19) | Exatamente um ciclo independente; pelo menos um baixio não obrigatório | Escolher acesso e momento no anel, sem dispensar as travessias obrigatórias. |
-| `bacias-gemeas` (23) | Exatamente dois ciclos independentes; pelo menos dois baixios não obrigatórios | Coordenar os dois circuitos e os gargalos que ligam a rota à concha. |
-| `estreito-duplo` (29) | Árvore e exatamente um par de baixios adjacentes, ambos obrigatórios | Entrar no estreito na janela correta; subir a água no segundo baixio devolve à última areia. |
-| `anel-e-estreito` (31) | Um ciclo, passagem alternativa e estreito duplo obrigatório | Combinar a escolha no anel com a janela mais estreita de travessia. |
+| `canais-ramificados` (resto 5) | Árvore com pelo menos uma bifurcação | Distinguir ramais e becos, sincronizando os gargalos obrigatórios. |
+| `anel-de-mare` (resto 6) | Exatamente um ciclo independente; pelo menos um baixio não obrigatório | Escolher acesso e momento no anel, sem dispensar as travessias obrigatórias. |
+| `bacias-gemeas` (resto 7) | Exatamente dois ciclos independentes; pelo menos dois baixios não obrigatórios | Coordenar os dois circuitos e os gargalos que ligam a rota à concha. |
+| `estreito-duplo` (resto 8) | Árvore e exatamente um par de baixios adjacentes, ambos obrigatórios | Entrar no estreito na janela correta; subir a água no segundo baixio devolve à última areia. |
+| `anel-e-estreito` (resto 9) | Um ciclo, passagem alternativa e estreito duplo obrigatório | Combinar a escolha no anel com a janela mais estreita de travessia. |
 
-Esses padrões não reutilizam os tabuleiros anteriores: constroem uma árvore sobre dezesseis encontros, variam os espaçamentos **2/2/3** de cada eixo e acrescentam zero, uma ou duas conexões independentes. Sorteiam início, concha, baixios e pedras. A conexão da árvore, a posição dos anéis e as larguras dos canais mudam por semente. Rotações e reflexões só orientam as reservas; não contam como diversidade nos testes.
+Esses padrões não reutilizam os tabuleiros anteriores: constroem uma árvore sobre dezesseis encontros, variam os espaçamentos **2/2/3** de cada eixo e acrescentam zero, uma ou duas conexões independentes. Sorteiam baixios, pedras e início; a concha é escolhida entre encontros a pelo menos 20 passos geométricos do início. Nos padrões duplos, os extremos precisam estar separados pelo estreito. Esse filtro barato evita muitas buscas inviáveis, mas não substitui a certificação temporal. A conexão da árvore, a posição dos anéis e as larguras dos canais mudam por semente. Rotações e reflexões só orientam as reservas; não contam como diversidade nos testes.
 
 Todos exigem **30–60 comandos mínimos**, **custo de maré ≥8**, **três baixios individualmente indispensáveis** e solução menor ao retirar as pedras. Nas famílias duplas, bloquear qualquer uma das duas casas do estreito deve impedir a chegada: um par decorativo é rejeitado. A assinatura espacial e a conectividade são verificadas antes da busca completa. Há no máximo **128 candidatos**, seguidos de uma das **oito reservas próprias por padrão**, também certificada em tempo de geração. As reservas conservam a dificuldade; a geração ocorre uma vez ao criar a fase. Anéis e bifurcações descrevem opções topológicas, não garantem que toda decisão seja subjetivamente difícil.
 
@@ -130,9 +132,42 @@ Todos exigem **30–60 comandos mínimos**, **custo de maré ≥8**, **três bai
 
 `node --test tests/mare-extrema.test.mjs tests/quintal-modos.test.mjs`
 
-Foram executadas 100 sementes de cada faixa no jogo real, além do lote misto de 300 sementes. O teste verifica reprodução, solução, pontes obrigatórias, custo da maré, escolhas, praças e diversidade após remover pedras decorativas e normalizar rotações/reflexões. O lote muito difícil teve 72 topologias normalizadas, 33–40 comandos e custo 12–17; o muitíssimo difícil teve 68 topologias, 39–40 comandos e custo 18–22. Trinta e quarenta sementes, respectivamente, usaram reservas: a taxa é explicitada porque a geração tem orçamento limitado.
+Na medição histórica anterior à redistribuição, foram executadas 100 sementes de cada faixa no jogo real, além do lote misto de 300 sementes. O teste verifica reprodução, solução, pontes obrigatórias, custo da maré, escolhas, praças e diversidade após remover pedras decorativas e normalizar rotações/reflexões. O lote muito difícil teve 72 topologias normalizadas, 33–40 comandos e custo 12–17; o muitíssimo difícil teve 68 topologias, 39–40 comandos e custo 18–22. Trinta e quarenta sementes, respectivamente, usaram reservas: a taxa é explicitada porque a geração tem orçamento limitado.
 
 Benchmark local em Node, 100 gerações por faixa: muito difícil com mediana 8,3 ms, percentil 95 de 21,5 ms e máximo 29,0 ms; muitíssimo difícil com mediana 8,8 ms, percentil 95 de 15,5 ms e máximo 41,1 ms. São medições desta máquina, não garantias para celulares. O roteiro de revisão visual e toque continua necessário; não foi alterado por esses testes discretos.
+
+No lote atual de **100 sementes por padrão novo** (restos 5–9 entre 0 e 999), todas as 500 soluções foram executadas pelos controles reais, conferindo posição, passos, maré, retorno à areia, comandos bloqueados e vitória única. A normalização abaixo elimina rotação/reflexão, pedras decorativas e posição de início/concha; a coluna de geometria elimina também a posição dos baixios.
+
+| Padrão | Topologias / geometrias | Passos mínimos | Custo da maré | Reservas / 100 | Sementes reproduzíveis |
+|---|---|---|---|---|---|
+| `canais-ramificados` | 100 / 98 | 30–45 | 8–17 | 1 | 5, 15, 25 |
+| `anel-de-mare` | 100 / 100 | 30–40 | 8–17 | 2 | 6, 16, 26 |
+| `bacias-gemeas` | 94 / 94 | 30–42 | 8–19 | 12 | 7, 17, 27 |
+| `estreito-duplo` | 100 / 99 | 30–51 | 8–19 | 0 | 8, 18, 28 |
+| `anel-e-estreito` | 97 / 96 | 30–47 | 8–27 | 10 | 9, 19, 29 |
+
+O fallback caiu para **25/500 (5%)** no novo lote. No mesmo lote de sementes usado antes da redistribuição, a escolha orientada dos extremos reduziu as reservas de **192/500 (38,4%) para 27/500 (5,4%)**. A comparação separa a melhoria do construtor da troca de sementes. Os testes passaram a exigir **pelo menos 80 geometrias por padrão** e menos de 30 reservas por 100 sementes; as 40 reservas também são certificadas individualmente. Nenhum limite de dificuldade foi afrouxado.
+
+Medição isolada com **Node 24.22.1, AMD EPYC 9V74**, sem aquecimento explícito: 100 chamadas sequenciais por família, imports, desenho e execução das soluções excluídos. Cada chamada inclui todas as tentativas e a certificação do fallback quando necessário.
+
+| Lote | Mediana | p95 | Máximo | Total |
+|---|---|---|---|---|
+| 500 canais novos | 4.30 ms | 11.05 ms | 39.04 ms | 2.621 s |
+| 1.000 mapas das dez famílias | 4.32 ms | 14.35 ms | 47.06 ms | 5.729 s |
+
+Nos canais, 8/500 chamadas excederam 16,7 ms e nenhuma excedeu 50 ms; o máximo ocorreu na semente 387. Na mistura completa, foram 31/1.000 acima de 16,7 ms, nenhuma acima de 50 ms, com máximo na enseada legada de semente 981. A medição anterior dos canais tinha mediana/p95 de 10,92/18,30 ms (outro lote, antes do equilíbrio). A geração continua síncrona e pode atrasar quadros ao abrir uma fase; estas medições de servidor não garantem fluidez em celular.
+
+A suíte completa (`node --test tests/*.test.mjs`) passou com **195 testes, zero falhas, em 22,270 s** neste ambiente. Os lotes anteriores continuam presentes, agora selecionando suas famílias na distribuição equilibrada.
+
+Para reproduzir distribuição, tempos, reservas, diversidade e compatibilidade:
+
+```sh
+node scripts/medir-mare.mjs
+node --input-type=module -e "import {gerarMare} from './dist/quintal.js'; for (const seed of [5,6,7,8,9,15,26,38]) { const m=gerarMare(seed); console.log(seed,m.family,m.fallback,m.metrics,m.solution.join(' ')); }"
+node --test tests/mare-canais.test.mjs tests/mare-extrema.test.mjs tests/quintal-modos.test.mjs
+```
+
+A dificuldade é medida pelas soluções mínimas e dependências de maré/pedras, não pelo tamanho visual do caminho. Os testes automatizados não substituem avaliação humana de conforto e desafio em celular.
 
 ## Pipa: bando em V
 
@@ -143,24 +178,3 @@ A coluna de aves foi substituída por uma formação com ponta inferior e pares 
 O ponto só é somado quando todo o bando, inclusive a ave mais à direita, passou pelo corpo da pipa. O descarte e a renderização consideram as duas asas da formação, evitando cortes prematuros nas laterais do visor. Sem Parar conserva a alternância anterior entre postes com e sem obstáculo aéreo, agora usando pequenos Vs onde havia uma ave. A partida segue após superar o recorde, sem alterar a persistência.
 
 Os testes verificam simetria, quantidades, pixels sólidos e interior vazio; executam trajetórias pelos controles reais nas três dificuldades a 30/60/120 Hz, confirmam derrota sem movimento e testam dez minutos de Sem Parar em cada dificuldade com memória limitada. São simulações da lógica real em Node, não ensaios em celular físico.
-
-No lote adicional de **100 sementes por padrão**, todas as 500 soluções foram executadas pelos controles reais, conferindo posição, passos, maré, retorno à areia, comandos bloqueados e vitória única. A normalização abaixo elimina rotação/reflexão, pedras decorativas e posição de início/concha; a coluna de geometria elimina também a posição dos baixios.
-
-| Padrão | Topologias / geometrias | Passos mínimos | Custo da maré | Reservas / 100 | Sementes reproduzíveis |
-|---|---|---|---|---|---|
-| `canais-ramificados` | 83 / 80 | 30–50 | 8–19 | 25 | 17, 34, 68 |
-| `anel-de-mare` | 85 / 84 | 30–44 | 8–32 | 22 | 19, 38, 76 |
-| `bacias-gemeas` | 57 / 57 | 30–42 | 8–30 | 51 | 23, 46, 92 |
-| `estreito-duplo` | 69 / 65 | 31–51 | 8–31 | 39 | 29, 58, 116 |
-| `anel-e-estreito` | 53 / 53 | 30–51 | 8–35 | 55 | 31, 62, 124 |
-
-As taxas de reserva são explícitas: anéis combinados com gargalos temporais são mais seletivos. Cada padrão ainda precisa produzir pelo menos 35 geometrias distintas no lote, mesmo descontando todos os espelhamentos, rotações e posições dos baixios. As 40 reservas também têm testes individuais. O hash agregado de 269 sementes não selecionadas para os canais é idêntico ao commit anterior `37e7d3c`; as outras 31 do lote 0–299 passam à nova mistura. A semente de referência **1428316038** permanece intocada.
-
-Para reproduzir soluções e métricas de qualquer exemplo:
-
-```sh
-node --input-type=module -e "import {gerarMare} from './dist/quintal.js'; for (const seed of [17,19,23,29,31,68,76,116]) { const m=gerarMare(seed); console.log(seed,m.family,m.fallback,m.metrics,m.solution.join(' ')); }"
-node --test tests/mare-canais.test.mjs tests/mare-extrema.test.mjs tests/quintal-modos.test.mjs
-```
-
-A dificuldade é medida pelas soluções mínimas e dependências de maré/pedras, não pelo tamanho visual do caminho. Os testes automatizados não substituem avaliação humana de conforto e desafio em celular.

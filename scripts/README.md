@@ -2,6 +2,8 @@
 
 `node scripts/gerar-miniaturas.mjs` atualiza somente os dois SVGs legados de Peteca e Gato na Sombra em `dist/arte/`. Esses jogos estão fora do catálogo ativo. O script chama draw(ctx) das fábricas com um contexto que registra retângulos e produz SVGs. Não requer dependências externas. Use apenas para manutenção histórica de `pracinha.js`. O script não gera as dez miniaturas PNG ativas, os ícones SVG, a capa ou a marca; não o trate como pipeline de todo o acervo.
 
+`node scripts/medir-mare.mjs` mede Maré Miúda sem escrever arquivos: distribuição de 10 mil sementes, geração de 100 mapas por família, mediana/p95/máximo, reservas, geometrias normalizadas e compatibilidade de 300 sementes com o gerador legado. Execute isoladamente para evitar competição com a suíte; os tempos de Node não são garantias para celulares.
+
 [Manual principal](../README.md)
 
 

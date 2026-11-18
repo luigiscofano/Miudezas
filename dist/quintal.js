@@ -517,17 +517,35 @@ function gerarMareCanais(seed, family) {
   if (!metrics) throw new Error('Reserva dos canais da maré inválida.');
   return {seed, grid, solution: metrics.solution, metrics, fallback: true, family};
 }
-export function gerarMare(seed = 1) {
+export const familiasMare = Object.freeze([
+  'original', 'enseada-irregular', 'arquipelago', 'muito-dificil', 'muitissimo-dificil',
+  ...Object.keys(padroesMare)
+]);
+export function selecionarFamiliaMare(seed) {
   const original = Number(seed) >>> 0;
-  // A prioridade preserva as enseadas; o restante alterna arquipélagos e família original.
+  // Preserva o mapa escolhido como referência do Puxado, sem alterar a fase autoral.
+  if (original === 1428316038) return 'enseada-irregular';
+  return familiasMare[original % familiasMare.length];
+}
+export function gerarMare(seed = 1) {
+  const original = Number(seed) >>> 0, family = selecionarFamiliaMare(original);
+  if (family === 'enseada-irregular') return gerarMareIrregular(original);
+  if (family === 'arquipelago') return gerarArquipelagoMare(original);
+  if (family === 'muito-dificil' || family === 'muitissimo-dificil') return gerarMareAvancada(original, family);
+  if (padroesMare[family]) return gerarMareCanais(original, family);
+  return gerarMareOriginal(original);
+}
+// Reproduz a versão publicada anterior para auditoria de sementes antigas.
+// A interface usa a mistura equilibrada acima; não existe novo modo ou migração de saves.
+export function gerarMareLegada(seed = 1) {
+  const original = Number(seed) >>> 0;
   if (original % 3 === 0) return gerarMareIrregular(original);
   if (original % 7 === 0) return gerarArquipelagoMare(original);
   if (original % 13 === 0) return gerarMareAvancada(original, 'muitissimo-dificil');
   if (original % 11 === 0) return gerarMareAvancada(original, 'muito-dificil');
-  // As quatro prioridades anteriores continuam recebendo exatamente suas sementes.
-  for (const [family, pattern] of Object.entries(padroesMare)) {
-    if (original % pattern.divisor === 0) return gerarMareCanais(original, family);
-  }
+  return gerarMareOriginal(original);
+}
+function gerarMareOriginal(original) {
   let state = original;
   const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
   const orientation = Math.floor(random() * 8);
