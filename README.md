@@ -438,6 +438,10 @@ Luz de Varanda e Três Petelecos: luz, texturas e sprites refinados sem mudar ob
 
 Pisca no Mato mantém o visual original dos vaga-lumes e da vegetação lateral, restaurado a pedido do autor. Sem Parar, recordes e sequência continuam inalterados. Rastro de Prata apresenta três folhas finas com silhuetas distintas, na mesma paleta e escala. São mudanças de desenho: regras, controles, mapas e saves permanecem iguais.
 
+### Segundo refinamento aprovado: Maré e Rastro
+
+Maré Miúda recebeu espuma costeira, areia discreta, baixios destacados, pedras facetadas e concha preenchida. Rastro de Prata recebeu apenas brilho nas bordas dos ladrilhos, preservando as folhas finas B. Este lote não modifica os outros oito jogos, incluindo o visual restaurado de Pisca.
+
 ## Ícones aprovados na seleção
 
 Rádio de Pilha, Três Petelecos e Pisca no Mato usam seus ícones em pixel art nos cartões de **Escolha um jogo**. As outras sete miniaturas permanecem como estavam. A mudança é só de apresentação: introduções, resultados, partidas, controles e dados salvos continuam iguais.

@@ -272,6 +272,21 @@ function mare(level, api, options = {}) {
         const at = grid[j][i], px = i * 12, py = j * 12;
         const sea = '#116a70', shallow = high ? '#287d7e' : '#7acabb', sand = '#f6dba4';
         rect(ctx, at === '~' ? sea : at === '=' ? shallow : sand, px, py, 12, 12);
+        // A espuma marca somente o encontro com areia; não inventa passagens.
+        if (at === '~') {
+          const costa = '#61b7a7';
+          if (grid[j - 1]?.[i] && !['~', '='].includes(grid[j - 1][i])) rect(ctx, costa, px + 1, py, 10, 1);
+          if (grid[j + 1]?.[i] && !['~', '='].includes(grid[j + 1][i])) rect(ctx, costa, px + 1, py + 11, 10, 1);
+          if (grid[j]?.[i - 1] && !['~', '='].includes(grid[j][i - 1])) rect(ctx, costa, px, py + 1, 1, 10);
+          if (grid[j]?.[i + 1] && !['~', '='].includes(grid[j][i + 1])) rect(ctx, costa, px + 11, py + 1, 1, 10);
+        } else if (at === '.' && (i + j) % 3 === 0) {
+          rect(ctx, '#e7c48c', px + 3, py + 8, 1, 1);
+          rect(ctx, '#e7c48c', px + 7, py + 4, 2, 1);
+        }
+        if (at === '=' && !high) {
+          rect(ctx, '#abd6b9', px + 2, py + 4, 4, 1);
+          rect(ctx, '#579e97', px + 7, py + 8, 3, 1);
+        }
         if (at === '~' && (i * 3 + j) % 9 === 0) {
           const off = Math.floor(clock * 1.25 + j) % 2;
           rect(ctx, '#95d2c1', px + 2 + off, py + 6, 3, 1);
@@ -281,9 +296,12 @@ function mare(level, api, options = {}) {
         if (at === '#') {
           rect(ctx, '#3c4450', px + 2, py + 5, 9, 5);
           rect(ctx, '#3c4450', px + 4, py + 3, 5, 3);
+          rect(ctx, '#65717a', px + 4, py + 4, 4, 1);
+          rect(ctx, '#4d5965', px + 3, py + 6, 3, 2);
+          rect(ctx, '#283e49', px + 8, py + 7, 2, 2);
         }
         if (at === 'C') {
-          sprite(ctx, ['..sss..','.s...s.','s.sss.s','s.s.s.s','.s..s.s','..sss..'], {s:'#bc805e'}, px + 2, py + 3);
+          sprite(ctx, ['..sss..','.shhhs.','shssshs','shshshs','.shhshs','..sss..'], {s:'#bc805e',h:'#fff1ca'}, px + 2, py + 3);
         }
       }
       sprite(ctx, crab, {r:flash > 0 ? '#fff5da' : '#cd4c3e', w:'#fff4c9', k:'#323b43', h:'#ec8162'}, x * 12, y * 12 + 2, facing);

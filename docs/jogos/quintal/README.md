@@ -54,3 +54,7 @@ A matriz aprovada tem 11 × 8 pixels e fica dentro de cada casa de 12 × 12. Pin
 Goteira recebeu moldura da janela, piso e reflexos no balde; Último Fio ganhou nuvens e telhados; Pipa de Laje recebeu uma segunda camada de morros e detalhes de fachadas e lajes. A dificuldade recém-recalibrada da Pipa permanece intacta. A arte aprovada do caranguejo já estava publicada e não foi duplicada.
 
 Os detalhes usam a grade nativa de 96 × 96, cores chapadas e bordas sem suavização. São apenas desenho: não representam novos obstáculos nem mudam colisões, controles, fases ou saves. As propostas foram comparadas com renderizações do próprio `draw()` antes da aplicação.
+
+### Maré: segunda prévia aprovada
+
+A costa recebe espuma em um pixel apenas no encontro com areia. Pequenos pontos sugerem areia, riscos diferenciam baixios, pedras ganham faces e a concha recebe preenchimento claro. O caranguejo aprovado é preservado. Nenhum detalhe cria passagem ou obstáculo: a matriz de terreno continua sendo a única fonte de colisões e movimentos.

@@ -64,6 +64,8 @@ Os testes comparam as três dificuldades: nenhuma vence sem comandos, e uma traj
 
 `pisca-rastro-arte.test.mjs` verifica as três matrizes de folhas, a paleta, o fundo original de Pisca e a preservação do estado ao desenhar.
 
+`mare-rastro-refinamento.test.mjs` confere cores características dos dois refinamentos, desenho com coordenadas finitas, estado imutável e fases geradas com quatro sementes. Os testes são automatizados; não representam teste em aparelho físico.
+
 ### Ícones aprovados
 
 `navegacao.test.mjs` verifica a galeria nas duas páginas: apenas Rádio, Gude e Pisca recebem os SVGs aprovados, os sete restantes preservam os PNGs e `foto()` fora da seleção conserva as cenas. Execute `node --test tests/*.test.mjs`. A inspeção local dos três SVGs também comparou seus pixels com as artes aprovadas. Essa comparação não equivale a teste em aparelho físico.
