@@ -87,7 +87,7 @@ function inicio(){
     '<div class="home-options">'+
     btn('avulso','<span class="mode-icon">'+icone('avulso')+'</span><span><b>Jogo avulso</b><small>Escolha uma das '+totalJogos+' janelinhas.</small></span><span class="chev" aria-hidden="true">›</span>','mode primary')+
     btn('circuito','<span class="mode-icon">'+icone('mapa')+'</span><span><b>Volta no Bairro</b><small>Jogue os '+totalJogos+' em sequência.</small></span><span class="chev" aria-hidden="true">›</span>','mode')+'</div>';
-  pfooter('Luigi Scofano de Araujo','Teclado ou toque');
+  pfooter('© 2026 Luigi Scofano de Araujo','Teclado ou toque');
 }
 function galeria(){
   modo='avulso';mudar('galeria');

@@ -35,7 +35,7 @@ export function criarConfiguracoes({ler,salvar,aoMudar=()=>{},aoAbrir=()=>{},doc
     criar('p',null,'Meus dois pais viveram a vida toda na Tijuca. Foi nesse bairro e nas minhas memórias de família que busquei inspiração para a identidade visual de Miudezas. Trouxe temas do cotidiano brasileiro para criar um jogo confortável e aconchegante, como essas lembranças.'),
     criar('p',null,'Entre essas memórias está a obra Balões ou Ritual do Vento, do escultor Gabriel Fonseca, que eu sempre via ao ir para a casa da minha avó na Tijuca. Suas formas e cores aparecem reinterpretadas em pixel art na capa, junto das casas, dos morros, da pipa e do bem-te-vi.'),
     criar('p',null,'Quis transformar essas pequenas cenas em um lugar para desacelerar, explorar e brincar. A arte em pixels e a música suave acompanham esse sentimento de acolhimento.'),
-    criar('p',null,'© 2026 Luigi Scofano de Araujo. Obras e referências de terceiros pertencem aos respectivos titulares.'),
+    criar('p',null,'© 2026 Luigi Scofano de Araujo'),
     criar('p',null,'Progresso e preferências ficam neste navegador. Use o backup para guardar seus dados; não há conta nem sincronização automática.')
   );
   const referencia=criar('p'),linkReferencia=criar('a',null,'Referência artística: Gabriel Fonseca — Balões ou Ritual do Vento');
