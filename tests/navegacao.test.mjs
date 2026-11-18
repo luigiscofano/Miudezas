@@ -9,7 +9,7 @@ import {varanda as jogosVaranda} from '../dist/varanda.js';
 import {catalogo, nomesNiveis} from '../dist/catalogo.js';
 
 const fonte=readFileSync(new URL('../dist/app.js',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
-function navegador(salvo=null, busca='?janela=1&tela=roteiro&modo=circuito', reais={}) {
+function navegador(salvo=null, busca='?janela=1&tela=roteiro&modo=circuito', reais={},gerador=semente=>({promise:Promise.resolve({semente}),cancel(){}})) {
   const eventos={},chamadas=[],frames=new Map(),gravacoes=[];let proximoFrame=0;
   const elementos=new Map();
   const dados={volta:salvo};
@@ -18,7 +18,7 @@ function navegador(salvo=null, busca='?janela=1&tela=roteiro&modo=circuito', rea
     return elementos.get(id);
   }
   const fabricas=Object.fromEntries(catalogo.map(j=>[j.id,(nivel,api,opcoes)=>{chamadas.push({id:j.id,nivel,...opcoes});return {press(){},release(){},cancelInput(){},draw(){},hud(){return 'Jogando';},snapshot(){return {alimentos:[]};},update(){},score(){return 0;}};}]));
-  const sandbox={criarConfiguracoes:()=>{},criarAudio,normalizarRecordes,registrarRecorde,normalizarVolta,catalogo,nomesNiveis,quintal:{...fabricas,...reais},esquina:{},varanda:{},pracinha:{},
+  const sandbox={solicitarTerrenoGude:gerador,criarConfiguracoes:()=>{},criarAudio,normalizarRecordes,registrarRecorde,normalizarVolta,catalogo,nomesNiveis,quintal:{...fabricas,...reais},esquina:{},varanda:{},pracinha:{},
     icone:()=>'',escapar:s=>s,ler:(k,v)=>dados[k]??v,salvar:(k,v)=>{dados[k]=v;gravacoes.push(k);},
     URLSearchParams,URL, location:{search:busca,href:'https://example.com/?'+busca},
     ResizeObserver:class {observe(){} disconnect(){}},requestAnimationFrame:f=>{frames.set(++proximoFrame,f);return proximoFrame;},
@@ -75,17 +75,17 @@ test('Marca e capa não impedem a entrada no menu avulso',()=>{
   assert.match(n.html(),/1 \/ 2/);
 });
 
-test('Caminho Novo mantém seed no retry, pausa e quadros não recriam gerador',()=>{
+test('Caminho Novo mantém seed no retry, pausa e quadros não recriam gerador',async()=>{
  const n=navegador(null,'?janela=1&tela=galeria');const indice=catalogo.findIndex(j=>j.id==='gude');
- n.executar(`acao({dataset:{do:'escolher',index:'${indice}'}});acao({dataset:{do:'modo-extra'}});semente=123;acao({dataset:{do:'comecar'}})`);
+ n.executar(`acao({dataset:{do:'escolher',index:'${indice}'}});acao({dataset:{do:'modo-extra'}});semente=123;acao({dataset:{do:'comecar'}})`);await Promise.resolve();
  assert.equal(n.chamadas.length,1);assert.equal(n.chamadas[0].seed,123);assert.equal(n.chamadas[0].mode,'generated');
  for(let t=1;t<=20;t++){const [id,frame]=n.frames.entries().next().value;n.frames.delete(id);frame(t*16);}
  assert.equal(n.chamadas.length,1);
  n.executar("pausar();acao({dataset:{do:'continuar'}})");assert.equal(n.chamadas.length,1);
- n.executar("finalizar(false,'Tentativa');acao({dataset:{do:'repetir'}})");
+ n.executar("finalizar(false,'Tentativa');acao({dataset:{do:'repetir'}})");await Promise.resolve();
  assert.equal(n.chamadas.length,2);assert.equal(n.chamadas[1].seed,123);
  n.executar("finalizar(true,'Conseguiu')");assert.match(n.html(),/Gerar outra fase/);
- n.executar("Math.random=()=>.5;acao({dataset:{do:'outra-fase'}})");assert.equal(n.chamadas[2].seed,2147483648);
+ n.executar("Math.random=()=>.5;acao({dataset:{do:'outra-fase'}})");await Promise.resolve();assert.equal(n.chamadas[2].seed,2147483648);
 });
 test('Sem Parar mostra resultado e só persiste recorde maior',()=>{
  const n=navegador(null,'?janela=1&tela=galeria');const indice=catalogo.findIndex(j=>j.id==='pisca');
@@ -108,10 +108,10 @@ test('URL da janela conserva modo e seed, e rejeita modo incompatível',()=>{
 });
 
 
-test('Voltar às fases encerra tentativa e mantém seleção, recordes e volta salva',()=>{
+test('Voltar às fases encerra tentativa e mantém seleção, recordes e volta salva',async()=>{
  const salvo={nivel:2,ids:catalogo.map(j=>j.id),resultados:[true,false]};
  const n=navegador(salvo,'?janela=1&tela=galeria');
- n.executar("selecionado=8;nivel=3;modo='avulso';tipoPartida='generated';semente=789;criarPartida();pausar()");
+ n.executar("selecionado=8;nivel=3;modo='avulso';tipoPartida='generated';semente=789;criarPartida()");await Promise.resolve();n.executar("pausar()");
  assert.match(n.html(),/Voltar às fases/);assert.match(n.html(),/Voltar ao menu/);
  n.executar("acao({dataset:{do:'voltar-fases'}})");
  assert.equal(n.executar('tela'),'nivel');assert.equal(n.executar('partida'),null);
@@ -228,4 +228,26 @@ test('Tela principal exibe copyright no rodapé sem substituir as opções',()=>
   assert.match(n.elemento('#foot').innerHTML,/© 2026 Luigi Scofano de Araujo/);
   assert.match(n.html(),/Jogo avulso/);
   assert.match(n.html(),/Volta no Bairro/);
+});
+
+
+test('Preparação cancelada ao sair/reiniciar ignora respostas antigas e permite tentar após erro',async()=>{
+ const tarefas=[];
+ const gerar=semente=>{let resolve,reject;const t={semente,cancelada:false,promise:new Promise((a,b)=>{resolve=a;reject=b;}),cancel(){this.cancelada=true;},resolve:t=>resolve(t),reject:()=>reject(new Error('falhou'))};tarefas.push(t);return t;};
+ const n=navegador(null,'?janela=1&tela=galeria',{},gerar);
+ n.executar("selecionado=8;tipoPartida='generated';semente=42;criarPartida()");
+ assert.equal(n.executar('tela'),'preparando');assert.equal(n.chamadas.length,0);
+ n.executar('criarPartida()');assert.equal(tarefas[0].cancelada,true);
+ tarefas[0].resolve({semente:42});await Promise.resolve();assert.equal(n.chamadas.length,0);
+ n.executar('voltar()');assert.equal(tarefas[1].cancelada,true);
+ tarefas[1].resolve({semente:42});await Promise.resolve();assert.equal(n.executar('tela'),'nivel');
+ n.executar('criarPartida()');tarefas[2].reject();await Promise.resolve();await Promise.resolve();
+ assert.match(n.html(),/Não foi possível/);assert.equal(n.chamadas.length,0);
+ n.executar("acao({dataset:{do:'repetir'}})");assert.equal(tarefas[3].semente,42);
+ tarefas[3].resolve({semente:42});await Promise.resolve();assert.equal(n.executar('tela'),'jogo');
+ assert.equal(n.chamadas[0].terrenoValidado.semente,42);
+ n.executar('criarPartida()');n.eventos.pagehide();assert.equal(tarefas[4].cancelada,true);
+ assert.equal(n.executar('tela'),'nivel');
+ n.executar('criarPartida();document.hidden=true');n.eventos.visibilitychange();assert.equal(tarefas[5].cancelada,true);
+ assert.equal(n.executar('tela'),'nivel');
 });

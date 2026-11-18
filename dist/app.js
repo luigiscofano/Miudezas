@@ -6,6 +6,7 @@ import {catalogo,nomesNiveis} from './catalogo.js';
 import {quintal} from './quintal.js';
 import {esquina} from './esquina.js';
 import {varanda} from './varanda.js';
+import {solicitarTerrenoGude} from './gude-assincrono.js';
 import {icone,escapar,ler,salvar} from './interface.js';
 
 const jogos={...quintal,...esquina,...varanda};
@@ -20,7 +21,7 @@ let quadro=0,observador=null,tempoAnterior=0,comSom=ler('som',false)===true;
 const trilha=criarAudio();
 criarConfiguracoes({ler,salvar,aoMudar:({musica,efeitos})=>trilha.volumes(musica/100,efeitos/100),aoAbrir:()=>{if(tela==='jogo')pausar();}});
 let recordeCelebrado=false;
-let limparCena=null,limparEnquadramento=null;
+let limparCena=null,limparEnquadramento=null,geracaoGude=null;
 const segurando=new Map();
 const teclas={ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right',ArrowUp:'up',w:'up',ArrowDown:'down',s:'down'};
 const setas={left:'←',right:'→',up:'↑',down:'↓',act:'Bote'};
@@ -70,6 +71,7 @@ function interromperQuadros(){
   limparEnquadramento?.();limparEnquadramento=null;
 }
 function mudar(nome){
+  geracaoGude?.cancel();geracaoGude=null;
   interromperQuadros();
   if(tela==='jogo'&&nome!=='jogo')desligarEntrada();
   tela=nome;area.scrollTop=0;trilha.mudar(nome,atual().id);
@@ -121,8 +123,24 @@ function parada(){
   area.innerHTML=paginaHTML(topo('Próxima parada',(selecionado+1)+' / '+totalJogos)+'<div class="modal-box">'+foto(j)+'<h2>'+j.nome+'</h2><p class="body-copy">'+j.regra+'</p><p class="controls-copy">'+j.controle+'</p></div><div class="actions">'+btn('partir','Jogar esta parada  ›')+'</div>');
   pfooter('Volta no Bairro',nomesNiveis[nivel-1]);
 }
-function criarPartida(){
-  const instancia=jogos[atual().id](nivel,{tone:tom,finish:finalizar},{mode:tipoPartida,seed:semente});
+function criarPartida(terrenoValidado=null){
+  if(atual().id==='gude'&&tipoPartida==='generated'&&!terrenoValidado){
+    mudar('preparando');partida=null;
+    area.innerHTML=paginaHTML(topo('Preparando caminho')+'<p class="body-copy" role="status">Preparando uma fase com solução…</p><div class="actions">'+btn('voltar-fases','Voltar às fases','action secondary')+'</div>');
+    pfooter('Três Petelecos','Fase '+semente);
+    const tarefa=solicitarTerrenoGude(semente);geracaoGude=tarefa;
+    tarefa.promise.then(terreno=>{
+      // Uma resposta atrasada não pode substituir outra fase nem reabrir o jogo.
+      if(geracaoGude!==tarefa)return;
+      geracaoGude=null;criarPartida(terreno);
+    }).catch(()=>{
+      if(geracaoGude!==tarefa)return;
+      geracaoGude=null;
+      area.innerHTML=paginaHTML(topo('Preparar caminho')+'<p class="body-copy" role="alert">Não foi possível preparar esta fase. Tente novamente.</p><div class="actions">'+btn('repetir','Tentar novamente')+btn('voltar-fases','Voltar às fases','action secondary')+'</div>');
+    });
+    return;
+  }
+  const instancia=jogos[atual().id](nivel,{tone:tom,finish:finalizar},{mode:tipoPartida,seed:semente,...(terrenoValidado?{terrenoValidado}:{})});
   partida=instancia;ultimo=null;recordeCelebrado=false;mostrarJogo();
 }
 function ativarDir(fonte,dir){
@@ -274,6 +292,7 @@ function resumo(){
   pfooter('Volta completa',nomesNiveis[nivel-1]);
 }
 function voltar(){
+  if(tela==='preparando'){voltarAsFases();return;}
   if(tela==='nivel'){modo==='circuito'?roteiro():galeria();}
   else if(tela==='jogo')pausar();else if(tela==='pausa')mostrarJogo();
   else if(tela==='parada')roteiro();else if(tela==='resultado'&&modo==='circuito')roteiro();
@@ -348,8 +367,8 @@ document.addEventListener('keydown',e=>{
   bs[i<0?Math.max(0,bs.findIndex(b=>b.matches('.mode,.card,.action,.selected'))):(i+k+bs.length)%bs.length].focus({preventScroll:false});
 });
 document.addEventListener('keyup',e=>soltarDir('key'+e.code));
-document.addEventListener('visibilitychange',()=>{if(document.hidden)pausar();trilha.visibilidade(!document.hidden);});
-window.addEventListener('pagehide',()=>trilha.visibilidade(false));
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(tela==='preparando')voltarAsFases();else pausar();}trilha.visibilidade(!document.hidden);});
+window.addEventListener('pagehide',()=>{if(tela==='preparando')voltarAsFases();trilha.visibilidade(false);});
 window.addEventListener('pageshow',()=>trilha.visibilidade(!document.hidden));
 window.addEventListener('blur',()=>{
   // Alguns navegadores móveis emitem blur transitório durante interação.

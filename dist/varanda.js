@@ -217,21 +217,25 @@ export function validarTerrenoGude(terreno) {
   for (const dt of [1/30,1/60,1/120]) {
     const planejado=terreno.familia?.startsWith('planejado-');
     for (let combinacao=0; combinacao<(planejado?64:8); combinacao++) {
-      let venceu=false;
-      const jogo=gude(1,{tone(){},finish(ok){venceu=ok;}},{terrenoValidado:terreno});
-      for (const [indice,passo] of terreno.solucao.entries()) {
-        jogo.press(passo.direcao);
-        // Tolerância de 15 ms por gesto; evita certificados sem margem de execução.
-        jogo.update(passo.duracao + ((combinacao>>indice)&1 ? .015 : -.015));
-        jogo.release(passo.direcao);
-        for(let quadro=0;quadro<600 && jogo.moving;quadro++) jogo.update(dt);
+      // Os três bits do teclado têm só oito casos únicos; os demais bits
+      // pertencem aos eixos independentes do toque, não a novos tempos.
+      if(combinacao<8){
+        let venceu=false;
+        const jogo=gude(1,{tone(){},finish(ok){venceu=ok;}},{terrenoValidado:terreno});
+        for (const [indice,passo] of terreno.solucao.entries()) {
+          jogo.press(passo.direcao);
+          // Tolerância de 15 ms por gesto; evita certificados sem margem de execução.
+          jogo.update(passo.duracao + ((combinacao>>indice)&1 ? .015 : -.015));
+          jogo.release(passo.direcao);
+          for(let quadro=0;quadro<600 && jogo.moving;quadro++) jogo.update(dt);
+        }
+        if(!venceu) return false;
       }
-      if(!venceu) return false;
       // Repete pelo arrasto real: erros de 0,25 pixel lógico em ambos os eixos.
       let toqueVenceu=false;
       const toque=gude(3,{tone(){},finish(ok){toqueVenceu=ok;}},{terrenoValidado:terreno});
       for(const [indice,passo] of terreno.solucao.entries()){
-        const {x,y}=toque.snapshot(),[dx,dy]=direcoes[passo.direcao];
+        const {x,y}=toque.position(),[dx,dy]=direcoes[passo.direcao];
         const distancia=(5+68*passo.duracao)/3.6;
         const erro=((combinacao>>indice)&1)?.25:-.25;
         // Nos novos padrões, cobre independentemente os dois eixos de cada
@@ -317,7 +321,7 @@ function montarPadraoGude(padrao,seed,orientacao,escala=[1,1],deslocamento=[0,0]
 // inclusive após ricochetes. Não é uma prova sobre todos os ângulos possíveis.
 export function encontrarAtalhoGude(terreno) {
   function arrastar(jogo,angulo,alcance) {
-    const {x,y}=jogo.snapshot();
+    const {x,y}=jogo.position();
     const px=x-Math.cos(angulo)*alcance/3.6,py=y-Math.sin(angulo)*alcance/3.6;
     if(px<0||px>96||py<0||py>96)return false;
     jogo.point(x,y,'down');jogo.point(px,py,'up');
@@ -331,7 +335,7 @@ export function encontrarAtalhoGude(terreno) {
     if(!arrastar(jogo,angulo,alcance))continue;
     const tiros=[{angulo,alcance}];
     if(venceu)return tiros;
-    const {x,y}=jogo.snapshot(),dx=terreno.alvo[0]-x,dy=terreno.alvo[1]-y;
+    const {x,y}=jogo.position(),dx=terreno.alvo[0]-x,dy=terreno.alvo[1]-y;
     const distancia=Math.hypot(dx,dy),mira=Math.atan2(dy,dx);
     if(distancia>94)continue;
     if(arrastar(jogo,mira,distancia)&&venceu)return [...tiros,{angulo:mira,alcance:distancia}];
@@ -473,6 +477,8 @@ function gude(level, api, options={}) {
   }
   return {
     get moving(){return Boolean(tiro);},
+    // Cópia mínima, sem expor o terreno nem clonar suas pedras nas simulações.
+    position(){return {x,y};},
     snapshot(){return {x,y,jogadas,acabou,emMovimento:Boolean(tiro),terreno:structuredClone(terreno)};},
     press(dir) {
       if (!direcoes[dir] || acabou || tiro || arrasto || tecla) return;
