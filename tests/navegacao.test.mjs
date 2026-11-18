@@ -16,13 +16,13 @@ function navegador(salvo=null, busca='?janela=1&tela=roteiro&modo=circuito', rea
     if(!elementos.has(id))elementos.set(id,{innerHTML:'',textContent:'',classList:{add(){},toggle(){}},setAttribute(){},addEventListener(){},style:{setProperty(){}},focus(){},querySelector:elemento,querySelectorAll(){return [];},setPointerCapture(){},getBoundingClientRect(){return {left:0,top:0,width:384,height:384};},getContext(){return new Proxy({}, {get:(o,k)=>o[k]??(()=>{})});},get parentElement(){return elemento('stage');}});
     return elementos.get(id);
   }
-  const fabricas=Object.fromEntries(catalogo.map(j=>[j.id,(nivel,api,opcoes)=>{chamadas.push({id:j.id,nivel,...opcoes});return {press(){},release(){},cancelInput(){},draw(){},hud(){return 'Jogando';},update(){},score(){return 0;}};}]));
+  const fabricas=Object.fromEntries(catalogo.map(j=>[j.id,(nivel,api,opcoes)=>{chamadas.push({id:j.id,nivel,...opcoes});return {press(){},release(){},cancelInput(){},draw(){},hud(){return 'Jogando';},snapshot(){return {alimentos:[]};},update(){},score(){return 0;}};}]));
   const sandbox={normalizarRecordes,registrarRecorde,normalizarVolta,catalogo,nomesNiveis,quintal:{...fabricas,...reais},esquina:{},varanda:{},pracinha:{},
     icone:()=>'',escapar:s=>s,ler:(k,v)=>dados[k]??v,salvar:(k,v)=>{dados[k]=v;gravacoes.push(k);},
     URLSearchParams,URL, location:{search:busca,href:'https://example.com/?'+busca},
     ResizeObserver:class {observe(){} disconnect(){}},requestAnimationFrame:f=>{frames.set(++proximoFrame,f);return proximoFrame;},
     document:{querySelector:elemento,body:elemento('body'),hidden:false,hasFocus:()=>true,addEventListener(n,f){eventos[n]=f;}},
-    window:{addEventListener(n,f){eventos[n]=f;}},cancelAnimationFrame(id){frames.delete(id);}};
+    window:{addEventListener(n,f){eventos[n]=f;},removeEventListener(n,f){if(eventos[n]===f)delete eventos[n];}},cancelAnimationFrame(id){frames.delete(id);}};
   const contexto=createContext(sandbox);runInContext(fonte,contexto);
   return {executar:s=>runInContext(s,contexto), html:()=>elemento('#screen').innerHTML,dados,chamadas,gravacoes,frames,eventos,elemento};
 }
@@ -184,4 +184,39 @@ test('Pausa usa a mesma arte da seleção em todos os jogos e mantém três aç�
   assert.match(n.html(),/class="result-actions pause-actions"/);
   for(const acao of ['continuar','voltar-fases','sair'])assert.ok(n.html().includes('data-do="'+acao+'"'));
  }
+});
+
+
+test('Enquadramento desktop elimina faixas e é restaurado ao pausar',()=>{
+ const n=navegador(null,'?janela=1&tela=galeria');
+ n.executar("window.innerWidth=800;window.matchMedia=()=>({matches:true,addEventListener(){},removeEventListener(){}})");
+ const moldura=n.elemento('.window');moldura.offsetWidth=492;moldura.clientWidth=486;
+ const stage=n.elemento('stage');
+ stage.getBoundingClientRect=()=>({width:parseFloat(moldura.style.width||'492')-6,height:325});
+ n.executar('criarPartida()');
+ assert.equal(moldura.style.width,'331px');
+ assert.equal(n.elemento('canvas').style.width,'325px');
+ assert.equal(n.elemento('canvas').style.height,'325px');
+ assert.ok(n.eventos.resize);
+ n.executar('pausar()');assert.equal(moldura.style.width,'');assert.equal(n.eventos.resize,undefined);
+ n.executar("acao({dataset:{do:'continuar'}})");assert.equal(moldura.style.width,'331px');
+});
+
+test('Enquadramento adapta dez jogos e janelas desktop, sem mudar toque',()=>{
+ for(const larguraTela of [492,800,1366,1920])for(let indice=0;indice<10;indice++){
+  const n=navegador(null,'?janela=1&tela=galeria');
+  n.executar(`window.innerWidth=${larguraTela};window.matchMedia=()=>({matches:true,addEventListener(){},removeEventListener(){}})`);
+  const moldura=n.elemento('.window');moldura.offsetWidth=492;moldura.clientWidth=486;
+  const altura=indice===0?260:325;
+  n.elemento('stage').getBoundingClientRect=()=>({width:parseFloat(moldura.style.width||'492')-6,height:altura});
+  n.executar(`selecionado=${indice};criarPartida()`);
+  assert.equal(parseFloat(moldura.style.width),altura+6);
+  assert.equal(n.elemento('canvas').style.width,n.elemento('canvas').style.height);
+  n.executar('voltarAsFases()');
+  assert.equal(moldura.style.width,'');
+ }
+ const n=navegador(null,'?janela=1&tela=galeria');
+ n.executar("window.matchMedia=()=>({matches:false,addEventListener(){},removeEventListener(){}});criarPartida()");
+ assert.equal(n.elemento('.window').style.width,'');
+ assert.equal(n.elemento('canvas').style.width,'384px');
 });
