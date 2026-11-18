@@ -665,7 +665,7 @@ A identidade sonora, **Interpretação Mais Natural**, reúne nove músicas rela
 
 O aviso **© 2026 Luigi Scofano de Araujo** aparece no rodapé inicial e no Sobre, sem alterar a licença do repositório.
 
-A **engrenagem** abre Configurações: música e efeitos têm controles independentes (padrões 10% e 25%), botão para restaurar os volumes e **Sobre o projeto**. O botão de som continua silenciando tudo e mantém a preferência anterior. O som começa somente após interação; ocultar a aba o suspende. Pisca e Rádio preservam suas pistas sonoras, com música de fundo atenuada. Configurações pausam a partida; fechar não retoma o jogo involuntariamente.
+A **engrenagem** abre Configurações: música e efeitos têm controles independentes (padrões 10% e 5%), botão para restaurar os volumes e **Sobre o projeto**. O botão de som continua silenciando tudo e mantém a preferência anterior. O som começa somente após interação; ocultar a aba o suspende. Pisca e Rádio preservam suas pistas sonoras, com música de fundo atenuada. Configurações pausam a partida; fechar não retoma o jogo involuntariamente.
 
 ---
 
@@ -673,7 +673,7 @@ A **engrenagem** abre Configurações: música e efeitos têm controles independ
 
 | Chave local | Conteúdo | Momento de gravação |
 |---|---|---|
-| miudezas.v1.volumeMusica / volumeEfeitos | Inteiros entre 0 e 100; padrões 10/25. | Ao ajustar Configurações. |
+| miudezas.v1.volumeMusica / volumeEfeitos | Inteiros entre 0 e 100; padrões 10/5. | Ao ajustar Configurações. |
 | miudezas.v1.som | Booleano. O padrão é desligado. | Ao alternar o som na barra superior. |
 | miudezas.v1.recordes | Melhores pontuações dos seis jogos Sem Parar, por ID. | Ao superar o recorde durante a partida e ao concluir. |
 | miudezas.v1.volta | Objeto com nivel, ids e resultados booleanos, migrado por IDs. | No começo da volta e ao avançar de parada. Ao completar a última, o valor passa a null. |
