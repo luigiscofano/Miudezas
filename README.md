@@ -21,7 +21,7 @@
 - **10 jogos e 30 fases autorais:** Sossegado, Animado e Puxado continuam disponíveis.
 - **6 modos Sem Parar:** recordes pessoais persistentes, sem cronômetro final.
 - **3 modos Caminho Novo:** fases reproduzíveis, solução validada e reinício na mesma semente.
-- **Novidades consolidadas:** Maré com cinco famílias e faixas avançadas, Gude com terrenos variados e níveis recalibrados, Rastro com percursos abertos e irregulares, Pipa com aves em V e colisão por pixels, lagartixa com três erros em todos os níveis.
+- **Novidades consolidadas:** Maré com dez famílias e faixas avançadas, Gude com terrenos variados e níveis recalibrados, Rastro com percursos abertos e irregulares, Pipa com aves em V e colisão por pixels, lagartixa com três erros em todos os níveis.
 - **Dados locais:** preferência de som, Volta no Bairro e recordes exportáveis. Não há conta, sincronização, ranking online ou sistema de medalhas implementado.
 
 > Este README descreve a implementação atual. Imagens de marca são artes; cada ficha conserva o ícone e a miniatura armazenada e inclui uma **cena atual renderizada pelo próprio motor do jogo**, sem cursor. Essas cenas mostram o tabuleiro do nível Puxado. A seção de telas reais apresenta, separadamente, capturas completas da interface publicada. [Origem e reprodução das imagens](docs/imagens/jogos/README.md).
@@ -366,7 +366,7 @@ Leve o caranguejo até a concha. A maré muda a cada três passos. Se ela cobrir
 |---|---|---|
 | **Enseada** · Mapa 8 × 8 com banco raso contínuo | **Dois baixios** · Mapa 8 × 8 com dois baixios separados | **Canal estreito** · Mapa 8 × 8 com passagens rasas estreitas |
 
-Apenas um passo válido avança a maré. No terceiro, se a água subir sobre uma casa rasa, o caranguejo retorna à última casa firme. Circular na areia permite preparar uma travessia. O Puxado atual usa o mapa escolhido da semente **1428316038**, com o siri na última linha (coluna 4), quatro baixios indispensáveis e solução mínima de 21 comandos. Caminho Novo combina cinco famílias; veja os critérios na [seção de geração](#geração-e-validação-de-fases).
+Apenas um passo válido avança a maré. No terceiro, se a água subir sobre uma casa rasa, o caranguejo retorna à última casa firme. Circular na areia permite preparar uma travessia. O Puxado atual usa o mapa escolhido da semente **1428316038**, com o siri na última linha (coluna 4), quatro baixios indispensáveis e solução mínima de 21 comandos. Caminho Novo combina dez famílias; veja os critérios na [seção de geração](#geração-e-validação-de-fases).
 
 Palco `#205E60` · [Implementação de Maré Miúda](dist/quintal.js)
 
@@ -570,8 +570,13 @@ Os três geradores usam sementes, orçamento finito de tentativas e reservas val
 | Arquipélagos | 23–27 comandos, custo de maré ≥7, três baixios indispensáveis; ilhas, pontes e escolhas locais. |
 | Muito difícil | 30–48 comandos, custo de maré 12–17, cinco travessias indispensáveis, áreas de escolha e praças secas. |
 | Muitíssimo difícil | 38–60 comandos, custo de maré ≥18, seis travessias indispensáveis e os mesmos critérios espaciais. |
+| Canais ramificados | Árvore irregular com bifurcações e becos; 30–60 comandos, custo de maré ≥8 e três baixios indispensáveis. |
+| Anel de maré | Um ciclo independente com passagem rasa alternativa e travessias obrigatórias fora do anel. |
+| Bacias gêmeas | Dois ciclos independentes e pelo menos dois baixios alternativos, mantendo os gargalos obrigatórios. |
+| Estreito duplo | Árvore com duas casas rasas consecutivas, ambas indispensáveis: a entrada precisa coincidir com a janela da maré. |
+| Anel e estreito | Combina um ciclo alternativo com o estreito duplo obrigatório. |
 
-A busca considera **posição, fase da maré e última areia segura**. “Custo da maré” é a diferença entre soluções mínimas com e sem a mecânica; bloquear um baixio indispensável torna a concha inalcançável. As faixas avançadas se misturam em aproximadamente 9% das sementes e não removem as famílias anteriores. Limites de 48, 96 ou 64 candidatos, conforme a família, evitam geração ilimitada. [Critérios completos, sementes e reservas](docs/jogos/quintal/README.md).
+A busca considera **posição, fase da maré e última areia segura**. “Custo da maré” é a diferença entre soluções mínimas com e sem a mecânica; bloquear um baixio indispensável torna a concha inalcançável. A mistura atual reserva aproximadamente **10% para cada uma das dez famílias**: 50% de padrões anteriores e 50% dos cinco novos. Os cinco padrões de canais usam 30–60 comandos, custo de maré ≥8, três baixios indispensáveis e pedras que encurtariam a solução se removidas. A seleção usa a semente módulo dez, mantendo a referência 1428316038. Sementes antigas podem produzir outro mapa nesta versão; fases autorais e saves não mudam. `gerarMareLegada()` permite auditar a reprodução anterior. Limites de 48, 96, 64 ou 128 candidatos, conforme a família, evitam geração ilimitada. Os canais têm oito reservas por padrão, revalidadas pelos mesmos critérios. A escolha de extremos afastados reduz descartes: no lote atual de 500 canais, 25 usaram reserva (5%), com 94–100 geometrias distintas por padrão. Mediana/p95 de geração: 4,30/11,05 ms em Node neste ambiente, sem garantia para celulares. [Critérios completos, sementes e reservas](docs/jogos/quintal/README.md).
 
 ### Rastro de Prata: ordem e ocupação do caminho
 

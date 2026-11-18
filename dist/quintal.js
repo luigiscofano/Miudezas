@@ -1,3 +1,4 @@
+import {criarCanaisMare, estruturaCanaisMare, padroesMare, criteriosMareCanais, reservasMareCanais} from './mare-canais.js';
 import {criarBandoPipa, colideBandoPipa, spriteAvePipa, coresAvePipa} from './pipa-aves.js';
 // As cenas usam a mesma grade de 96 pixels do visor.
 function rect(ctx, color, x, y, w, h) {
@@ -472,13 +473,79 @@ function gerarMareAvancada(seed, tier) {
   if (!mareAvancadaValida(metrics, tier)) throw new Error('Reserva avançada da maré inválida.');
   return {seed, grid, solution: metrics.solution, metrics, fallback: true, family: tier};
 }
-export function gerarMare(seed = 1) {
+// A mesma busca de estados certifica os candidatos e as reservas dos canais.
+export function validarCanaisMare(grid, family) {
+  const pattern = padroesMare[family], limits = criteriosMareCanais;
+  if (!pattern) return null;
+  const structure = estruturaCanaisMare(grid);
+  if (!structure || structure.aneis !== pattern.aneis || structure.duplos !== Number(pattern.duplo) ||
+      (family === 'canais-ramificados' && structure.bifurcacoes === 0)) return null;
+  const solution = resolverMare(grid);
+  if (!solution || solution.length < limits.minPassos || solution.length > limits.maxPassos) return null;
+  const metrics = analisarMare(grid);
+  if (metrics.passos - metrics.passosSemMare < limits.custoMare ||
+      metrics.baixiosObrigatorios < limits.portais || metrics.passosSemPedras >= metrics.passos) return null;
+  const mandatory = [];
+  let shallows = 0;
+  grid.forEach((row, y) => [...row].forEach((cell, x) => {
+    if (cell !== '=') return;
+    shallows++;
+    const blocked = [...grid];
+    blocked[y] = row.slice(0, x) + '~' + row.slice(x + 1);
+    if (!resolverMare(blocked)) mandatory.push([x, y]);
+  }));
+  // Um estreito duplo deve fazer parte de TODA solução, não só aparecer no desenho.
+  const duploObrigatorio = mandatory.some(([x, y]) => mandatory.some(([nx, ny]) => Math.abs(nx - x) + Math.abs(ny - y) === 1));
+  if (pattern.duplo && !duploObrigatorio) return null;
+  const baixiosAlternativos = shallows - mandatory.length;
+  if (baixiosAlternativos < pattern.aneis) return null;
+  return {...metrics, duploObrigatorio, baixiosAlternativos};
+}
+function gerarMareCanais(seed, family) {
+  let state = (seed ^ 0x27d4eb2f) >>> 0;
+  const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
+  const pattern = padroesMare[family];
+  for (let attempt = 0; attempt < criteriosMareCanais.tentativas; attempt++) {
+    const grid = criarCanaisMare(random, pattern.aneis, pattern.duplo);
+    if (!grid) continue;
+    const metrics = validarCanaisMare(grid, family);
+    if (metrics) return {seed, grid, solution: metrics.solution, metrics, fallback: false, family};
+  }
+  const reserves = reservasMareCanais[family];
+  const grid = orientarMare(reserves[Math.floor(random() * reserves.length)], Math.floor(random() * 8));
+  const metrics = validarCanaisMare(grid, family);
+  if (!metrics) throw new Error('Reserva dos canais da maré inválida.');
+  return {seed, grid, solution: metrics.solution, metrics, fallback: true, family};
+}
+export const familiasMare = Object.freeze([
+  'original', 'enseada-irregular', 'arquipelago', 'muito-dificil', 'muitissimo-dificil',
+  ...Object.keys(padroesMare)
+]);
+export function selecionarFamiliaMare(seed) {
   const original = Number(seed) >>> 0;
-  // A prioridade preserva as enseadas; o restante alterna arquipélagos e família original.
+  // Preserva o mapa escolhido como referência do Puxado, sem alterar a fase autoral.
+  if (original === 1428316038) return 'enseada-irregular';
+  return familiasMare[original % familiasMare.length];
+}
+export function gerarMare(seed = 1) {
+  const original = Number(seed) >>> 0, family = selecionarFamiliaMare(original);
+  if (family === 'enseada-irregular') return gerarMareIrregular(original);
+  if (family === 'arquipelago') return gerarArquipelagoMare(original);
+  if (family === 'muito-dificil' || family === 'muitissimo-dificil') return gerarMareAvancada(original, family);
+  if (padroesMare[family]) return gerarMareCanais(original, family);
+  return gerarMareOriginal(original);
+}
+// Reproduz a versão publicada anterior para auditoria de sementes antigas.
+// A interface usa a mistura equilibrada acima; não existe novo modo ou migração de saves.
+export function gerarMareLegada(seed = 1) {
+  const original = Number(seed) >>> 0;
   if (original % 3 === 0) return gerarMareIrregular(original);
   if (original % 7 === 0) return gerarArquipelagoMare(original);
   if (original % 13 === 0) return gerarMareAvancada(original, 'muitissimo-dificil');
   if (original % 11 === 0) return gerarMareAvancada(original, 'muito-dificil');
+  return gerarMareOriginal(original);
+}
+function gerarMareOriginal(original) {
   let state = original;
   const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
   const orientation = Math.floor(random() * 8);
