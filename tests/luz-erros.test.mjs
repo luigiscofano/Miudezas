@@ -66,3 +66,11 @@ test('Sem Parar não ganha prazo e mantém três erros', () => {
   assert.equal(resultados.length, 1);
   assert.equal(resultados[0][0], false);
 });
+
+test('Catálogo informa três erros em todos os modos sem retirar prazo autoral', async () => {
+  const {catalogo} = await import('../dist/catalogo.js');
+  const regra = catalogo.find(jogo => jogo.id === 'luz').regra;
+  assert.match(regra, /terceiro bote errado encerra qualquer modo/);
+  assert.match(regra, /antes de a lâmpada apagar/);
+  assert.match(regra, /Sem Parar não tem prazo/);
+});

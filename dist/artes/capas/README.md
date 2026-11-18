@@ -8,9 +8,13 @@
 
 Título Miudezas com iluminação pixelada; árvores enraizadas no solo; Cristo sutil no topo da montanha; Ritual do Vento com pequenas dobras sugeridas no alto das formas; bem-te-vi e nota musical; pipa na posição original com linha partindo de trás de uma casa.
 
+## Inventário
+
+Esta pasta contém um único recurso visual: [miudezas-tijuca.png](miudezas-tijuca.png), **PNG de 1672 × 941 pixels**, dimensão conferida no arquivo. É uma composição estática aprovada, não uma captura atual de partida nem uma folha de sprites.
+
 ## Integração
 
-A abertura usa `object-fit: contain` para preservar a proporção. O título não é redesenhado por HTML. Há um `h1` exclusivo para leitura assistiva. Não substitua o arquivo por uma captura do navegador.
+A função de abertura em [app.js](../../app.js) aponta diretamente para este PNG, com largura e altura declaradas. O [CSS](../../style.css) usa `object-fit: contain` para preservar a proporção. O título não é redesenhado por HTML. Há um `h1` exclusivo para leitura assistiva. Não substitua o arquivo por uma captura do navegador.
 
 [Índice das artes](../README.md) · [Manual principal](../../../README.md)
 

@@ -1,42 +1,34 @@
-# Ícones aprovados da seleção
+# Dez ícones da seleção e da pausa
 
-Estes dez desenhos aparecem na galeria e na tela de pausa. Luz de Varanda foi adicionada após aprovação específica da opção A com ajuste restrito a uma perna.
+Todos os jogos ativos possuem `icone` em [catalogo.js](../../catalogo.js). A função `foto(..., true)` em [app.js](../../app.js) usa estes SVGs na **galeria e na pausa**. Nas demais telas, continuam os [PNGs de cenas](../README.md). Os ícones não são usados para desenhar os personagens dentro das partidas.
 
-| Arquivo | Jogo | Referência |
-|---|---|---|
-| `radio.svg` | Rádio de Pilha | Ícone aprovado na rodada 3 |
-| `gude.svg` | Três Petelecos | Ícone aprovado na rodada 3 |
-| `pisca.svg` | Pisca no Mato | Vaga-lume original, preservado na rodada 3 |
-| `luz.svg` | Luz de Varanda | Opção A com perna esquerda afastada; cauda, rosto e luz preservados |
+## Inventário completo
 
-![Rádio](radio.svg) ![Bolinha](gude.svg) ![Vaga-lume](pisca.svg) ![Lagartixa](luz.svg)
+| Jogo | Arquivo | viewBox | Referência visual registrada |
+|---|---|---|---|
+| Goteira | [goteira.svg](goteira.svg) | 144 × 112 | Balde com alça simples; matriz-base 24 × 24 |
+| Maré Miúda | [mare.svg](mare.svg) | 72 × 56 | Caranguejo da proposta 5 |
+| Último Fio | [fio.svg](fio.svg) | 72 × 56 | Bem-te-vi da proposta 5 |
+| Pipa de Laje | [pipa.svg](pipa.svg) | 144 × 112 | Pipa inclinada; matriz-base 24 × 24 |
+| Rádio de Pilha | [radio.svg](radio.svg) | 72 × 56 | Proposta aprovada na rodada 3 |
+| Pão na Chapa | [pao.svg](pao.svg) | 144 × 112 | Versão intermediária: pão francês e ovo, matriz-base 32 × 32 |
+| Rastro de Prata | [rastro.svg](rastro.svg) | 72 × 56 | Caracol da proposta 5, sem folha |
+| Luz de Varanda | [luz.svg](luz.svg) | 72 × 56 | Opção A, com perna esquerda afastada |
+| Três Petelecos | [gude.svg](gude.svg) | 72 × 56 | Proposta aprovada na rodada 3 |
+| Pisca no Mato | [pisca.svg](pisca.svg) | 72 × 56 | Vaga-lume preservado na rodada 3 |
 
-## Construção e enquadramento
+<img src="goteira.svg" width="144" alt="Balde de Goteira"> <img src="mare.svg" width="144" alt="Caranguejo de Maré Miúda"> <img src="fio.svg" width="144" alt="Bem-te-vi de Último Fio"> <img src="pipa.svg" width="144" alt="Pipa de Laje"> <img src="radio.svg" width="144" alt="Rádio de Pilha">
 
-As sete primeiras artes usam matriz de 48 × 48 pixels; Goteira e Pipa usam 24 × 24, e Pão na Chapa usa 32 × 32. As três últimas usam viewBox 144 × 112 com área central de 96 × 96: ampliação inteira de 4 ou 3, mantendo a proporção de margem das anteriores. Os SVGs representam os mesmos pixels por retângulos horizontais contíguos, sem filtros, scripts, fontes ou dependências externas. `shape-rendering="crispEdges"` mantém as bordas secas. O `viewBox` 72 × 56 adiciona apenas margem de fundo em volta da matriz (12 pixels na horizontal e 4 na vertical), preservando a composição central da prévia nos cartões.
+<img src="pao.svg" width="144" alt="Pão e ovo"> <img src="rastro.svg" width="144" alt="Caracol de Rastro de Prata"> <img src="luz.svg" width="144" alt="Lagartixa de Luz de Varanda"> <img src="gude.svg" width="144" alt="Bolinha de Três Petelecos"> <img src="pisca.svg" width="144" alt="Vaga-lume de Pisca no Mato">
 
-## Integração restrita
+## Construção
 
-`catalogo.js` informa o caminho opcional `icone`. `app.js` pede esse asset na galeria e na pausa. As introduções, o roteiro e os resultados continuam lendo as miniaturas anteriores. Nenhuma regra, controle, recorde, conquista ou backup foi modificado. Novos ícones dependem de aprovação individual antes de alterar o catálogo.
+Os sete SVGs com viewBox 72 × 56 enquadram a matriz de 48 × 48 com margem. Goteira e Pipa ampliam sua matriz-base por quatro; Pão amplia por três. Esses três arquivos usam viewBox 144 × 112, com região central de 96 × 96. A proporção externa é a mesma, sem confundir tamanho lógico da arte com tamanho de exibição no cartão.
 
-## Verificação
+Os arquivos usam retângulos contíguos e `shape-rendering="crispEdges"`, sem filtros, scripts ou fontes externas. A exibição uniforme depende também do CSS. Os desenhos da partida podem ter animações e estados que não existem no ícone estático.
 
-O teste de navegação confere os dez cartões e a preservação das imagens fora da galeria. A rasterização local foi comparada pixel a pixel com os PNGs aprovados. Testes automatizados não substituem revisão em dispositivos físicos.
+## Revisão sem efeitos colaterais
 
-## Aprovação dos três sprites
+Após editar um ícone aprovado, verificar galeria e pausa, incluindo telas estreitas. Conferir que introduções e resultados continuam usando os PNGs. Não alterar regras, controles, colisões ou saves para ajustar uma imagem. A suíte de navegação verifica as referências das telas; isso não substitui inspeção visual. Referências históricas de aprovação acima documentam as decisões existentes, não uma nova aprovação.
 
-| Arquivo | Jogo | Arte aprovada |
-|---|---|---|
-| `mare.svg` | Maré Miúda | Caranguejo da proposta 5 |
-| `fio.svg` | Último Fio | Bem-te-vi da proposta 5 |
-| `rastro.svg` | Rastro de Prata | Caracol da proposta 5, sem folha |
-
-![Caranguejo](mare.svg) ![Bem-te-vi](fio.svg) ![Caracol](rastro.svg)
-
-Somente a seleção muda. Folhas e sprites dentro das partidas não são alterados. Pão na Chapa usa a versão intermediária aprovada, baseada nos sprites atuais do jogo.
-
-### Goteira, Pipa e Pão na Chapa: últimos ícones aprovados
-
-Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavização: balde com alça simples e pipa inclinada. São compartilhados pela seleção e pela pausa; não alteram cenas jogáveis, colisões, controles ou saves. Pão na Chapa usa a versão intermediária aprovada de 32 × 32 pixels, com pão francês e ovo baseados nos sprites reais.
-
-![Goteira](goteira.svg) ![Pipa](pipa.svg) ![Pão na Chapa](pao.svg)
+[Acervo visual](../README.md) · [Design e arte em código](../../../docs/design/README.md)
