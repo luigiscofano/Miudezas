@@ -67,8 +67,8 @@ test('Gude valida 500 sementes usando controles, colisões e física reais',()=>
  assert.equal(rotas.size,24);assert.equal(orientacoes.size,8);
  assert.deepEqual([...familias].sort(),['cotovelo','escalonado-retorno','escalonado-travessia','retorno','travessia']);assert.deepEqual([...quantidades].sort(),[3,4,5,6,7,8]);
 });
-test('Gude reinício reconstrói mapa; dificuldades clássicas mantêm alvos',()=>{
- for(const level of [1,2,3])assert.deepEqual(varanda.gude(level,api()).snapshot().terreno.alvo,[[77,20],[78,19],[78,18]][level-1]);
+test('Gude reinício reconstrói mapa; dificuldades autorais têm alvos fixos',()=>{
+ for(const level of [1,2,3])assert.deepEqual(varanda.gude(level,api()).snapshot().terreno.alvo,[[22,80],[52,69],[15,45]][level-1]);
  assert.deepEqual(varanda.gude(1,api(),{mode:'generated',seed:77}).snapshot().terreno,varanda.gude(1,api(),{mode:'generated',seed:77}).snapshot().terreno);
 });
 
@@ -93,9 +93,10 @@ test('Luz clássica mantém vitória por meta e derrota por prazo',()=>{
  const b=api(),k=varanda.luz(3,b);k.update(24);assert.equal(b.resultados[0].ok,false);
 });
 test('Gude arrasto exige início na bola; cancelar não lança, força longa percorre mais',()=>{
- const simular=(distancia)=>{const j=varanda.gude(1,api());j.point(16,80,'down');j.point(16-distancia,80,'move');assert.equal(j.snapshot().jogadas,0);j.point(16-distancia,80,'up');while(j.moving)j.update(1/60);return j.snapshot();};
+ const terrenoControle={inicio:[16,80],alvo:[77,20],pedras:[[48,48,10,8]]};
+ const simular=(distancia)=>{const j=varanda.gude(1,api(),{terrenoValidado:terrenoControle});j.point(16,80,'down');j.point(16-distancia,80,'move');assert.equal(j.snapshot().jogadas,0);j.point(16-distancia,80,'up');while(j.moving)j.update(1/60);return j.snapshot();};
  assert.ok(simular(10).x>simular(3).x+20);
- const j=varanda.gude(1,api());j.point(80,10,'down');j.point(0,0,'up');assert.equal(j.snapshot().jogadas,0);
+ const j=varanda.gude(1,api(),{terrenoValidado:terrenoControle});j.point(80,10,'down');j.point(0,0,'up');assert.equal(j.snapshot().jogadas,0);
  j.point(16,80,'down');j.point(0,80,'cancel');j.point(0,80,'up');assert.equal(j.snapshot().jogadas,0);
  j.point(16,80,'down');j.cancelInput();j.point(0,80,'up');assert.equal(j.snapshot().jogadas,0);
 });
@@ -118,4 +119,16 @@ test('Certificado rejeita mapa trivial e área inferior às pedras do Puxado',()
  assert.equal(t.solucao.length,3);assert.ok(t.pedras.length>=5);assert.ok(t.desafioForca>=4);
  }
  assert.ok(novos>=80);assert.equal(familias.size,2);assert.ok(geometrias.size>=75);assert.ok(internos>=30);
+ });
+
+ test('Três fases autorais progressivas são certificadas com teclado e toque',()=>{
+ for(let level=1;level<=3;level++){
+  const terreno=varanda.gude(level,api()).snapshot().terreno;
+  assert.equal(terreno.pedras.length,level+2);
+  assert.equal(terreno.solucao.length,level===1?2:3);
+  assert.ok(validarTerrenoGude(terreno));
+  const a=api(),j=varanda.gude(level,a);
+  for(const passo of terreno.solucao){j.press(passo.direcao);j.update(passo.duracao);j.release(passo.direcao);while(j.moving)j.update(1/60);}
+  assert.equal(a.resultados.length,1);assert.equal(a.resultados[0].ok,true);
+ }
  });

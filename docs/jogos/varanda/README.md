@@ -20,11 +20,11 @@ Cada mosquito capturado vale um ponto. Um bote desalinhado consome uma das três
 
 ## Bolinha de Gude: Caminho Novo
 
-`criarTerrenoGude(seed)` usa um gerador determinístico. A semente reconstrói alvo, pedras e certificado de solução com até três petelecos. As fases autorais não mudam. O gerenciador deve conservar a semente ao tentar novamente e fornecer outra somente ao pedir nova fase.
+`criarTerrenoGude(seed)` usa um gerador determinístico. A semente reconstrói alvo, pedras e certificado de solução com até três petelecos. As fases autorais são fixas e independentes da geração; suas novas disposições estão descritas abaixo. O gerenciador deve conservar a semente ao tentar novamente e fornecer outra somente ao pedir nova fase.
 
 O certificado não é apenas conectividade: `validarTerrenoGude()` instancia **o mesmo jogo**, pressiona e solta controles públicos e executa a física real, incluindo alcance carregado, desaceleração, ricochetes, colisões e raio do buraco. Verifica 30, 60 e 120 atualizações/s e oito combinações de erro de ±15 ms ao soltar os três gestos. Também repete o certificado por arrasto com perturbação de ±0,25 pixel lógico em ambos os eixos, nas mesmas frequências, verificando que o gesto cabe no tabuleiro. Geração limitada a 64 tentativas, seguida de percurso seguro também validado. Se até ele falhar, lança erro em vez de apresentar mapa sem certificado.
 
-Como referência mensurável do Puxado, exige pelo menos duas pedras e área total de obstáculos de 360 pixels quadrados (duas pedras autorais de 15 × 12). Rejeita mapas em que mirar diretamente no buraco vence com qualquer alcance inteiro de 3 a 94, incluindo os ricochetes dessa tentativa. Isso exige trabalhar direção e força; não prova equivalência subjetiva de dificuldade. O gerador sorteia percursos de dois ou três tiros e depois distribui de três a sete pedras independentes, com pelo menos cinco pixels de separação. Não divide mais uma barreira fixa em pedaços para aparentar variedade. Há cotovelos (dois tiros), travessias e retornos (três tiros), com diferentes comprimentos e posições, inclusive inícios e destinos na região interna do tabuleiro. O percurso certificado mantém folga de seis pixels das pedras; a validação física final continua obrigatória. Cada candidato tenta até 120 posições de pedras, dentro do limite global de 64 candidatos. A saída de segurança permanece um percurso previamente conhecido e é validada novamente. O jogador pode descobrir outras soluções; não há autopiloto. A prova garante a existência de uma sequência executável, não a vitória com qualquer força ou caminho.
+Como referência mínima histórica do Puxado anterior, exige pelo menos duas pedras e área total de obstáculos de 360 pixels quadrados (duas pedras antigas de 15 × 12). Rejeita mapas em que mirar diretamente no buraco vence com qualquer alcance inteiro de 3 a 94, incluindo os ricochetes dessa tentativa. Isso exige trabalhar direção e força; não prova equivalência subjetiva de dificuldade. O gerador sorteia percursos de dois ou três tiros e depois distribui de três a sete pedras independentes, com pelo menos cinco pixels de separação. Não divide mais uma barreira fixa em pedaços para aparentar variedade. Há cotovelos (dois tiros), travessias e retornos (três tiros), com diferentes comprimentos e posições, inclusive inícios e destinos na região interna do tabuleiro. O percurso certificado mantém folga de seis pixels das pedras; a validação física final continua obrigatória. Cada candidato tenta até 120 posições de pedras, dentro do limite global de 64 candidatos. A saída de segurança permanece um percurso previamente conhecido e é validada novamente. O jogador pode descobrir outras soluções; não há autopiloto. A prova garante a existência de uma sequência executável, não a vitória com qualquer força ou caminho.
 
 ### Controles
 
@@ -45,7 +45,7 @@ node --test tests/varanda-modos.test.mjs
 - validação pelo motor real com três frequências e perturbações de tempo;
 - 500 certificados repetidos por arrasto/toque, sem sair do canvas;
 - Pisca ultrapassa 12 rodadas sem vitória artificial e mantém último resultado completo ao errar;
-- metas clássicas e alvos autorais preservados;
+- metas clássicas dos demais jogos preservadas; novas fases autorais de Gude certificadas;
 - renderizadores exercitados com contexto instrumentado.
 
 Testes automatizados não substituem inspeção visual em navegador nem teste físico em celular. Persistência e backup pertencem ao gerenciador central, sem alteração de esquema neste módulo.
@@ -71,3 +71,18 @@ Além da validação original, seis ensaios alteram a força de **um** dos três
 A busca continua limitada a 64 candidatos, com até 120 amostras de pedras por candidato. Se o padrão exigente não passar, usa o gerador anterior e seu fallback certificado, sem apresentar um mapa insolúvel. Nada é gerado por quadro.
 
 Verificação do novo subconjunto (100 sementes múltiplas de três): 92 retornos e oito travessias, 66 inícios internos e 23 destinos internos; nenhuma queda para o gerador anterior nesta amostra. O teste exige pelo menos 75 configurações distintas após normalizar rotações/reflexões em uma grade de ocupação 6×6. Geração p95 aproximada de 22 ms neste ambiente, não uma garantia para celulares. Dez testes passam, incluindo 500 sementes gerais e hashes de regressão que conferem mapas anteriores byte a byte.
+
+
+## Três Petelecos: três fases autorais revisadas
+
+As dificuldades mantêm os mesmos IDs, três tentativas, controles e formato de progresso/backup. Apenas suas disposições foram redesenhadas. O histórico antigo continua associado à mesma dificuldade; não é apagado nem recalculado.
+
+| Dificuldade | Início | Buraco | Pedras | Percurso de referência e intenção |
+| --- | --- | --- | --- | --- |
+| Sossegado | (69,29) | (22,80) | 3 | Esquerda 47, baixo 51: uma curva ampla, solução em dois tiros e um tiro de reserva. |
+| Animado | (54,29) | (52,69) | 4 | Direita 21, baixo 40, esquerda 23: contornar o bloqueio central e voltar, usando os três tiros e forças diferentes. |
+| Puxado | (53,66) | (15,45) | 5 | Cima 47, esquerda 38, baixo 26: retorno escalonado, obstáculos alongados e mudanças de direção/força. |
+
+Coordenadas e distâncias usam o tabuleiro lógico 96×96. Os caminhos acima são certificados, não movimentos automáticos. A progressão vem da quantidade de decisões, da ausência de tiro de reserva nas duas últimas fases e da disposição dos obstáculos, não da alteração artificial da física. Não se afirma que seja a única solução nem que a dificuldade subjetiva seja idêntica para todas as pessoas.
+
+Cada fase passa pelo mesmo motor com controles de teclado/toque, tolerância de ±15 ms e ±0,25 pixel lógico, a 30/60/120 atualizações por segundo. Os testes verificam também vitória única, três/quatro/cinco pedras e soluções com dois/três/três tiros. O teste genérico de força/cancelamento usa um terreno de controle explícito para não confundir a mecânica com a nova disposição das fases.

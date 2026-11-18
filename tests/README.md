@@ -85,3 +85,12 @@ A pausa usa a mesma imagem da seleção: ícone aprovado quando disponível e mi
 ### Goteira, Pipa e Pão na Chapa: últimos ícones aprovados
 
 Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavização: balde com alça simples e pipa inclinada. São compartilhados pela seleção e pela pausa; não alteram cenas jogáveis, colisões, controles ou saves. Pão na Chapa usa a versão intermediária aprovada de 32 × 32 pixels, com pão francês e ovo baseados nos sprites reais.
+
+## Novas famílias de Caminho Novo e progressão de Gude
+
+- `mare-padroes.test.mjs`: regressão da geração anterior, 100 enseadas irregulares, topologias normalizadas e execução das soluções com maré.
+- `rastro-padroes.test.mjs`: regressão estreita/aberta, 300 mapas irregulares, rejeição de atalhos e ordens inviáveis, gestos completos e tratamento de busca inconclusiva.
+- `varanda-modos.test.mjs`: preservação das sementes antigas, percursos escalonados e sensibilidade à força, além dos certificados das três dificuldades clássicas.
+- `navegacao.test.mjs`: o gesto integrado começa na posição real da bolinha, sem presumir uma origem antiga fixa.
+
+Os testes executam o motor e os controles públicos em automação. Isso não equivale a validação em telefone físico; a comparação visual usa renderizações do próprio `draw()`.
