@@ -51,41 +51,41 @@ Gude é verificado por posições iniciais, quadrantes, famílias de rota, orien
 
 Rastro preserva a família estreita e acrescenta a aberta. Mil sementes resultaram em 667 mapas da família estreita e 333 da aberta, com 985 mapas únicos; 16 das abertas usaram fallback próprio (4,8%). O banco aberto possui dois modelos e oito orientações. A suíte inclui execução por gesto de 200 mapas abertos e regressão de 100 sementes estreitas. A área livre e as bifurcações são critérios verificáveis; dificuldade subjetiva ainda depende de teste humano.
 
-`mare-arte.test.mjs` confere os pixels da arte aprovada e que desenhar não modifica o estado da partida.
+`mare-arte.test.mjs` confere os pixels da arte e que desenhar não modifica o estado da partida.
 
 ### Pipa: movimento obrigatório nas fases
 
 Os testes comparam as três dificuldades: nenhuma vence sem comandos, e uma trajetória com correções para cima e para baixo atravessa todas as passagens a 30, 60 e 120 Hz. A progressão de velocidade e margem é verificada explicitamente. A regressão de quatro minutos do Sem Parar permanece, pois sua configuração não foi alterada. Esses testes executam a simulação e os controles do jogo, mas não substituem avaliação de conforto por uma pessoa no celular.
 
-`quintal-arte.test.mjs` verifica cores características da arte aprovada, coordenadas finitas e ausência de mutação de estado/HUD durante o desenho. São testes de renderização isolada, não testes de aparelho físico.
+`quintal-arte.test.mjs` verifica cores características da arte, coordenadas finitas e ausência de mutação de estado/HUD durante o desenho. São testes de renderização isolada, não testes de aparelho físico.
 
-`esquina-arte.test.mjs` verifica cores características da arte aprovada, coordenadas finitas e ausência de mutação de estado/HUD durante o desenho. São testes de renderização isolada, não testes de aparelho físico.
+`esquina-arte.test.mjs` verifica cores características da arte, coordenadas finitas e ausência de mutação de estado/HUD durante o desenho. São testes de renderização isolada, não testes de aparelho físico.
 
-`varanda-arte.test.mjs` verifica cores características da arte aprovada, coordenadas finitas e ausência de mutação de estado/HUD durante o desenho. São testes de renderização isolada, não testes de aparelho físico.
+`varanda-arte.test.mjs` verifica cores características da arte, coordenadas finitas e ausência de mutação de estado/HUD durante o desenho. São testes de renderização isolada, não testes de aparelho físico.
 
 `pisca-rastro-arte.test.mjs` verifica as três matrizes de folhas, a paleta, o fundo original de Pisca e a preservação do estado ao desenhar.
 
 `mare-rastro-refinamento.test.mjs` confere cores características dos dois refinamentos, desenho com coordenadas finitas, estado imutável e fases geradas com quatro sementes. Os testes são automatizados; não representam teste em aparelho físico.
 
-### Ícones aprovados
+### Ícones
 
-`navegacao.test.mjs` verifica a galeria nas duas páginas: Rádio, Gude, Pisca, Luz, Maré, Fio, Rastro, Goteira, Pipa e Pão recebem os SVGs aprovados e `foto()` fora da seleção e da pausa conserva as cenas. Execute `node --test tests/*.test.mjs`. A inspeção local dos dez SVGs também comparou seus pixels com as artes aprovadas. Essa comparação não equivale a teste em aparelho físico.
+`navegacao.test.mjs` verifica a galeria nas duas páginas: Rádio, Gude, Pisca, Luz, Maré, Fio, Rastro, Goteira, Pipa e Pão recebem os SVGs e `foto()` fora da seleção e da pausa conserva as cenas. Execute `node --test tests/*.test.mjs`. A inspeção local dos dez SVGs também comparou seus pixels com as artes. Essa comparação não equivale a teste em aparelho físico.
 
 `rastro-vaso.test.mjs` verifica dimensões de 11 × 10 pixels, permanência dentro da casa P nas três dificuldades e em cinco sementes geradas, além da preservação do estado e da solução durante o desenho.
 
 
-### Pão francês aprovado
+### Pão francês
 
-Pão na Chapa usa a versão aprovada baseada na referência enviada: pão francês alongado, com dois cortes diagonais e cores chapadas. O sprite tem 13 × 16 pixels, desenhado em escala 2 na chapa. As quatro paletas mostram antes do ponto, no ponto, tostado e queimado, preservando a fumaça. Ovo, utensílios, áreas de toque, tempos, metas, reposições e alternância de lados não mudam. Os testes de identidade verificam o novo desenho em ambos os lados; a suíte mantém os testes dos três níveis, vitória, queima e três erros.
+Pão na Chapa usa um sprite de pão francês alongado, com dois cortes diagonais e cores chapadas. O sprite tem 13 × 16 pixels, desenhado em escala 2 na chapa. As quatro paletas mostram antes do ponto, no ponto, tostado e queimado, preservando a fumaça. Ovo, utensílios, áreas de toque, tempos, metas, reposições e alternância de lados não mudam. Os testes de identidade verificam o novo desenho em ambos os lados; a suíte mantém os testes dos três níveis, vitória, queima e três erros.
 
 
 ### Tela de pausa coesa
 
-A pausa usa a mesma imagem da seleção: ícone aprovado quando disponível e miniatura original nos demais jogos. A imagem é contida sem recorte. “Continuar” e “Voltar às fases” permanecem na primeira linha; “Voltar ao menu” ocupa a segunda linha, centralizado e com a mesma largura dos demais botões. O ajuste é exclusivo da pausa e mantém navegação, progresso e controles. O teste de navegação verifica a arte e as três ações dos dez jogos.
+A pausa usa a mesma imagem da seleção: ícone quando disponível e miniatura original nos demais jogos. A imagem é contida sem recorte. “Continuar” e “Voltar às fases” permanecem na primeira linha; “Voltar ao menu” ocupa a segunda linha, centralizado e com a mesma largura dos demais botões. O ajuste é exclusivo da pausa e mantém navegação, progresso e controles. O teste de navegação verifica a arte e as três ações dos dez jogos.
 
-### Goteira, Pipa e Pão na Chapa: últimos ícones aprovados
+### Goteira, Pipa e Pão na Chapa: últimos ícones
 
-Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavização: balde com alça simples e pipa inclinada. São compartilhados pela seleção e pela pausa; não alteram cenas jogáveis, colisões, controles ou saves. Pão na Chapa usa a versão intermediária aprovada de 32 × 32 pixels, com pão francês e ovo baseados nos sprites reais.
+Os dois ícones usam a grade de 24 × 24 pixels, ampliada sem suavização: balde com alça simples e pipa inclinada. São compartilhados pela seleção e pela pausa; não alteram cenas jogáveis, colisões, controles ou saves. Pão na Chapa usa a versão intermediária de 32 × 32 pixels, com pão francês e ovo baseados nos sprites reais.
 
 ## Novas famílias de Caminho Novo e progressão de Gude
 
@@ -129,8 +129,8 @@ Em dispositivos com mouse, a largura da janela durante a partida acompanha a alt
 
 `elementos-visuais.test.mjs` verifica cobertura dos dez jogos, correspondência de cada SVG e prancha com o motor, cobertura de todos os retângulos emitidos, determinismo e erros de entrada.
 
-## Áudio aprovado e configurações
+## Áudio e configurações
 
 `audio.test.mjs`: inventário de nove faixas/nove efeitos, mute, ausência de autoplay/rede antes de gesto, reutilização/cache limitado, troca obsoleta, falha de rede, suspensão e limite de vozes. Contexto Web Audio simulado. `configuracoes.test.mjs`: normalização/persistência de volumes, restauração, diálogo, Escape e foco em DOM simulado. `backup.test.mjs`: schema 3, volumes e compatibilidade v1/v2.
 
-Nesta entrega, a suíte inteira passou com 175 testes. Chromium local não pôde iniciar por restrição de socket/processo do ambiente; não houve teste em aparelho físico. Não confundir simulação de autoplay com validação no Safari/iOS. Os 18 arquivos foram verificados por decodificação; avaliação musical foi feita pelo usuário nas prévias aprovadas.
+Nesta entrega, a suíte inteira passou com 175 testes. Chromium local não pôde iniciar por restrição de socket/processo do ambiente; não houve teste em aparelho físico. Não confundir simulação de autoplay com validação no Safari/iOS. Os 18 arquivos foram verificados por decodificação; a escuta musical complementou as verificações técnicas.

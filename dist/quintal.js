@@ -500,7 +500,7 @@ export function gerarMare(seed = 1) {
   return {seed: original, grid, solution: analise.solution, metrics: analise, fallback: true};
 }
 
-// A arte aprovada cabe na célula de 12 px; só o desenho muda, não as regras.
+// A arte cabe na célula de 12 px; só o desenho muda, não as regras.
 const crab = ['r.r.....r.r','rrr.w.w.rrr','.r..k.k..r.','..rrrrrrr..','.rrhhhhhrr.','..rrrrrrr..','.r.rrrrr.r.','r.r.....r.r'];
 
 function mare(level, api, options = {}) {
@@ -661,7 +661,7 @@ function pipa(level, api, options = {}) {
   const baseSpeed = [14, 17, 20][level - 1];
   const n = [4, 5, 6][level - 1];
   // Nas fases, passagens altas e baixas se alternam: não existe altura segura fixa.
-  // Sem Parar conserva a geração e o ritmo já aprovados.
+  // Sem Parar conserva a geração e o ritmo existentes.
   const margem = [8, 7, 6][level - 1];
   function criarObstaculo(x, top, ponta, dados = {}) {
     const aves = criarBandoPipa(ponta);
@@ -746,7 +746,7 @@ function pipa(level, api, options = {}) {
         rect(ctx, ink, ax, tower.top, 1, 77 - tower.top);
         rect(ctx, ink, ax - 6, tower.top, 13, 2);
         for (let i = -1; i <= 1; i++) rect(ctx, ink, ax + i * 4, tower.top - 2, 1, 4);
-        // Uma ponta e pares ascendentes formam o V aprovado, sem preencher o céu.
+        // Uma ponta e pares ascendentes formam o V, sem preencher o céu.
         for (const ave of tower.aves) {
           sprite(ctx, spriteAvePipa, coresAvePipa, ax + ave.x, ave.y);
         }

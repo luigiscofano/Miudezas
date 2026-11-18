@@ -4,7 +4,7 @@ Inventário dos **dez jogos ativos**, organizado em **47 famílias visuais**: pe
 
 ## Procedência
 
-Base de desenho: revisão `166ca9d30a451479c7038f9dcee67992ce7fba59`, incluindo o **pote aprovado de Rastro de Prata**. Gerado em 18/11/2026.
+Base de desenho: revisão `166ca9d30a451479c7038f9dcee67992ce7fba59`, incluindo o **pote de Rastro de Prata**. Gerado em 18/11/2026.
 
 A ferramenta instancia as fábricas de jogo, avança o relógio em passos fixos e chama `draw()`. Cada retângulo é associado ao bloco de origem usando a pilha de execução. Os marcos de código ficam em [inventario-elementos.mjs](../../scripts/inventario-elementos.mjs). Não há matrizes de sprites copiadas, redesenho, reconstrução visual manual ou alteração em `dist/`.
 

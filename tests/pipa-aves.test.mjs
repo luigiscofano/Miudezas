@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {criarBandoPipa, colideBandoPipa, spriteAvePipa} from '../dist/pipa-aves.js';
 import {quintal} from '../dist/quintal.js';
 
-test('V aprovado cresce por pares, com ponta inferior e simetria', () => {
+test('V cresce por pares, com ponta inferior e simetria', () => {
   assert.deepEqual(criarBandoPipa(null), []);
   for (const [ponta, tamanho] of [[6,3], [18,7], [30,9]]) {
     const aves = criarBandoPipa(ponta);

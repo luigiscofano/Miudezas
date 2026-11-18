@@ -50,7 +50,7 @@ node --test tests/varanda-modos.test.mjs
 
 Testes automatizados não substituem inspeção visual em navegador nem teste físico em celular. Persistência e backup pertencem ao gerenciador central, sem alteração de esquema neste módulo.
 
-## Acabamento visual aprovado
+## Acabamento visual
 
 Luz de Varanda recebeu iluminação quadriculada, parede discreta e dorso legível; Três Petelecos ganhou grãos de terra, faces de pedras e reflexo da bolinha. Pisca no Mato conserva seu visual original.
 

@@ -6,7 +6,7 @@ import {esquina} from '../dist/esquina.js';
 const jogos = ['radio', 'pao'];
 const cores = ['#f2bb55', '#70605c'];
 for (const [indice, id] of jogos.entries()) {
-  test(`Arte aprovada: ${id} conserva estado e pixels característicos`, () => {
+  test(`Arte: ${id} conserva estado e pixels característicos`, () => {
     const jogo = esquina[id](1, {tone() {}, finish() {}}, {seed: 1});
     const antes = jogo.snapshot?.();
     const hud = jogo.hud?.();

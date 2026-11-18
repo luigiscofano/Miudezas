@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {quintal} from '../dist/quintal.js';
 
-test('Maré: arte aprovada cabe na célula e desenhar preserva o estado', () => {
+test('Maré: arte cabe na célula e desenhar preserva o estado', () => {
   const game = quintal.mare(1, {tone() {}, finish() {}});
   const before = game.snapshot();
   const pixels = new Map();

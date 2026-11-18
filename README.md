@@ -4,7 +4,7 @@
 
 **Dez jogos de bairro em uma janelinha.** Um balde quase cheio, uma mariposa no fio de cima, um ovo e um pão que douram em tempos diferentes. Em Miudezas, cada uma dessas cenas vira uma partida que se aprende olhando e se joga com poucas teclas ou um gesto.
 
-<p align="center"><img src="dist/artes/capas/miudezas-tijuca.png" alt="Capa aprovada de Miudezas: Tijuca, bem-te-vi, pipa e Ritual do Vento em pixel art" width="440"></p>
+<p align="center"><img src="dist/artes/capas/miudezas-tijuca.png" alt="Capa de Miudezas: Tijuca, bem-te-vi, pipa e Ritual do Vento em pixel art" width="440"></p>
 
 | Coleção | Desafios | Tela de jogo | Plataforma |
 |---|---|---|---|
@@ -121,7 +121,7 @@ O nome **Miudezas** reúne acontecimentos pequenos o bastante para caber numa ja
 |---|---|
 | Moldura | Contorno escuro, barra clara e sombra deslocada lembram uma janela de computador. A moldura separa a interface persistente das cores próprias de cada cena. |
 | Tipografia | **Miudezas Pixel**, fonte local com acentos, identifica títulos, níveis e comandos. Verdana, Arial e a fonte sem serifa do sistema sustentam regras e textos corridos. |
-| Escala | A cena ativa é desenhada em 96 × 96 e ampliada com pixels aparentes. As dez miniaturas ativas têm 128 × 120; a capa aprovada 1672 × 941 e o ícone verde aprovado 390 × 390. |
+| Escala | A cena ativa é desenhada em 96 × 96 e ampliada com pixels aparentes. As dez miniaturas ativas têm 128 × 120; a capa mede 1672 × 941 e o ícone verde mede 390 × 390. |
 | Silhueta | Asa curta e peito amarelo identificam o pássaro. Um retângulo de água sob a rachadura avisa onde a gota vai cair. Cada detalhe precisa continuar legível no tamanho da janela. |
 | Pequenas irregularidades | A alça do balde cai de lado, a antena do rádio dobra e as fachadas variam um pixel. A irregularidade pertence ao objeto. As áreas de toque e as regras continuam previsíveis. |
 | Sinais de jogo | O fio treme antes da rajada, o pão muda de cor e solta vapor, a luz do rádio indica sintonia. Sons curtos confirmam ações, enquanto o indicador escrito conserva a informação principal. |
@@ -134,7 +134,7 @@ O logotipo escrito identifica o conjunto; o **M na janela verde** é o favicon; 
 
 - [Capa](dist/artes/capas/README.md): composição completa, sem recortes ou título sobreposto.
 - [Marca](dist/artes/marca/README.md): logotipo, favicon e janela original.
-- [Ícones](dist/arte/icones/README.md): os dez símbolos aprovados usados na seleção e na pausa.
+- [Ícones](dist/arte/icones/README.md): os dez símbolos usados na seleção e na pausa.
 - [Miniaturas, fonte e legado](dist/arte/README.md): inventário separado de material ativo e histórico.
 - [Arte em código](docs/design/README.md): animais, alimentos, objetos, cenários e ícones inline efetivamente desenhados pelos módulos.
 
@@ -176,7 +176,7 @@ As cores de enquadramento de cada jogo continuam nas respectivas fichas. Esta se
 
 ## Elementos visuais dentro dos jogos
 
-O [acervo organizado por jogo](docs/elementos-visuais/README.md) reúne **47 famílias de elementos reais dos dez jogos**: pote, três folhas, caracol, siri, concha, bolinha e buraco, lagartixa, mosquito, vagalumes, bem-te-vi, mariposa, alimentos, utensílios, obstáculos e cenários. O pote inclui a versão aprovada mais recente.
+O [acervo organizado por jogo](docs/elementos-visuais/README.md) reúne **47 famílias de elementos reais dos dez jogos**: pote, três folhas, caracol, siri, concha, bolinha e buraco, lagartixa, mosquito, vagalumes, bem-te-vi, mariposa, alimentos, utensílios, obstáculos e cenários. O pote inclui a versão mais recente.
 
 Não são os ícones da seleção: os SVGs vêm das próprias chamadas de desenho das partidas. As pranchas abaixo têm fundo neutro e escala ajustada por quadro para consulta. Preservam as cores e os pixels do motor, mas **não são screenshots nem indicam a escala relativa dos objetos entre quadros**. Cada grupo contém um estado representativo, não todos os quadros animados.
 
@@ -320,7 +320,7 @@ Palco `#172244` · [Implementação de Goteira](dist/quintal.js)
 
 ### 02 · Maré Miúda
 
-O caranguejo jogável usa a arte aprovada em pixel art: pinças simétricas, olhos definidos e destaque discreto na carapaça, dentro da célula original. A arte ocupa a mesma célula lógica usada pelas regras.
+O caranguejo jogável usa a arte em pixel art: pinças simétricas, olhos definidos e destaque discreto na carapaça, dentro da célula original. A arte ocupa a mesma célula lógica usada pelas regras.
 
 
 <img src="dist/arte/icones/mare.svg" width="64" alt="Ícone atual"> <img src="dist/arte/mare.png" width="192" alt="Miniatura armazenada de mare">
@@ -453,7 +453,7 @@ O caminho ocupa as casas percorridas. Refazer o último passo desfaz também a c
 Palco `#C18E86` · [Implementação de Rastro de Prata](dist/esquina.js)
 
 
-O destino usa o pote de barro aprovado: abertura circular, contorno regular e sombras escuras, sem a faixa clara atrás dele. A cena atual acima reproduz essa versão; fases, controles e progresso permanecem iguais.
+O destino usa o pote de barro: abertura circular, contorno regular e sombras escuras, sem a faixa clara atrás dele. A cena atual acima reproduz essa versão; fases, controles e progresso permanecem iguais.
 
 ---
 
@@ -645,7 +645,7 @@ console.log(rodada.hud());
 
 ## Trilha sonora e configurações
 
-A identidade sonora aprovada, **Interpretação Mais Natural**, reúne nove músicas relaxantes com síncopes brasileiras e nove efeitos instrumentais V2. Cada tipo de tela tem seu tema. A síntese combina cordas dedilhadas, madeira e percussão delicada; os mapas abaixo documentam eventos reais do compositor, não uma transcrição inventada.
+A identidade sonora, **Interpretação Mais Natural**, reúne nove músicas relaxantes com síncopes brasileiras e nove efeitos instrumentais V2. Cada tipo de tela tem seu tema. A síntese combina cordas dedilhadas, madeira e percussão delicada; os mapas abaixo documentam eventos reais do compositor, não uma transcrição inventada.
 
 ![Formas de onda das nove músicas](docs/audio/ondas-musicas.png)
 
@@ -717,7 +717,7 @@ Para transferir progresso de outra origem, exporte pela página de backup naquel
 | [Índice técnico](docs/README.md) | Acesso aos manuais e organização do projeto. |
 | [Acervo de artes](dist/artes/README.md) | Capa, marca, ligação com ícones e miniaturas. |
 | [Design e arte em código](docs/design/README.md) | Origem, uso e manutenção dos assets e sprites reais. |
-| [Histórico visual](docs/evolucao-visual.md) | Decisões aprovadas e revisões anteriores, separadas do estado atual. |
+| [Histórico visual](docs/evolucao-visual.md) | Decisões e revisões anteriores, separadas do estado atual. |
 | [Quintal](docs/jogos/quintal/README.md) | Goteira, Maré, Fio e Pipa. |
 | [Esquina](docs/jogos/esquina/README.md) | Rádio, Pão e Rastro. |
 | [Varanda](docs/jogos/varanda/README.md) | Lagartixa, Gude e Pisca. |
@@ -728,7 +728,7 @@ Para transferir progresso de outra origem, exporte pela página de backup naquel
 
 ## Referências
 
-**Inspirações de criação.** As referências visuais diretas são as prévias aprovadas dos jogos mantidos. A moldura vem da ideia de um jogo de janela para computador. O bairro dá unidade a cenas que pedem gestos diferentes, como dar um peteleco, acertar o ponto do pão, ajustar um rádio e observar os vaga-lumes. O quintal do caracol traz o raciocínio espacial ao chão de ladrilhos. Esses exemplos descrevem as escolhas tomadas para Miudezas.
+**Inspirações de criação.** As referências visuais partem das cenas e dos objetos dos jogos do catálogo. A moldura vem da ideia de um jogo de janela para computador. O bairro dá unidade a cenas que pedem gestos diferentes, como dar um peteleco, acertar o ponto do pão, ajustar um rádio e observar os vaga-lumes. O quintal do caracol traz o raciocínio espacial ao chão de ladrilhos. Esses exemplos descrevem as escolhas tomadas para Miudezas.
 
 **Leitura técnica.** O Canvas explica a superfície de desenho usada pelas cenas. O agendamento de quadros explica o relógio de animação. A síntese dos sinais parte dos recursos nativos de áudio do navegador.
 

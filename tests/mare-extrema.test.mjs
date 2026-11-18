@@ -20,7 +20,7 @@ for(const [tier,mod] of [['muito-dificil',11],['muitissimo-dificil',13]])test(`$
  }
  assert.ok(shapes.size>=40);assert.ok(fallbacks>0&&fallbacks<70);
 });
-test('a mistura não captura famílias anteriores nem a semente aprovada',()=>{
+test('a mistura não captura famílias anteriores nem a semente',()=>{
  assert.equal(gerarMare(1428316038).family,'enseada-irregular');
  assert.equal(gerarMare(39).family,'enseada-irregular');assert.equal(gerarMare(91).family,'arquipelago');
  assert.equal(gerarMare(1).family,undefined);

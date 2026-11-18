@@ -9,7 +9,7 @@ function tela() {
     for (let dy = 0; dy < h; dy++) for (let dx = 0; dx < w; dx++) pixels.set(`${x + dx},${y + dy}`, this.fillStyle);
   }};
 }
-test('Rastro: três folhas finas aprovadas preservam o estado e a escala', () => {
+test('Rastro: três folhas finas preservam o estado e a escala', () => {
   const jogo = esquina.rastro(1, api), antes = jogo.snapshot(), ctx = tela();
   jogo.draw(ctx);
   const matrizes = [['....gg.','...ghgg','..ghigg','.ghigg.','ghigg..','gig....','i......'],['...g...','..ghg..','.ghigg.','ghiggg.','.gigg..','..ig...','..i....'],['.....g.','...gghg','..ghigg','.ghigg.','ghigg..','.ig....','i......']];

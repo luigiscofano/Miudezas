@@ -1,4 +1,4 @@
-/** Trilhas aprovadas, carregadas sob demanda; nenhuma rede/áudio antes do gesto. */
+/** Trilhas, carregadas sob demanda; nenhuma rede/áudio antes do gesto. */
 export const TRILHAS = Object.freeze(['inicio','galeria','nivel','jogo','pausa','roteiro','parada','resultado','resumo']);
 export const EFEITOS = Object.freeze(['selecionar','confirmar','voltar','acerto','erro','coleta','recorde','vitoria','derrota']);
 

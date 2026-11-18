@@ -18,7 +18,7 @@ function desenharSemMudarEstado(jogo) {
 }
 const api = {tone() {}, finish() {}};
 
-test('Maré: costa, areia, baixios e concha aprovados são apenas desenho', () => {
+test('Maré: costa, areia, baixios e concha são apenas desenho', () => {
   for (const nivel of [1, 2, 3]) {
     const cores = desenharSemMudarEstado(quintal.mare(nivel, api));
     for (const cor of ['#61b7a7', '#e7c48c', '#abd6b9', '#65717a', '#fff1ca']) assert.ok(cores.has(cor));

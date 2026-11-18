@@ -30,7 +30,7 @@ let tipoPartida='classic',semente=1,recordes=normalizarRecordes(ler('recordes',{
 const novoMapa=()=>{semente=(Math.random()*4294967296)>>>0;};
 const nomeModo=()=>tipoPartida==='endless'?'Sem Parar':tipoPartida==='generated'?'Caminho Novo':nomesNiveis[nivel-1];
 const atual=()=>catalogo[selecionado];
-// Galeria e pausa usam os ícones aprovados; outras telas mantêm suas cenas.
+// Galeria e pausa usam os ícones; outras telas mantêm suas cenas.
 const foto=(j,extra='',selecao=false)=>'<img src="./arte/'+((selecao&&j.icone)||j.imagem||j.id+'.png')+'" alt="" '+extra+'>';
 const btn=(acao,titulo,classe='action',extra='')=>'<button type="button" class="'+classe+'" data-do="'+acao+'" '+extra+'>'+titulo+'</button>';
 const paginaHTML=(conteudo,classe='')=>'<section class="screen-page '+classe+'">'+conteudo+'</section>';
@@ -82,7 +82,7 @@ function mudar(nome){
 }
 function inicio(){
   mudar('inicio');partida=null;volta=null;
-  // A capa aprovada já contém o título; o cabeçalho acessível evita texto sobreposto.
+  // A capa já contém o título; o cabeçalho acessível evita texto sobreposto.
   area.innerHTML='<div class="hero"><img src="./artes/capas/miudezas-tijuca.png" width="1672" height="941" alt="Miudezas: bairro inspirado na Tijuca, com bem-te-vi, pipa, Cristo ao longe e referência ao Ritual do Vento"><h1 class="sr-only">Miudezas — '+totalJogos+' jogos de bairro</h1></div>'+
     '<div class="home-options">'+
     btn('avulso','<span class="mode-icon">'+icone('avulso')+'</span><span><b>Jogo avulso</b><small>Escolha uma das '+totalJogos+' janelinhas.</small></span><span class="chev" aria-hidden="true">›</span>','mode primary')+
