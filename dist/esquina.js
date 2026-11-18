@@ -140,9 +140,10 @@ const eggOutline = [
 ];
 
 const breadOutline = [
-  '..bbbbbbb..', '.bbbbbbbbb.', 'bbbbbbbbbbb', 'bbbbbbbbbbb',
-  '.bbbbbbbbb.', '.bbbbbbbbb.', '.bbbbbbbbb.', '.bbbbbbbbb.',
-  '.bbbbbbbbb.', '.bbbbbbbbb.', '.bbbbbbbbb.', '..bbbbbbb..'
+  '.....bbbb....', '...bbbbbbbb..', '..bbbbbbbbbc.', '..bbbbbbbbbbc',
+  '.bbbccccbbbbc', '.bbccccbbbbb.', 'bbbccbbbbbbb.', 'bbbbbbbbbbbb.',
+  'bbbbbbbbbbbb.', 'bbbbbbbbccbb.', 'bbbbbbcccbbb.', 'bbbcccccbbbb.',
+  '.bbcccbbbbb..', '.bbbbbbbbbc..', '..bbbbbbbc...', '...bbbbb.....'
 ];
 
 // Tempos em segundos: preparo, janela no ponto e aviso tostado antes de queimar.
@@ -258,12 +259,14 @@ function pao(level, api, options = {}) {
         rect(ctx, yolk, x + 8, y + 9, 8, 8); rect(ctx, yolk, x + 6, y + 11, 12, 4);
         rect(ctx, '#ffe19a', x + 9, y + 10, 3, 2);
       } else {
-        sprite(ctx, breadOutline, {b: crust}, x, y, 2);
-        rect(ctx, ['#f9e1b0', gold, '#c88a35', '#75402d'][state], x + 4, y + 4, 14, 17);
-        const line = state === 3 ? iron : '#c48343';
-        rect(ctx, line, x + 5, y + 8, 5, 2); rect(ctx, line, x + 11, y + 14, 5, 2);
-        rect(ctx, '#e8bb7b', x + 5, y + 5, 11, 1);
-        rect(ctx, line, x + 6, y + 17, 2, 1);
+        // Casca e dois cortes diagonais mantêm a identidade nos quatro pontos.
+        const paletasPao = [
+          {c:'#a97944', b:'#e5bf7d', h:'#fff2d7', r:'#c59458'},
+          {c:'#a9512f', b:'#e8ad43', h:'#f9e1b0', r:'#c48343'},
+          {c:'#75402d', b:'#c88a35', h:'#e8bb7b', r:'#a9512f'},
+          {c:'#35252c', b:'#75402d', h:'#ad682d', r:'#49302c'}
+        ];
+        sprite(ctx, breadOutline, paletasPao[state], x - 1, y - 3, 2);
       }
       if (state > 0) {
         const lift = Math.floor(alimento.idade * 2) % 3;

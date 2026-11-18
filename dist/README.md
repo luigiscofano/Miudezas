@@ -68,3 +68,8 @@ Pisca preserva o primeiro desenho dos vaga-lumes preservado no GitHub (`9cc7bbb`
 O campo opcional `icone` do catálogo é usado somente pela galeria de jogos. Sem esse campo, mantém-se a miniatura existente. `foto(j, extra, selecao)` só escolhe o ícone quando `selecao` é verdadeiro; os outros fluxos preservam as cenas. Os quatro assets aprovados estão em [arte/icones](arte/icones/README.md). Não há alteração de CSS, navegação ou persistência.
 
 O sprite `vasoDestino` de Rastro usa 11 × 10 pixels e é centralizado dentro da casa P. A ampliação é exclusivamente visual; o identificador e as regras de vitória não mudam.
+
+
+### Pão francês aprovado
+
+Pão na Chapa usa a versão aprovada baseada na referência enviada: pão francês alongado, com dois cortes diagonais e cores chapadas. O sprite tem 13 × 16 pixels, desenhado em escala 2 na chapa. As quatro paletas mostram antes do ponto, no ponto, tostado e queimado, preservando a fumaça. Ovo, utensílios, áreas de toque, tempos, metas, reposições e alternância de lados não mudam. Os testes de identidade verificam o novo desenho em ambos os lados; a suíte mantém os testes dos três níveis, vitória, queima e três erros.

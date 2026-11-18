@@ -79,3 +79,8 @@ Cada ladrilho recebe uma linha clara de um pixel junto à borda superior, manten
 ### Vaso de destino ampliado
 
 Para facilitar a leitura no celular, o vaso agora ocupa 11 × 10 pixels em vez de 8 × 7. A abertura escura e a cerâmica mantêm as mesmas cores. O desenho cabe com margem dentro da menor casa (13 pixels), sem encostar na divisória nem cobrir células vizinhas. A vitória continua exigindo recolher as folhas e entrar na casa P.
+
+
+### Pão francês aprovado
+
+Pão na Chapa usa a versão aprovada baseada na referência enviada: pão francês alongado, com dois cortes diagonais e cores chapadas. O sprite tem 13 × 16 pixels, desenhado em escala 2 na chapa. As quatro paletas mostram antes do ponto, no ponto, tostado e queimado, preservando a fumaça. Ovo, utensílios, áreas de toque, tempos, metas, reposições e alternância de lados não mudam. Os testes de identidade verificam o novo desenho em ambos os lados; a suíte mantém os testes dos três níveis, vitória, queima e três erros.

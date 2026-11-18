@@ -12,7 +12,9 @@ function conferirIdentidades(jogo) {
   const pixels=[];
   jogo.draw({fillStyle:'',fillRect(x,y,w,h){pixels.push({cor:this.fillStyle,x,y,w,h});}});
   assert.equal(pixels.filter(p=>p.cor==='#ffe19a').length,1,'uma gema em todo estado');
-  assert.equal(pixels.filter(p=>p.w===14&&p.h===17).length,1,'um miolo de pão');
+  const ladoPao=jogo.snapshot().alimentos.findIndex(a=>a.tipo==='pao');
+  const inicio=16+ladoPao*36;
+  assert.ok(pixels.some(p=>p.w===2&&p.h===2&&p.x>=inicio&&p.x<inicio+26&&p.y>=26&&p.y<58),'pão francês desenhado no lado correto');
 }
 for(const nivel of [1,2,3]) {
   for(const dt of [1/30,1/60,1/120]) test(`Vitória, identidades e alternância: nível ${nivel}, passo ${dt}`,()=>{
