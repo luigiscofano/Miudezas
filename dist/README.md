@@ -97,3 +97,7 @@ Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavizaç
 ### Enquadramento dos jogos no computador
 
 Em dispositivos com mouse, a largura da janela durante a partida acompanha a altura livre do tabuleiro quadrado. Isso remove as faixas laterais sem esticar os pixels, cortar a cena ou mudar coordenadas de controle. O ajuste reage ao redimensionamento e à altura do HUD, e é desfeito ao pausar ou voltar aos menus. Telas de toque mantêm o enquadramento anterior. Os testes de navegação cobrem os dez jogos, larguras de 492 a 1920 pixels, saída/retomada e preservação do toque; a simulação DOM não substitui avaliação em aparelho físico.
+
+## Música e configurações
+
+[audio.js](audio.js) gerencia as trilhas aprovadas, efeitos V2, pistas essenciais, cache limitado e suspensão. [configuracoes.js](configuracoes.js) e [configuracoes.css](configuracoes.css) criam a engrenagem acessível, volumes e Sobre. A navegação fornece tela/jogo ao player; não há trabalho sonoro por quadro. [Guia completo](../docs/audio/README.md). O diálogo pausa a partida e isola o teclado.

@@ -1,3 +1,4 @@
+import {criarAudio} from '../dist/audio.js';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -17,7 +18,7 @@ function navegador(salvo=null, busca='?janela=1&tela=roteiro&modo=circuito', rea
     return elementos.get(id);
   }
   const fabricas=Object.fromEntries(catalogo.map(j=>[j.id,(nivel,api,opcoes)=>{chamadas.push({id:j.id,nivel,...opcoes});return {press(){},release(){},cancelInput(){},draw(){},hud(){return 'Jogando';},snapshot(){return {alimentos:[]};},update(){},score(){return 0;}};}]));
-  const sandbox={normalizarRecordes,registrarRecorde,normalizarVolta,catalogo,nomesNiveis,quintal:{...fabricas,...reais},esquina:{},varanda:{},pracinha:{},
+  const sandbox={criarConfiguracoes:()=>{},criarAudio,normalizarRecordes,registrarRecorde,normalizarVolta,catalogo,nomesNiveis,quintal:{...fabricas,...reais},esquina:{},varanda:{},pracinha:{},
     icone:()=>'',escapar:s=>s,ler:(k,v)=>dados[k]??v,salvar:(k,v)=>{dados[k]=v;gravacoes.push(k);},
     URLSearchParams,URL, location:{search:busca,href:'https://example.com/?'+busca},
     ResizeObserver:class {observe(){} disconnect(){}},requestAnimationFrame:f=>{frames.set(++proximoFrame,f);return proximoFrame;},

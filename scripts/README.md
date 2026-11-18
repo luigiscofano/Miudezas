@@ -12,3 +12,7 @@ Execute `node scripts/gerar-cenas-atuais.mjs` na raiz. O script usa as fábricas
 ## Acervo de elementos visuais
 
 `node scripts/gerar-elementos-visuais.mjs` extrai as 47 famílias reais dos dez jogos. `inventario-elementos.mjs` define os marcos de origem. A ferramenta roda somente para documentação, não no navegador. Consulte [procedência e limites](../docs/elementos-visuais/README.md).
+
+## Áudio
+
+[Composição e exportação reproduzível](audio/README.md), com nove músicas, nove efeitos e gerador de formas de onda/mapas de notas.
