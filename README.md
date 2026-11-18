@@ -575,7 +575,7 @@ A busca considera **posição, fase da maré e última areia segura**. “Custo 
 
 ### Rastro de Prata: ordem e ocupação do caminho
 
-Famílias estreita, aberta e irregular convivem. Áreas abertas trazem bifurcações e praças; o caminho ocupado impede tratar o problema como simples conectividade. A família irregular exige pelo menos 26 movimentos, três ilhas de pedras e apenas uma a três ordens viáveis das seis permutações das folhas. O solver testa o rastro e rejeita atalhos curtos. Gestos rápidos atravessam células intermediárias em ordem, usando o mesmo validador dos comandos de teclado. [Validação e limites de busca](docs/jogos/esquina/README.md).
+Famílias estreita, aberta e irregular convivem com cinco novos padrões de travessia: ferradura, varanda, enseada, cotovelo e contrafluxo. As travessias mantêm pelo menos 39 casas livres, 22 bifurcações e 12 praças; o solucionador prova que nenhuma vitória usa menos de 28 movimentos. Áreas abertas trazem bifurcações e praças; o caminho ocupado impede tratar o problema como simples conectividade. A família irregular exige pelo menos 26 movimentos, três ilhas de pedras e apenas uma a três ordens viáveis das seis permutações das folhas. O solver testa o rastro e rejeita atalhos curtos. Gestos rápidos atravessam células intermediárias em ordem, usando o mesmo validador dos comandos de teclado. [Validação e limites de busca](docs/jogos/esquina/README.md).
 
 ### Três Petelecos: direção, força e física
 

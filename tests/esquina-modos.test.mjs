@@ -177,5 +177,5 @@ test('Rastro: seleção por semente inclui ambas as famílias e reinício é det
     const fase=gerarRastro(seed);familias.add(fase.familia);
     assert.deepEqual(fase,gerarRastro(seed));
   }
-  assert.deepEqual([...familias].sort(),['aberto','estreito','irregular']);
+  assert.deepEqual([...familias].sort(),['aberto','estreito','irregular','travessia']);
 });

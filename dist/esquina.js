@@ -366,28 +366,42 @@ export function buscarAtalhoRastro(mapa, limite = 21, orcamento = 30000) {
   const folhas = [...casas].flatMap((c, i) => c === 'L' ? [i] : []);
   const adjacencias = Array.from(casas, (_, i) => vizinhosRastro(i, lado).filter(v => casas[v.posicao] !== '#'));
   const distancia = (a, b) => Math.abs(a % lado - b % lado) + Math.abs(Math.floor(a / lado) - Math.floor(b / lado));
+  // Há somente oito subconjuntos de folhas. Memorizar o limite inferior
+  // evita recalcular suas permutações em cada estado, sem podar novos caminhos.
+  const combinacoes = 1 << folhas.length;
+  const limites = new Int16Array(casas.length * combinacoes).fill(-1);
+  const folhaNaCasa = new Uint8Array(casas.length);
+  folhas.forEach((posicao, i) => { folhaNaCasa[posicao] = 1 << i; });
   function minimoRestante(posicao, faltam) {
-    if (!faltam.length) return distancia(posicao, fim);
-    return Math.min(...faltam.map(alvo => distancia(posicao, alvo) + minimoRestante(alvo, faltam.filter(i => i !== alvo))));
+    const chave = posicao * combinacoes + faltam;
+    if (limites[chave] !== -1) return limites[chave];
+    let minimo = faltam ? Infinity : distancia(posicao, fim);
+    for (let i = 0; i < folhas.length; i++) {
+      const bit = 1 << i;
+      if (faltam & bit) minimo = Math.min(minimo, distancia(posicao, folhas[i]) + minimoRestante(folhas[i], faltam ^ bit));
+    }
+    limites[chave] = minimo;
+    return minimo;
   }
-  const usadas = new Set([inicio]);
+  const usadas = new Uint8Array(casas.length);
+  usadas[inicio] = 1;
   let nos = 0, esgotado = false;
   function visitar(posicao, faltam, passos) {
     if (++nos > orcamento) { esgotado = true; return false; }
     if (passos + minimoRestante(posicao, faltam) > limite) return false;
-    if (posicao === fim) return !faltam.length;
+    if (posicao === fim) return faltam === 0;
     for (const vizinho of adjacencias[posicao]) {
       const proxima = vizinho.posicao;
-      if (usadas.has(proxima) || (proxima === fim && faltam.length)) continue;
-      usadas.add(proxima);
-      const achou = visitar(proxima, faltam.filter(i => i !== proxima), passos + 1);
-      usadas.delete(proxima);
+      if (usadas[proxima] || (proxima === fim && faltam)) continue;
+      usadas[proxima] = 1;
+      const achou = visitar(proxima, faltam & ~folhaNaCasa[proxima], passos + 1);
+      usadas[proxima] = 0;
       if (achou) return true;
       if (esgotado) return false;
     }
     return false;
   }
-  const encontrado = visitar(inicio, folhas, 0);
+  const encontrado = visitar(inicio, combinacoes - 1, 0);
   return {encontrado, conclusivo: !esgotado, nos};
 }
 
@@ -551,7 +565,76 @@ function gerarRastroIrregular(seed) {
   return reserva;
 }
 
-export function gerarRastro(seed = 1, familia = (Number(seed) >>> 0) % 4 === 3 ? 'irregular' : (Number(seed) >>> 0) % 3 === 1 ? 'aberto' : 'estreito') {
+// Cinco topologias abertas próprias: os certificados não bastam para aceitar
+// uma fase; cada mutação e cada reserva também passam pela busca de atalhos.
+const modelosTravessia = [
+  {padrao: "ferradura", mapa: [".......", ".....L.", ".#....#", "LSP#.#.", "..#.###", "......L", "......."],
+    solucao: ["down", "down", "right", "right", "right", "right", "right", "down", "left", "left", "left", "left", "left", "left", "up", "up", "up", "up", "up", "right", "up", "right", "right", "right", "right", "right", "down", "left", "left", "down", "left", "up", "left", "down", "down"]},
+  {padrao: "varanda", mapa: ["#..##L.", "L...#..", ".......", "....S#.", "#....#.", ".....#.", "..L..P."],
+    solucao: ["left", "down", "right", "down", "left", "down", "left", "left", "left", "up", "right", "right", "up", "up", "left", "left", "up", "up", "right", "down", "right", "up", "right", "down", "right", "right", "up", "up", "right", "down", "down", "down", "down", "down", "down", "left"]},
+  {padrao: "enseada", mapa: ["#####.L", "L.##...", "...#...", "....#..", "....S..", ".......", "...LP.."],
+    solucao: ["left", "up", "left", "left", "up", "up", "left", "down", "down", "down", "right", "right", "down", "left", "left", "down", "right", "right", "right", "up", "right", "right", "up", "up", "up", "left", "up", "right", "up", "right", "down", "down", "down", "down", "down", "down", "left", "left"]},
+  {padrao: "cotovelo", mapa: ["...L...", "..#..S.", "..P....", "...#...", "...#...", "...#..L", "L.###.."],
+    solucao: ["up", "right", "down", "down", "down", "down", "down", "left", "left", "up", "right", "up", "left", "up", "left", "up", "right", "up", "left", "left", "left", "left", "down", "right", "down", "left", "down", "down", "down", "down", "right", "up", "right", "up", "left", "up", "right", "up"]},
+  {padrao: "contrafluxo", mapa: ["...P#L.", ".......", "L.#..#.", "..##...", "..#.#S.", "..##...", "..L...."],
+    solucao: ["up", "left", "up", "up", "right", "up", "right", "down", "down", "down", "down", "down", "down", "left", "left", "left", "left", "left", "left", "up", "right", "up", "left", "up", "right", "up", "left", "up", "up", "right", "down", "right", "right", "up"]},
+];
+
+function gerarRastroTravessia(seed) {
+  let estado = Number(seed) >>> 0;
+  const aleatorio = () => {
+    estado = (Math.imul(1664525, estado) + 1013904223) >>> 0;
+    return estado / 4294967296;
+  };
+  const modelo = modelosTravessia[estado % modelosTravessia.length];
+  const giro = Math.floor(aleatorio() * 4), espelho = aleatorio() < 0.5;
+  const transformar = indice => {
+    let x = indice % 7, y = Math.floor(indice / 7);
+    if (espelho) x = 6 - x;
+    for (let i = 0; i < giro; i++) [x, y] = [6 - y, x];
+    return y * 7 + x;
+  };
+  const base = Array(49);
+  [...modelo.mapa.join('')].forEach((c, i) => { base[transformar(i)] = c; });
+  let posicao = modelo.mapa.join('').indexOf('S');
+  const trilha = [transformar(posicao)];
+  for (const dir of modelo.solucao) {
+    const [dx, dy] = directions[dir]; posicao += dx + 7 * dy;
+    trilha.push(transformar(posicao));
+  }
+  const solucao = trilha.slice(1).map((casa, i) => vizinhosRastro(trilha[i], 7).find(v => v.posicao === casa).direcao);
+  const protegidas = new Set(trilha);
+  const externas = Array.from({length: 49}, (_, i) => i).filter(i => !protegidas.has(i));
+  function avaliar(casas, fallback) {
+    const mapa = Array.from({length: 7}, (_, y) => casas.slice(y * 7, y * 7 + 7).join(''));
+    const metricas = medirRastro(casas);
+    if (metricas.areaLivre < 39 || metricas.bifurcacoes < 22 || metricas.pracas < 12 || !validarRastro(mapa, solucao)) return null;
+    const atalho = buscarAtalhoRastro(mapa, 27, 30000);
+    if (!atalho.conclusivo || atalho.encontrado) return null;
+    return {mapa, solucao, ...metricas, familia: 'travessia', padrao: modelo.padrao, minimoPassos: 28, fallback};
+  }
+  // Altera pedras fora da testemunha e reposiciona folhas em três faixas
+  // disjuntas. Isso muda decisões reais, além das oito orientações visuais.
+  for (let tentativa = 0; tentativa < 16; tentativa++) {
+    const casas = base.map(c => c === 'L' ? '.' : c);
+    for (let i = 0, mudancas = 1 + Math.floor(aleatorio() * 3); i < mudancas; i++) {
+      const alvo = externas[Math.floor(aleatorio() * externas.length)];
+      casas[alvo] = casas[alvo] === '#' ? '.' : '#';
+    }
+    for (const fracao of [0.2, 0.5, 0.8]) {
+      const indice = Math.floor((trilha.length - 1) * fracao) + Math.floor(aleatorio() * 5) - 2;
+      casas[trilha[indice]] = 'L';
+    }
+    const fase = avaliar(casas, false);
+    if (fase) return fase;
+  }
+  const reserva = avaliar(base, true);
+  if (!reserva) throw new Error('Reserva de travessia não validada.');
+  return reserva;
+}
+
+export function gerarRastro(seed = 1, familia = (Number(seed) >>> 0) % 4 === 2 ? 'travessia' : (Number(seed) >>> 0) % 4 === 3 ? 'irregular' : (Number(seed) >>> 0) % 3 === 1 ? 'aberto' : 'estreito') {
+  if (familia === 'travessia') return gerarRastroTravessia(seed);
   if (familia === 'irregular') return gerarRastroIrregular(seed);
   const aberto = familia === 'aberto';
   let estado = Number(seed) >>> 0;

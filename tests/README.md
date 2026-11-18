@@ -90,7 +90,7 @@ Os dois ícones usam a grade de 24 × 24 pixels, ampliada sem suavização: bald
 ## Novas famílias de Caminho Novo e progressão de Gude
 
 - `mare-padroes.test.mjs`: regressão da geração anterior, 100 enseadas irregulares, topologias normalizadas e execução das soluções com maré.
-- `rastro-padroes.test.mjs`: regressão estreita/aberta, 300 mapas irregulares, rejeição de atalhos e ordens inviáveis, gestos completos e tratamento de busca inconclusiva.
+- `rastro-padroes.test.mjs`: regressão por hash das primeiras 100 sementes estreitas, abertas e irregulares; 300 mapas irregulares e 500 travessias em cinco padrões; rejeição de atalhos e ordens inviáveis, gestos completos, reinício reproduzível, diversidade normalizada e tratamento de busca inconclusiva. Nas travessias, todas as fases e reservas precisam de pelo menos 28 movimentos, 39 casas livres, 22 bifurcações e 12 praças. O lote teve 95 reservas próprias (19%); cada padrão apresentou pelo menos 52 layouts e 24 topologias sem contar simetrias. Após otimizar a busca sem mudar seus estados, 500 sementes tiveram p95/máximo de 4,50/10,95 ms no Node e 18,60/32,00 ms no Chromium com CPU 4× mais lenta via CDP; são medições locais de geração, sem teste em celular físico.
 - `varanda-modos.test.mjs`: preservação das sementes antigas, percursos escalonados e sensibilidade à força, além dos certificados das três dificuldades clássicas.
 - `navegacao.test.mjs`: o gesto integrado começa na posição real da bolinha, sem presumir uma origem antiga fixa.
 
