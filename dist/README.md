@@ -65,7 +65,7 @@ Pisca preserva o primeiro desenho dos vaga-lumes preservado no GitHub (`9cc7bbb`
 
 ### Imagens da seleção
 
-O campo opcional `icone` do catálogo é usado somente pela galeria de jogos. Sem esse campo, mantém-se a miniatura existente. `foto(j, extra, selecao)` só escolhe o ícone quando `selecao` é verdadeiro; os outros fluxos preservam as cenas. Os quatro assets aprovados estão em [arte/icones](arte/icones/README.md). Não há alteração de CSS, navegação ou persistência.
+O campo opcional `icone` do catálogo é usado somente pela galeria de jogos. Sem esse campo, mantém-se a miniatura existente. `foto(j, extra, selecao)` só escolhe o ícone quando `selecao` é verdadeiro; os outros fluxos preservam as cenas. Os sete assets aprovados estão em [arte/icones](arte/icones/README.md). Não há alteração de CSS, navegação ou persistência.
 
 O sprite `vasoDestino` de Rastro usa 11 × 10 pixels e é centralizado dentro da casa P. A ampliação é exclusivamente visual; o identificador e as regras de vitória não mudam.
 
