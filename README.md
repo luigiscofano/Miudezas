@@ -174,6 +174,126 @@ As cores de enquadramento de cada jogo continuam nas respectivas fichas. Esta se
 
 ---
 
+## Elementos visuais dentro dos jogos
+
+O [acervo organizado por jogo](docs/elementos-visuais/README.md) reúne **47 famílias de elementos reais dos dez jogos**: pote, três folhas, caracol, siri, concha, bolinha e buraco, lagartixa, mosquito, vagalumes, bem-te-vi, mariposa, alimentos, utensílios, obstáculos e cenários. O pote inclui a versão aprovada mais recente.
+
+Não são os ícones da seleção: os SVGs vêm das próprias chamadas de desenho das partidas. As pranchas abaixo têm fundo neutro e escala ajustada por quadro para consulta. Preservam as cores e os pixels do motor, mas **não são screenshots nem indicam a escala relativa dos objetos entre quadros**. Cada grupo contém um estado representativo, não todos os quadros animados.
+
+<details>
+<summary><strong>Goteira</strong> · 5 famílias visuais</summary>
+
+Teto e rachaduras; Janela e marcas da parede; Piso, ralo e água no chão; Gotas e respingos; Balde, alça e conteúdo.
+
+<img src="docs/elementos-visuais/goteira/prancha.svg" width="640" alt="Acervo dos elementos reais de Goteira">
+
+[Abrir arquivos e explicações](docs/elementos-visuais/goteira/README.md).
+
+</details>
+
+<details>
+<summary><strong>Maré Miúda</strong> · 4 famílias visuais</summary>
+
+Mar, areia, espuma, ondulações e travessias; Pedras e sombras; Concha de destino; Siri / caranguejo.
+
+<img src="docs/elementos-visuais/mare/prancha.svg" width="640" alt="Acervo dos elementos reais de Maré Miúda">
+
+[Abrir arquivos e explicações](docs/elementos-visuais/mare/README.md).
+
+</details>
+
+<details>
+<summary><strong>Último Fio</strong> · 5 famílias visuais</summary>
+
+Céu e nuvens; Casas, telhados e chaminé; Fios e sinal de rajada; Mariposa; Bem-te-vi.
+
+<img src="docs/elementos-visuais/fio/prancha.svg" width="640" alt="Acervo dos elementos reais de Último Fio">
+
+[Abrir arquivos e explicações](docs/elementos-visuais/fio/README.md).
+
+</details>
+
+<details>
+<summary><strong>Pipa de Laje</strong> · 6 famílias visuais</summary>
+
+Céu e nuvens; Duas camadas de morros; Fachadas, janelas, portas e telhados; Postes e lajes; Bando de aves em V; Pipa, linha, rabiola e laços.
+
+<img src="docs/elementos-visuais/pipa/prancha.svg" width="640" alt="Acervo dos elementos reais de Pipa de Laje">
+
+[Abrir arquivos e explicações](docs/elementos-visuais/pipa/README.md).
+
+</details>
+
+<details>
+<summary><strong>Rádio de Pilha</strong> · 5 famílias visuais</summary>
+
+Parede e bancada; Antena, caixa e acabamento; Escala, ponteiro e luz de sintonia; Grade do alto-falante; Botão e marcadores das estações.
+
+<img src="docs/elementos-visuais/radio/prancha.svg" width="640" alt="Acervo dos elementos reais de Rádio de Pilha">
+
+[Abrir arquivos e explicações](docs/elementos-visuais/radio/README.md).
+
+</details>
+
+<details>
+<summary><strong>Pão na Chapa</strong> · 5 famílias visuais</summary>
+
+Chapa, alça, bordas e fundo; Ovo: clara, gema e brilho; Pão francês e cortes da casca; Vapor dos alimentos; Espátula, pinça e seleção.
+
+<img src="docs/elementos-visuais/pao/prancha.svg" width="640" alt="Acervo dos elementos reais de Pão na Chapa">
+
+[Abrir arquivos e explicações](docs/elementos-visuais/pao/README.md).
+
+</details>
+
+<details>
+<summary><strong>Rastro de Prata</strong> · 6 famílias visuais</summary>
+
+Ladrilhos e acabamento; Três folhas com desenhos diferentes; Pedras; Pote de destino; Rastro construído; Caracol e concha.
+
+<img src="docs/elementos-visuais/rastro/prancha.svg" width="640" alt="Acervo dos elementos reais de Rastro de Prata">
+
+[Abrir arquivos e explicações](docs/elementos-visuais/rastro/README.md).
+
+</details>
+
+<details>
+<summary><strong>Luz de Varanda</strong> · 4 famílias visuais</summary>
+
+Parede, relevo e rodapé; Lâmpada, fio e sinais de luz; Mosquito e asas; Lagartixa: corpo, membros, cauda e olhos.
+
+<img src="docs/elementos-visuais/luz/prancha.svg" width="640" alt="Acervo dos elementos reais de Luz de Varanda">
+
+[Abrir arquivos e explicações](docs/elementos-visuais/luz/README.md).
+
+</details>
+
+<details>
+<summary><strong>Três Petelecos</strong> · 5 famílias visuais</summary>
+
+Terra batida, grãos e vegetação; Buraco de destino; Pedras e sombras; Mira e indicação de alcance; Bolinha de gude, brilho e sombra.
+
+<img src="docs/elementos-visuais/gude/prancha.svg" width="640" alt="Acervo dos elementos reais de Três Petelecos">
+
+[Abrir arquivos e explicações](docs/elementos-visuais/gude/README.md).
+
+</details>
+
+<details>
+<summary><strong>Pisca no Mato</strong> · 2 famílias visuais</summary>
+
+Fundo noturno e vegetação; Vagalumes, asas, abdômen e sinais de luz.
+
+<img src="docs/elementos-visuais/pisca/prancha.svg" width="640" alt="Acervo dos elementos reais de Pisca no Mato">
+
+[Abrir arquivos e explicações](docs/elementos-visuais/pisca/README.md).
+
+</details>
+
+[Procedência, limites e reprodução do acervo](docs/elementos-visuais/README.md). Nenhuma arte ou regra do jogo foi modificada para produzir esta documentação.
+
+---
+
 ## Jogos e level design
 
 Cada ficha mostra o ícone atual, a miniatura já armazenada e uma cena atual do tabuleiro, além do objetivo, dos comandos e da diferença implementada entre os três níveis. Nos jogos de tempo, a dificuldade altera a margem de reação. Nos de percurso, ela altera o mapa. Nos de memória, amplia o que o jogador precisa reter.

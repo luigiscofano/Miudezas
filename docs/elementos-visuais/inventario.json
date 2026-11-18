@@ -1,0 +1,317 @@
+[
+  {
+    "id": "goteira",
+    "nome": "Goteira",
+    "grupos": [
+      {
+        "id": "teto",
+        "nome": "Teto e rachaduras",
+        "retangulos": 25
+      },
+      {
+        "id": "janela-parede",
+        "nome": "Janela e marcas da parede",
+        "retangulos": 17
+      },
+      {
+        "id": "chao-ralo",
+        "nome": "Piso, ralo e água no chão",
+        "retangulos": 10
+      },
+      {
+        "id": "gotas",
+        "nome": "Gotas e respingos",
+        "retangulos": 3
+      },
+      {
+        "id": "balde",
+        "nome": "Balde, alça e conteúdo",
+        "retangulos": 16
+      }
+    ],
+    "retangulos": 71,
+    "fonte": "dist/quintal.js"
+  },
+  {
+    "id": "mare",
+    "nome": "Maré Miúda",
+    "grupos": [
+      {
+        "id": "terreno",
+        "nome": "Mar, areia, espuma, ondulações e travessias",
+        "retangulos": 116
+      },
+      {
+        "id": "pedras",
+        "nome": "Pedras e sombras",
+        "retangulos": 40
+      },
+      {
+        "id": "concha",
+        "nome": "Concha de destino",
+        "retangulos": 31
+      },
+      {
+        "id": "siri",
+        "nome": "Siri / caranguejo",
+        "retangulos": 50
+      }
+    ],
+    "retangulos": 237,
+    "fonte": "dist/quintal.js"
+  },
+  {
+    "id": "fio",
+    "nome": "Último Fio",
+    "grupos": [
+      {
+        "id": "ceu-nuvens",
+        "nome": "Céu e nuvens",
+        "retangulos": 5
+      },
+      {
+        "id": "casario",
+        "nome": "Casas, telhados e chaminé",
+        "retangulos": 17
+      },
+      {
+        "id": "fios-rajada",
+        "nome": "Fios e sinal de rajada",
+        "retangulos": 288
+      },
+      {
+        "id": "mariposa",
+        "nome": "Mariposa",
+        "retangulos": 10
+      },
+      {
+        "id": "bem-te-vi",
+        "nome": "Bem-te-vi",
+        "retangulos": 38
+      }
+    ],
+    "retangulos": 358,
+    "fonte": "dist/quintal.js"
+  },
+  {
+    "id": "pipa",
+    "nome": "Pipa de Laje",
+    "grupos": [
+      {
+        "id": "ceu-nuvens",
+        "nome": "Céu e nuvens",
+        "retangulos": 5
+      },
+      {
+        "id": "morros",
+        "nome": "Duas camadas de morros",
+        "retangulos": 192
+      },
+      {
+        "id": "casario",
+        "nome": "Fachadas, janelas, portas e telhados",
+        "retangulos": 155
+      },
+      {
+        "id": "poste-laje",
+        "nome": "Postes e lajes",
+        "retangulos": 20
+      },
+      {
+        "id": "aves",
+        "nome": "Bando de aves em V",
+        "retangulos": 120
+      },
+      {
+        "id": "pipa-linha",
+        "nome": "Pipa, linha, rabiola e laços",
+        "retangulos": 89
+      }
+    ],
+    "retangulos": 581,
+    "fonte": "dist/quintal.js"
+  },
+  {
+    "id": "radio",
+    "nome": "Rádio de Pilha",
+    "grupos": [
+      {
+        "id": "ambiente",
+        "nome": "Parede e bancada",
+        "retangulos": 4
+      },
+      {
+        "id": "antena-caixa",
+        "nome": "Antena, caixa e acabamento",
+        "retangulos": 20
+      },
+      {
+        "id": "visor",
+        "nome": "Escala, ponteiro e luz de sintonia",
+        "retangulos": 14
+      },
+      {
+        "id": "alto-falante",
+        "nome": "Grade do alto-falante",
+        "retangulos": 28
+      },
+      {
+        "id": "sintonizador",
+        "nome": "Botão e marcadores das estações",
+        "retangulos": 7
+      }
+    ],
+    "retangulos": 73,
+    "fonte": "dist/esquina.js"
+  },
+  {
+    "id": "pao",
+    "nome": "Pão na Chapa",
+    "grupos": [
+      {
+        "id": "chapa",
+        "nome": "Chapa, alça, bordas e fundo",
+        "retangulos": 11
+      },
+      {
+        "id": "ovo",
+        "nome": "Ovo: clara, gema e brilho",
+        "retangulos": 100
+      },
+      {
+        "id": "pao-frances",
+        "nome": "Pão francês e cortes da casca",
+        "retangulos": 161
+      },
+      {
+        "id": "vapor",
+        "nome": "Vapor dos alimentos",
+        "retangulos": 2
+      },
+      {
+        "id": "utensilios",
+        "nome": "Espátula, pinça e seleção",
+        "retangulos": 10
+      }
+    ],
+    "retangulos": 284,
+    "fonte": "dist/esquina.js"
+  },
+  {
+    "id": "rastro",
+    "nome": "Rastro de Prata",
+    "grupos": [
+      {
+        "id": "ladrilhos",
+        "nome": "Ladrilhos e acabamento",
+        "retangulos": 98
+      },
+      {
+        "id": "folhas",
+        "nome": "Três folhas com desenhos diferentes",
+        "retangulos": 70
+      },
+      {
+        "id": "pedras",
+        "nome": "Pedras",
+        "retangulos": 144
+      },
+      {
+        "id": "pote",
+        "nome": "Pote de destino",
+        "retangulos": 86
+      },
+      {
+        "id": "rastro",
+        "nome": "Rastro construído",
+        "retangulos": 1
+      },
+      {
+        "id": "caracol",
+        "nome": "Caracol e concha",
+        "retangulos": 72
+      }
+    ],
+    "retangulos": 471,
+    "fonte": "dist/esquina.js"
+  },
+  {
+    "id": "luz",
+    "nome": "Luz de Varanda",
+    "grupos": [
+      {
+        "id": "parede",
+        "nome": "Parede, relevo e rodapé",
+        "retangulos": 81
+      },
+      {
+        "id": "lampada",
+        "nome": "Lâmpada, fio e sinais de luz",
+        "retangulos": 18
+      },
+      {
+        "id": "mosquito",
+        "nome": "Mosquito e asas",
+        "retangulos": 4
+      },
+      {
+        "id": "lagartixa",
+        "nome": "Lagartixa: corpo, membros, cauda e olhos",
+        "retangulos": 102
+      }
+    ],
+    "retangulos": 205,
+    "fonte": "dist/varanda.js"
+  },
+  {
+    "id": "gude",
+    "nome": "Três Petelecos",
+    "grupos": [
+      {
+        "id": "chao",
+        "nome": "Terra batida, grãos e vegetação",
+        "retangulos": 28
+      },
+      {
+        "id": "buraco",
+        "nome": "Buraco de destino",
+        "retangulos": 60
+      },
+      {
+        "id": "pedras",
+        "nome": "Pedras e sombras",
+        "retangulos": 35
+      },
+      {
+        "id": "mira",
+        "nome": "Mira e indicação de alcance",
+        "retangulos": 5
+      },
+      {
+        "id": "bolinha",
+        "nome": "Bolinha de gude, brilho e sombra",
+        "retangulos": 40
+      }
+    ],
+    "retangulos": 168,
+    "fonte": "dist/varanda.js"
+  },
+  {
+    "id": "pisca",
+    "nome": "Pisca no Mato",
+    "grupos": [
+      {
+        "id": "mato",
+        "nome": "Fundo noturno e vegetação",
+        "retangulos": 35
+      },
+      {
+        "id": "vagalumes",
+        "nome": "Vagalumes, asas, abdômen e sinais de luz",
+        "retangulos": 69
+      }
+    ],
+    "retangulos": 104,
+    "fonte": "dist/varanda.js"
+  }
+]

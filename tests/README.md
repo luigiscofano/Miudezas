@@ -124,3 +124,7 @@ Em dispositivos com mouse, a largura da janela durante a partida acompanha a alt
 ### Pote de Rastro de Prata
 
 `rastro-vaso.test.mjs` confere o sprite de 12 × 10 pixels visíveis dentro do destino nas três dificuldades e em sementes geradas, a ausência da faixa clara somente nessa casa e a preservação do estado após desenhar.
+
+## Acervo de elementos visuais
+
+`elementos-visuais.test.mjs` verifica cobertura dos dez jogos, correspondência de cada SVG e prancha com o motor, cobertura de todos os retângulos emitidos, determinismo e erros de entrada.

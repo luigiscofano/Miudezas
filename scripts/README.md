@@ -8,3 +8,7 @@
 ## Cenas atuais dos dez jogos
 
 Execute `node scripts/gerar-cenas-atuais.mjs` na raiz. O script usa as fábricas e o método `draw()` de cada jogo para exportar os tabuleiros de Puxado em SVG, sem dependências externas, cursor ou redesenho. A simulação usa passo fixo e semente conhecida. Os arquivos ficam em `docs/imagens/jogos/`, fora dos arquivos publicados em `dist/`. Não são capturas da interface completa. Veja [origem, escolhas e reprodução](../docs/imagens/jogos/README.md).
+
+## Acervo de elementos visuais
+
+`node scripts/gerar-elementos-visuais.mjs` extrai as 47 famílias reais dos dez jogos. `inventario-elementos.mjs` define os marcos de origem. A ferramenta roda somente para documentação, não no navegador. Consulte [procedência e limites](../docs/elementos-visuais/README.md).
