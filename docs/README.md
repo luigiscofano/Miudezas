@@ -25,3 +25,7 @@ Esta é a arte aprovada, não uma captura da interface. Consulte [artes](../dist
 Há seis modos Sem Parar: Goteira, Último Fio, Pipa, Pão, Pisca e Luz de Varanda. Na Luz, três botes errados encerram qualquer modo; só Sem Parar dispensa o prazo final. Maré, Rastro e Três Petelecos oferecem Caminho Novo com referência no Puxado, soluções verificadas e fallback limitado; os critérios específicos pertencem aos guias de cada módulo.
 
 Rastro usa traçado a partir do caracol; Gude usa arrasto a partir da bola, sem lançar quando o gesto é cancelado. Teclado e botões permanecem como alternativa acessível. A captura de gestos fica no tabuleiro, sem bloquear a página. **Voltar às fases** na pausa mantém seleção e dados salvos. Os roteiros manuais distinguem testes simulados de testes em aparelhos físicos.
+
+## Elementos dentro dos jogos
+
+[Acervo de 47 famílias visuais](elementos-visuais/README.md): arquivos extraídos das partidas, separados dos ícones de seleção, com inventário, pranchas e explicação do método.
