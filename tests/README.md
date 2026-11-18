@@ -68,7 +68,7 @@ Os testes comparam as três dificuldades: nenhuma vence sem comandos, e uma traj
 
 ### Ícones aprovados
 
-`navegacao.test.mjs` verifica a galeria nas duas páginas: apenas Rádio, Gude, Pisca, Luz, Maré, Fio e Rastro recebem os SVGs aprovados, os três restantes preservam os PNGs e `foto()` fora da seleção conserva as cenas. Execute `node --test tests/*.test.mjs`. A inspeção local dos sete SVGs também comparou seus pixels com as artes aprovadas. Essa comparação não equivale a teste em aparelho físico.
+`navegacao.test.mjs` verifica a galeria nas duas páginas: Rádio, Gude, Pisca, Luz, Maré, Fio, Rastro, Goteira, Pipa e Pão recebem os SVGs aprovados e `foto()` fora da seleção e da pausa conserva as cenas. Execute `node --test tests/*.test.mjs`. A inspeção local dos dez SVGs também comparou seus pixels com as artes aprovadas. Essa comparação não equivale a teste em aparelho físico.
 
 `rastro-vaso.test.mjs` verifica dimensões de 11 × 10 pixels, permanência dentro da casa P nas três dificuldades e em cinco sementes geradas, além da preservação do estado e da solução durante o desenho.
 
@@ -81,3 +81,7 @@ Pão na Chapa usa a versão aprovada baseada na referência enviada: pão franc�
 ### Tela de pausa coesa
 
 A pausa usa a mesma imagem da seleção: ícone aprovado quando disponível e miniatura original nos demais jogos. A imagem é contida sem recorte. “Continuar” e “Voltar às fases” permanecem na primeira linha; “Voltar ao menu” ocupa a segunda linha, centralizado e com a mesma largura dos demais botões. O ajuste é exclusivo da pausa e mantém navegação, progresso e controles. O teste de navegação verifica a arte e as três ações dos dez jogos.
+
+### Goteira, Pipa e Pão na Chapa: últimos ícones aprovados
+
+Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavização: balde com alça simples e pipa inclinada. São compartilhados pela seleção e pela pausa; não alteram cenas jogáveis, colisões, controles ou saves. Pão na Chapa usa a versão intermediária aprovada de 32 × 32 pixels, com pão francês e ovo baseados nos sprites reais.
