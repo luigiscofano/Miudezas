@@ -42,4 +42,8 @@ A janela original `janela.png` continua ativa na barra superior, com uma cópia 
 
 ## Ícones da seleção
 
-A pasta [icones](icones/README.md) contém os sete símbolos aprovados para Rádio de Pilha, Três Petelecos, Pisca no Mato, Luz de Varanda, Maré Miúda, Último Fio e Rastro de Prata. Os PNGs de cenas desta pasta continuam disponíveis para introduções e resultados. Os demais jogos ainda utilizam suas miniaturas originais na seleção.
+A pasta [icones](icones/README.md) contém os dez símbolos aprovados para Rádio de Pilha, Três Petelecos, Pisca no Mato, Luz de Varanda, Maré Miúda, Último Fio e Rastro de Prata. Os PNGs de cenas desta pasta continuam disponíveis para introduções e resultados. Os demais jogos ainda utilizam suas miniaturas originais na seleção.
+
+### Goteira, Pipa e Pão na Chapa: últimos ícones aprovados
+
+Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavização: balde com alça simples e pipa inclinada. São compartilhados pela seleção e pela pausa; não alteram cenas jogáveis, colisões, controles ou saves. Pão na Chapa usa a versão intermediária aprovada de 32 × 32 pixels, com pão francês e ovo baseados nos sprites reais.

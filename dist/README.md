@@ -65,7 +65,7 @@ Pisca preserva o primeiro desenho dos vaga-lumes preservado no GitHub (`9cc7bbb`
 
 ### Imagens da seleção
 
-O campo opcional `icone` do catálogo é usado somente pela galeria de jogos. Sem esse campo, mantém-se a miniatura existente. `foto(j, extra, selecao)` só escolhe o ícone quando `selecao` é verdadeiro; os outros fluxos preservam as cenas. Os sete assets aprovados estão em [arte/icones](arte/icones/README.md). Não há alteração de CSS, navegação ou persistência.
+O campo opcional `icone` do catálogo é usado pela galeria e pela pausa. Sem esse campo, mantém-se a miniatura existente. `foto(j, extra, selecao)` só escolhe o ícone quando `selecao` é verdadeiro; os outros fluxos preservam as cenas. Os dez assets aprovados estão em [arte/icones](arte/icones/README.md). Não há alteração de CSS, navegação ou persistência.
 
 O sprite `vasoDestino` de Rastro usa 11 × 10 pixels e é centralizado dentro da casa P. A ampliação é exclusivamente visual; o identificador e as regras de vitória não mudam.
 
@@ -78,3 +78,7 @@ Pão na Chapa usa a versão aprovada baseada na referência enviada: pão franc�
 ### Tela de pausa coesa
 
 A pausa usa a mesma imagem da seleção: ícone aprovado quando disponível e miniatura original nos demais jogos. A imagem é contida sem recorte. “Continuar” e “Voltar às fases” permanecem na primeira linha; “Voltar ao menu” ocupa a segunda linha, centralizado e com a mesma largura dos demais botões. O ajuste é exclusivo da pausa e mantém navegação, progresso e controles. O teste de navegação verifica a arte e as três ações dos dez jogos.
+
+### Goteira, Pipa e Pão na Chapa: últimos ícones aprovados
+
+Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavização: balde com alça simples e pipa inclinada. São compartilhados pela seleção e pela pausa; não alteram cenas jogáveis, colisões, controles ou saves. Pão na Chapa usa a versão intermediária aprovada de 32 × 32 pixels, com pão francês e ovo baseados nos sprites reais.

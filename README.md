@@ -156,7 +156,7 @@ Pegue cinco mariposas. Quando um fio tremer, pule para outro antes da rajada. **
 |---|---|---|
 | **Brisa** · Fio avisa com 1,65 s | **Vento de tarde** · Aviso de 1,25 s | **Ventania** · Aviso de 0,92 s |
 
-Os três fios dividem a altura em linhas e cada uma tem nove posições. A mariposa indica o destino, mas o tremor muda a prioridade. Estar no fio ameaçado no fim do aviso encerra a rodada.
+Os três fios dividem a altura em linhas e cada uma tem dez posições. A mariposa indica o destino, mas o tremor muda a prioridade. Estar no fio ameaçado no fim do aviso encerra a rodada.
 
 Palco `#E9A17E` · [Implementação de Último Fio](dist/quintal.js)
 
@@ -414,7 +414,7 @@ A janela original permanece ao lado da marca na barra superior. O ícone verde a
 
 ## GitHub Pages e transferência de progresso
 
-A migração preserva os arquivos do jogo e acrescenta um workflow manual de publicação. Consulte o [guia completo de GitHub Pages](docs/github-pages.md) para ativação, verificação, reversão e transferência de progresso. A publicação foi confirmada em **17 de novembro de 2026**: [abrir Miudezas](https://luigiscofano.github.io/Miudezas/). O [workflow de publicação](https://github.com/luigiscofano/Miudezas/actions/runs/44140728469) terminou com sucesso.
+A migração preserva os arquivos do jogo e acrescenta um workflow manual de publicação. Consulte o [guia completo de GitHub Pages](docs/github-pages.md) para ativação, verificação, reversão e transferência de progresso. A publicação foi confirmada em **17 de dezmbro de 2026**: [abrir Miudezas](https://luigiscofano.github.io/Miudezas/). O [workflow de publicação](https://github.com/luigiscofano/Miudezas/actions/runs/44140728469) terminou com sucesso.
 
 O progresso não atravessa domínios automaticamente. Use a [página de backup no endereço antigo](https://miudezas-de-luigi.luigiscofano.chatgpt.site/backup.html) para exportar e a [página de backup no GitHub Pages](https://luigiscofano.github.io/Miudezas/backup.html) para importar. O armazenamento antigo permanece intacto. Essa ferramenta é independente da interface dos jogos.
 
@@ -444,7 +444,7 @@ Maré Miúda recebeu espuma costeira, areia discreta, baixios destacados, pedras
 
 ## Ícones aprovados na seleção
 
-Rádio de Pilha, Três Petelecos, Pisca no Mato, Luz de Varanda, Maré Miúda, Último Fio e Rastro de Prata usam seus ícones em pixel art nos cartões de **Escolha um jogo**. As outras três miniaturas permanecem como estavam. A mudança é só de apresentação: introduções, resultados, partidas, controles e dados salvos continuam iguais.
+Os dez jogos usam seus ícones em pixel art nos cartões de **Escolha um jogo**. Todos os dez jogos agora possuem ícone aprovado. A mudança é só de apresentação: introduções, resultados, partidas, controles e dados salvos continuam iguais.
 
 | Rádio de Pilha | Três Petelecos | Pisca no Mato |
 |---|---|---|
@@ -471,9 +471,15 @@ Pão na Chapa usa a versão aprovada baseada na referência enviada: pão franc�
 
 ![Maré Miúda](dist/arte/icones/mare.svg) ![Último Fio](dist/arte/icones/fio.svg) ![Rastro de Prata](dist/arte/icones/rastro.svg)
 
-Os três ícones aprovados usam os sprites dos respectivos jogos como referência. O caracol não inclui folha no ícone; as folhas coletáveis dentro da partida permanecem intactas. Pão na Chapa, Goteira e Pipa continuam com miniaturas, aguardando aprovação de novos ícones.
+Os três ícones aprovados usam os sprites dos respectivos jogos como referência. O caracol não inclui folha no ícone; as folhas coletáveis dentro da partida permanecem intactas. O conjunto completo dos dez ícones está aprovado.
 
 
 ### Tela de pausa coesa
 
 A pausa usa a mesma imagem da seleção: ícone aprovado quando disponível e miniatura original nos demais jogos. A imagem é contida sem recorte. “Continuar” e “Voltar às fases” permanecem na primeira linha; “Voltar ao menu” ocupa a segunda linha, centralizado e com a mesma largura dos demais botões. O ajuste é exclusivo da pausa e mantém navegação, progresso e controles. O teste de navegação verifica a arte e as três ações dos dez jogos.
+
+### Goteira, Pipa e Pão na Chapa: últimos ícones aprovados
+
+Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavização: balde com alça simples e pipa inclinada. São compartilhados pela seleção e pela pausa; não alteram cenas jogáveis, colisões, controles ou saves. Pão na Chapa usa a versão intermediária aprovada de 32 × 32 pixels, com pão francês e ovo baseados nos sprites reais.
+
+![Goteira](dist/arte/icones/goteira.svg) ![Pipa](dist/arte/icones/pipa.svg) ![Pão na Chapa](dist/arte/icones/pao.svg)
