@@ -115,3 +115,8 @@ O teste da lagartixa também verifica se o catálogo informa o terceiro erro em 
 ## Imagens atuais da documentação
 
 `cenas-documentacao.test.mjs` compara as dez imagens versionadas com uma nova renderização das fábricas reais, confere repetibilidade e a transformação espelhada do caracol. Execute o gerador de cenas após mudanças visuais intencionais, inspecione os resultados e mantenha as imagens no mesmo PR.
+
+
+### Enquadramento dos jogos no computador
+
+Em dispositivos com mouse, a largura da janela durante a partida acompanha a altura livre do tabuleiro quadrado. Isso remove as faixas laterais sem esticar os pixels, cortar a cena ou mudar coordenadas de controle. O ajuste reage ao redimensionamento e à altura do HUD, e é desfeito ao pausar ou voltar aos menus. Telas de toque mantêm o enquadramento anterior. Os testes de navegação cobrem os dez jogos, larguras de 492 a 1920 pixels, saída/retomada e preservação do toque; a simulação DOM não substitui avaliação em aparelho físico.

@@ -15,7 +15,7 @@ const ids=catalogo.map(j=>j.id);
 const totalJogos=catalogo.length, porPagina=6, totalPaginas=Math.ceil(totalJogos/porPagina);
 let tela='inicio',modo='avulso',nivel=1,selecionado=0,pagina=0,volta=null,partida=null,ultimo=null;
 let quadro=0,observador=null,tempoAnterior=0,audio=null,comSom=ler('som',false)===true;
-let limparCena=null;
+let limparCena=null,limparEnquadramento=null;
 const segurando=new Map();
 const teclas={ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right',ArrowUp:'up',w:'up',ArrowDown:'down',s:'down'};
 const setas={left:'←',right:'→',up:'↑',down:'↓',act:'Bote'};
@@ -63,6 +63,7 @@ function desligarEntrada(){
 }
 function interromperQuadros(){
   cancelAnimationFrame(quadro);observador?.disconnect();observador=null;tempoAnterior=0;
+  limparEnquadramento?.();limparEnquadramento=null;
 }
 function mudar(nome){
   interromperQuadros();
@@ -177,7 +178,28 @@ function mostrarJogo(){
   area.querySelector('.game-area').style.setProperty('--game-color',j.cor);pfooter(modo==='circuito'?'Parada '+(selecionado+1)+' de '+totalJogos:'Jogo avulso','Esc pausa');
   const c=area.querySelector('canvas'),stage=c.parentElement,ctx=c.getContext('2d'),hud=area.querySelector('.game-hud');
   ligarCena(c);ctx.imageSmoothingEnabled=false;
-  function ajustar(){const r=stage.getBoundingClientRect(),tam=Math.floor(Math.min(r.width,r.height));c.style.width=tam+'px';c.style.height=tam+'px';}
+  const moldura=document.querySelector('.window');
+  const desktop=window.matchMedia?.('(hover: hover) and (pointer: fine)');
+  function ajustar(){
+    const r=stage.getBoundingClientRect();
+    if(desktop?.matches){
+      // A cena é quadrada. Ajustamos a moldura à altura livre, não os desenhos:
+      // assim não sobram faixas laterais e nenhum obstáculo fica recortado.
+      const bordas=moldura.offsetWidth-moldura.clientWidth;
+      const larguraDisponivel=Math.min(492,window.innerWidth-(pequena?0:30))-bordas;
+      const largura=Math.max(0,Math.floor(Math.min(larguraDisponivel,r.height)));
+      moldura.style.width=(largura+bordas)+'px';
+    }else moldura.style.width='';
+    const cena=stage.getBoundingClientRect(),tam=Math.floor(Math.min(cena.width,cena.height));
+    c.style.width=tam+'px';c.style.height=tam+'px';
+  }
+  window.addEventListener('resize',ajustar);
+  desktop?.addEventListener('change',ajustar);
+  limparEnquadramento=()=>{
+    window.removeEventListener('resize',ajustar);
+    desktop?.removeEventListener('change',ajustar);
+    moldura.style.width='';
+  };
   observador=new ResizeObserver(ajustar);observador.observe(stage);ajustar();
   const esta=partida;
   function mostrarStatus(){
