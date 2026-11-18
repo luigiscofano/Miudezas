@@ -11,6 +11,8 @@ O módulo `dist/quintal.js` desenha as cenas na grade original de 96 × 96 pixel
 
 ## Goteira
 
+Os nomes das fases são **Chuvisco**, **Chuva firme** e **Temporal**, na ordem Sossegado, Animado e Puxado.
+
 O balde guarda no máximo quatro gotas. A quinta transborda e é imediatamente retirada da lista de gotas ativas. Gotas que chegam diretamente ao chão também contam uma vez. O piso molhado cresce até os limites: **12 no Sossegado, 9 no Animado, 6 no Puxado e 8 no Sem Parar**. O resultado “O chão alagou!” encerra a simulação uma única vez. O descarte lateral original continua esvaziando o balde. Os modos autorais conservam seu objetivo original por tempo; Sem Parar não termina aos 60 segundos. A cadência contínua tem intervalo mínimo de 1,35 s e velocidade máxima de 36 pixels/s.
 
 ## Pipa
@@ -22,6 +24,8 @@ Nas três fases autorais, passagens altas e baixas alternam seus centros entre a
 O modo **Sem Parar não foi recalibrado nesta revisão**: mantém seu corredor próximo da altura 22, progressão e velocidade limitada a 23 pixels/s. Sua simulação de quatro minutos continua aprovada. Obstáculos que saíram da tela são descartados; o total ativo permanece limitado. Subpassos de no máximo 25 ms evitam atravessar obstáculos por um quadro lento.
 
 ## Fio de Varal
+
+No catálogo, Último Fio usa **Brisa**, **Ventania** e **Vendavau**, na ordem Sossegado, Animado e Puxado. Os nomes são rótulos: os IDs, os índices de dificuldade e os dados salvos permanecem iguais.
 
 As cinco posições de mariposas se repetem, sem vitória automática na quinta. Uma rajada na fileira ocupada termina a partida. A janela de aviso nunca cai abaixo de 0,9 s e o intervalo entre rajadas não fica menor que 2,8 s. A frequência sonora também é limitada para não crescer indefinidamente com o placar.
 

@@ -9,6 +9,7 @@ node --test tests/*.test.mjs
 | Arquivo | Cobertura |
 |---|---|
 | `navegacao.test.mjs` | Galeria, catálogo ativo, migração por IDs, sequência e resumo das dez paradas em navegador simulado. |
+| `nomes-fases.test.mjs` | Rótulos atualizados de Goteira e Último Fio, conservando os IDs e a ordem das dificuldades. |
 | `recordes.test.mjs` | IDs elegíveis, inteiros seguros e atualização somente ao superar o melhor resultado. |
 | `backup.test.mjs` | Exportação/importação, validação de entradas e compatibilidade do progresso. |
 | `capa.test.mjs` | Dimensões do PNG, proporção preservada e título acessível sem sobreposição. |
