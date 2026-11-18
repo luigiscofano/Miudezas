@@ -1,3 +1,4 @@
+import {criarBandoPipa, colideBandoPipa, spriteAvePipa, coresAvePipa} from './pipa-aves.js';
 // As cenas usam a mesma grade de 96 pixels do visor.
 function rect(ctx, color, x, y, w, h) {
   ctx.fillStyle = color;
@@ -662,12 +663,15 @@ function pipa(level, api, options = {}) {
   // Nas fases, passagens altas e baixas se alternam: não existe altura segura fixa.
   // Sem Parar conserva a geração e o ritmo já aprovados.
   const margem = [8, 7, 6][level - 1];
+  function criarObstaculo(x, top, ponta, dados = {}) {
+    const aves = criarBandoPipa(ponta);
+    const direita = Math.max(9, ...aves.map(ave => ave.x + 6));
+    return {x, top, aves, direita, counted: false, ...dados};
+  }
   const towers = Array.from({length: n}, (_, i) => {
-    if(endless)return {x:90+i*70,top:[48,42,46,38,44,40][i],cable:i%2===1,counted:false};
+    if (endless) return criarObstaculo(90 + i * 70, [48,42,46,38,44,40][i], i % 2 === 1 ? 7 : null, {cable: i % 2 === 1});
     const centro=i%2===0?22:46;
-    const birds=[];
-    for(let py=centro-margem-8;py>=0;py-=8)birds.push(py);
-    return {x:90+i*70,top:centro+margem+12,birds,centro,counted:false};
+    return criarObstaculo(90 + i * 70, centro + margem + 12, centro - margem - 8, {centro});
   });
   const end = towers[n-1].x + 43;
   let scroll = 0, clock = 0, y = 37, vertical = 0, passed = 0, done = false;
@@ -684,9 +688,9 @@ function pipa(level, api, options = {}) {
       if(endless) {
         while(towers[towers.length-1].x-scroll<180) {
           const last=towers[towers.length-1];
-          towers.push({x:last.x+70,top:38+(Math.floor(last.x/70)%4)*3,cable:!last.cable,counted:false});
+          towers.push(criarObstaculo(last.x + 70, 38 + (Math.floor(last.x / 70) % 4) * 3, !last.cable ? 7 : null, {cable: !last.cable}));
         }
-        while(towers[0].x-scroll < -20) towers.shift();
+        while(towers[0].x-scroll < -40) towers.shift();
       }
       const control = Number(held.has('down')) - Number(held.has('up'));
       const breeze = Math.sin(clock * 1.33 - 0.4) * [2.5, 4.2, 6][level - 1];
@@ -696,10 +700,12 @@ function pipa(level, api, options = {}) {
         const dx = tower.x - scroll - kx;
         // A ponta da rabiola se estende para trás, a três pixels do corpo.
         if (dx >= -13 && dx <= 7 && y + 10 >= tower.top - 2) { fail(); return; }
-        const birds=tower.birds || (tower.cable?[7]:[]);
-        if(dx>=-14&&dx<=9&&birds.some(py=>y-4<=py+4&&y+4>=py)){fail();return;}
+        if (colideBandoPipa(tower.aves, tower.x - scroll, kx, y)) { fail(); return; }
       }
-      for(const tower of towers) if(!tower.counted && tower.x-scroll<kx-14){tower.counted=true;passed++;}
+      // O ponto só entra depois que a ave mais à direita também passou pela pipa.
+      for (const tower of towers) {
+        if (!tower.counted && tower.x - scroll + tower.direita < kx - 4) { tower.counted = true; passed++; }
+      }
       if (!endless && scroll >= end - kx) { done = true; api.finish(true, 'Última laje! A rabiola chegou inteira.'); }
     },
     draw(ctx) {
@@ -731,7 +737,7 @@ function pipa(level, api, options = {}) {
       }
       for (const tower of towers) {
         const ax = Math.round(tower.x - scroll);
-        if (ax < -14 || ax > 108) continue;
+        if (ax < -40 || ax > 136) continue;
         rect(ctx, brick, ax - 8, 77, 18, 19);
         rect(ctx, '#cc8060', ax - 8, 77, 18, 1);
         rect(ctx, '#99503f', ax - 8, 83, 18, 1);
@@ -740,9 +746,9 @@ function pipa(level, api, options = {}) {
         rect(ctx, ink, ax, tower.top, 1, 77 - tower.top);
         rect(ctx, ink, ax - 6, tower.top, 13, 2);
         for (let i = -1; i <= 1; i++) rect(ctx, ink, ax + i * 4, tower.top - 2, 1, 4);
-        // Pequenos bandos delimitam a passagem; não há tampa sólida no céu.
-        for(const py of tower.birds || (tower.cable?[7]:[])) {
-          sprite(ctx, ['kk.......kk','.kk.....kk.','..kk...kk..','...kkkkk...','....kkk....'], {k:ink}, ax-5, py);
+        // Uma ponta e pares ascendentes formam o V aprovado, sem preencher o céu.
+        for (const ave of tower.aves) {
+          sprite(ctx, spriteAvePipa, coresAvePipa, ax + ave.x, ave.y);
         }
       }
       const topY = Math.round(y);

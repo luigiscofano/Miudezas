@@ -98,3 +98,7 @@ Os testes executam o motor e os controles públicos em automação. Isso não eq
 ### Maré: muito difícil e muitíssimo difícil
 
 `mare-extrema.test.mjs` verifica lotes das duas faixas avançadas, execução das soluções no motor real, repetibilidade, critérios de planejamento e diversidade normalizada (sem contar rotações/reflexões como mapas distintos). A suíte mantém a regressão das famílias anteriores e o Puxado escolhido pela imagem. Esses critérios estimam dificuldade estrutural; não certificam a percepção de dificuldade por uma pessoa nem desempenho em todo aparelho.
+
+## Pipa em V
+
+`pipa-aves.test.mjs` verifica simetria e quantidade das aves, compara colisão com todos os pixels sólidos e confirma ausência de barreira invisível no interior do V. Simula dez minutos de Sem Parar em cada dificuldade, mantendo a lista de obstáculos limitada. `quintal-modos.test.mjs` também verifica vitória com controle ativo em 30/60/120 Hz, derrota parado e após acomodar na primeira passagem, encerramento único e velocidades/margens. São testes da lógica, não toque em aparelho físico.

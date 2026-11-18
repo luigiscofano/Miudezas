@@ -15,7 +15,7 @@ O balde guarda no máximo quatro gotas. A quinta transborda e é imediatamente r
 
 ## Pipa
 
-Casario estreito com janelas altas, telhas em pixels e morros ao fundo distingue o cenário carioca. Postes e pássaros escuros são obstáculos; casas e morros são decorativos. Não existe mais a tampa superior de fios. As colisões usam envelopes conservadores do corpo e da rabiola, não colisão perfeita por pixel. Postes mantêm seus isoladores e o pássaro ocupa o teto da passagem.
+Casario estreito com janelas altas, telhas em pixels e morros ao fundo distingue o cenário carioca. Postes e pássaros escuros são obstáculos; casas e morros são decorativos. Não existe mais a tampa superior de fios. Os postes mantêm os envelopes conservadores anteriores do corpo e da rabiola; nas aves em V, a colisão usa os pixels sólidos do corpo e do sprite. Postes mantêm seus isoladores e os bandos ocupam o alto da passagem.
 
 Nas três fases autorais, passagens altas e baixas alternam seus centros entre as alturas 22 e 46. Pequenos bandos acima e postes abaixo delimitam aberturas sem uma altitude fixa segura. Sossegado, Animado e Puxado usam velocidades de 14, 17 e 20 pixels/s, respectivamente, e margens verticais de 8, 7 e 6 pixels em torno do centro; o número de obstáculos continua 4, 5 e 6. Há 70 pixels entre obstáculos para permitir reposicionamento. Os testes verificam derrota sem comandos e trajetórias vencedoras que sobem e descem, a 30/60/120 Hz.
 
@@ -115,3 +115,13 @@ A busca mantém o estado completo (posição, fase do ciclo, última areia segur
 Foram executadas 100 sementes de cada faixa no jogo real, além do lote misto de 300 sementes. O teste verifica reprodução, solução, pontes obrigatórias, custo da maré, escolhas, praças e diversidade após remover pedras decorativas e normalizar rotações/reflexões. O lote muito difícil teve 72 topologias normalizadas, 33–40 comandos e custo 12–17; o muitíssimo difícil teve 68 topologias, 39–40 comandos e custo 18–22. Trinta e quarenta sementes, respectivamente, usaram reservas: a taxa é explicitada porque a geração tem orçamento limitado.
 
 Benchmark local em Node, 100 gerações por faixa: muito difícil com mediana 8,3 ms, percentil 95 de 21,5 ms e máximo 29,0 ms; muitíssimo difícil com mediana 8,8 ms, percentil 95 de 15,5 ms e máximo 41,1 ms. São medições desta máquina, não garantias para celulares. O roteiro de revisão visual e toque continua necessário; não foi alterado por esses testes discretos.
+
+## Pipa: bando em V aprovado
+
+A coluna de aves foi substituída por uma formação com ponta inferior e pares ascendentes, abrindo um V. A altura determina de duas a cinco fileiras (uma ave na ponta e até quatro pares): 3, 5, 7 ou 9 aves; a prévia aprovada mostra 3, 7 e 9. Cada ave mantém o sprite rudimentar de 7 × 4 pixels. Postes, casario, pipa, vento, velocidades 14/17/20, margens 8/7/6, controles e saves não mudam.
+
+`dist/pipa-aves.js` reúne formação, paleta, sprite e colisão. O corpo da pipa é comparado aos pixels sólidos das aves, nas mesmas coordenadas inteiras do desenho. Não existe uma caixa sólida cobrindo o interior vazio do V. A rabiola mantém a regra anterior contra postes; a linha decorativa não causa colisão com aves. Os subpassos de até 25 ms continuam evitando saltos na física. Os bandos e seus limites laterais são calculados ao criar o obstáculo, não a cada quadro.
+
+O ponto só é somado quando todo o bando, inclusive a ave mais à direita, passou pelo corpo da pipa. O descarte e a renderização consideram as duas asas da formação, evitando cortes prematuros nas laterais do visor. Sem Parar conserva a alternância anterior entre postes com e sem obstáculo aéreo, agora usando pequenos Vs onde havia uma ave. A partida segue após superar o recorde, sem alterar a persistência.
+
+Os testes verificam simetria, quantidades, pixels sólidos e interior vazio; executam trajetórias pelos controles reais nas três dificuldades a 30/60/120 Hz, confirmam derrota sem movimento e testam dez minutos de Sem Parar em cada dificuldade com memória limitada. São simulações da lógica real em Node, não ensaios em celular físico.
