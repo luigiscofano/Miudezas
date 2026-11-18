@@ -25,7 +25,7 @@ let tipoPartida='classic',semente=1,recordes=normalizarRecordes(ler('recordes',{
 const novoMapa=()=>{semente=(Math.random()*4294967296)>>>0;};
 const nomeModo=()=>tipoPartida==='endless'?'Sem Parar':tipoPartida==='generated'?'Caminho Novo':nomesNiveis[nivel-1];
 const atual=()=>catalogo[selecionado];
-// Apenas a galeria usa os ícones aprovados; introduções e resultados mantêm suas cenas.
+// Galeria e pausa usam os ícones aprovados; outras telas mantêm suas cenas.
 const foto=(j,extra='',selecao=false)=>'<img src="./arte/'+((selecao&&j.icone)||j.imagem||j.id+'.png')+'" alt="" '+extra+'>';
 const btn=(acao,titulo,classe='action',extra='')=>'<button type="button" class="'+classe+'" data-do="'+acao+'" '+extra+'>'+titulo+'</button>';
 const paginaHTML=(conteudo,classe='')=>'<section class="screen-page '+classe+'">'+conteudo+'</section>';
@@ -220,7 +220,7 @@ function mostrarJogo(){
 }
 function pausar(){
   if(tela!=='jogo')return;mudar('pausa');
-  area.innerHTML=paginaHTML(topo('Pausa')+'<div class="modal-box">'+foto(atual())+'<h2>'+atual().nome+'</h2><p class="body-copy">'+atual().regra+'</p><p class="controls-copy">'+atual().controle+'</p></div><div class="result-actions">'+btn('continuar','Continuar')+btn('voltar-fases','Voltar às fases','action secondary')+btn('sair','Voltar ao menu','action secondary')+'</div>');
+  area.innerHTML=paginaHTML(topo('Pausa')+'<div class="modal-box">'+foto(atual(),'class="pause-art"',true)+'<h2>'+atual().nome+'</h2><p class="body-copy">'+atual().regra+'</p><p class="controls-copy">'+atual().controle+'</p></div><div class="result-actions pause-actions">'+btn('continuar','Continuar')+btn('voltar-fases','Voltar às fases','action secondary')+btn('sair','Voltar ao menu','action secondary')+'</div>');
   pfooter(modo==='circuito'?'Parada '+(selecionado+1)+' de '+totalJogos:'Jogo avulso','Partida pausada');
 }
 function voltarAsFases(){

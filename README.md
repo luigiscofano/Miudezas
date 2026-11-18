@@ -472,3 +472,8 @@ Pão na Chapa usa a versão aprovada baseada na referência enviada: pão franc�
 ![Maré Miúda](dist/arte/icones/mare.svg) ![Último Fio](dist/arte/icones/fio.svg) ![Rastro de Prata](dist/arte/icones/rastro.svg)
 
 Os três ícones aprovados usam os sprites dos respectivos jogos como referência. O caracol não inclui folha no ícone; as folhas coletáveis dentro da partida permanecem intactas. Pão na Chapa, Goteira e Pipa continuam com miniaturas, aguardando aprovação de novos ícones.
+
+
+### Tela de pausa coesa
+
+A pausa usa a mesma imagem da seleção: ícone aprovado quando disponível e miniatura original nos demais jogos. A imagem é contida sem recorte. “Continuar” e “Voltar às fases” permanecem na primeira linha; “Voltar ao menu” ocupa a segunda linha, centralizado e com a mesma largura dos demais botões. O ajuste é exclusivo da pausa e mantém navegação, progresso e controles. O teste de navegação verifica a arte e as três ações dos dez jogos.

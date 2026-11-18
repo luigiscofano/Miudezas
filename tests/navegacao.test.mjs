@@ -161,7 +161,7 @@ test('Cancelar direções solta movimentos contínuos sem disparar petelecos',()
 });
 
 
-test('Ícones aprovados aparecem somente na seleção e preservam as demais miniaturas',()=>{
+test('Ícones aprovados aparecem na seleção e preservam miniaturas de outras telas',()=>{
  const n=navegador();n.executar('galeria()');
  for(const id of ['radio','mare','fio'])assert.ok(n.html().includes('arte/icones/'+id+'.svg'));
  for(const id of ['goteira','pipa','pao'])assert.ok(n.html().includes('arte/'+id+'.png'));
@@ -171,5 +171,17 @@ test('Ícones aprovados aparecem somente na seleção e preservam as demais mini
  for(const id of ['radio','gude','pisca','luz','mare','fio','rastro']){
   const cena=n.executar(`foto(catalogo.find(j=>j.id==='${id}'))`);
   assert.ok(cena.includes('arte/'+id+'.png'));
+ }
+});
+
+
+test('Pausa usa a mesma arte da seleção em todos os jogos e mantém três ações',()=>{
+ for(let i=0;i<catalogo.length;i++){
+  const n=navegador(null,'?janela=1&tela=galeria');n.executar(`selecionado=${i};tela='jogo';pausar()`);
+  const j=catalogo[i],arte=j.icone||j.imagem||j.id+'.png';
+  assert.ok(n.html().includes('./arte/'+arte));
+  assert.match(n.html(),/class="pause-art"/);
+  assert.match(n.html(),/class="result-actions pause-actions"/);
+  for(const acao of ['continuar','voltar-fases','sair'])assert.ok(n.html().includes('data-do="'+acao+'"'));
  }
 });
