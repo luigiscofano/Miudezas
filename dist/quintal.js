@@ -268,10 +268,59 @@ function gerarMareIrregular(seed) {
   if (!mareIrregularValida(metrics)) throw new Error('Reserva irregular da maré inválida.');
   return {seed, grid, solution: metrics.solution, metrics, fallback: true, family: 'enseada-irregular'};
 }
+// Salas de areia permitem escolher desvios e preparar a maré antes de outra ilha.
+function criarArquipelagoMare(random) {
+  const cells = Array.from({length: 8}, () => Array(8).fill('~'));
+  for (let roomY = 0; roomY < 3; roomY++) for (let roomX = 0; roomX < 3; roomX++) {
+    for (let dy = 0; dy < 2; dy++) for (let dx = 0; dx < 2; dx++) cells[roomY * 3 + dy][roomX * 3 + dx] = '.';
+  }
+  const visited = new Set([0]), stack = [0];
+  while (stack.length) {
+    const current = stack[stack.length - 1], x = current % 3, y = Math.floor(current / 3);
+    const neighbors = Object.values(delta).map(([dx, dy]) => [x + dx, y + dy])
+      .filter(([nx, ny]) => nx >= 0 && nx < 3 && ny >= 0 && ny < 3 && !visited.has(ny * 3 + nx));
+    if (!neighbors.length) { stack.pop(); continue; }
+    const [nx, ny] = neighbors[Math.floor(random() * neighbors.length)];
+    if (nx !== x) cells[y * 3 + Math.floor(random() * 2)][Math.min(x, nx) * 3 + 2] = '=';
+    else cells[Math.min(y, ny) * 3 + 2][x * 3 + Math.floor(random() * 2)] = '=';
+    visited.add(ny * 3 + nx); stack.push(ny * 3 + nx);
+  }
+  // Pedras nas divisões fecham atalhos; algumas dentro das ilhas criam desvios locais.
+  for (let i = 0; i < 6; i++) {
+    const x = Math.floor(random() * 8), y = Math.floor(random() * 8);
+    if (cells[y][x] === '.') cells[y][x] = '#';
+  }
+  for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) {
+    if (cells[y][x] === '~' && random() < 0.35) cells[y][x] = '#';
+  }
+  cells[7][0] = 'S'; cells[0][7] = 'C';
+  return cells.map(row => row.join(''));
+}
+function arquipelagoMareValido(metrics) {
+  return mareDesafiadora(metrics) && metrics.passos >= 23 &&
+    metrics.passos - metrics.passosSemMare >= 7 && metrics.baixiosObrigatorios >= 3;
+}
+function gerarArquipelagoMare(seed) {
+  let state = (seed ^ 0x85ebca6b) >>> 0;
+  const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
+  for (let attempt = 0; attempt < 48; attempt++) {
+    const grid = criarArquipelagoMare(random);
+    // O filtro barato evita calcular todas as provas para candidatos muito longos.
+    const solution = resolverMare(grid);
+    if (!solution || solution.length < 23 || solution.length > 27) continue;
+    const metrics = analisarMare(grid);
+    if (arquipelagoMareValido(metrics)) return {seed, grid, solution: metrics.solution, metrics, fallback: false, family: 'arquipelago'};
+  }
+  const grid = ['..#..=.C','.#~..#..','=~~#=#=~','..#..~#.','..##.#..','#=~~=~~=','..=..~.#','S#~..~..'];
+  const metrics = analisarMare(grid);
+  if (!arquipelagoMareValido(metrics)) throw new Error('Reserva do arquipélago inválida.');
+  return {seed, grid, solution: metrics.solution, metrics, fallback: true, family: 'arquipelago'};
+}
 export function gerarMare(seed = 1) {
   const original = Number(seed) >>> 0;
-  // Dois terços das sementes conservam exatamente a geração anterior.
+  // A prioridade preserva as enseadas; o restante alterna arquipélagos e família original.
   if (original % 3 === 0) return gerarMareIrregular(original);
+  if (original % 7 === 0) return gerarArquipelagoMare(original);
   let state = original;
   const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
   const orientation = Math.floor(random() * 8);
