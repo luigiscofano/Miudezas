@@ -63,3 +63,5 @@ Os testes comparam as três dificuldades: nenhuma vence sem comandos, e uma traj
 `varanda-arte.test.mjs` verifica cores características da arte aprovada, coordenadas finitas e ausência de mutação de estado/HUD durante o desenho. São testes de renderização isolada, não testes de aparelho físico.
 
 `pisca-rastro-arte.test.mjs` verifica as três matrizes de folhas, a paleta, o fundo original de Pisca e a preservação do estado ao desenhar.
+
+`mare-rastro-refinamento.test.mjs` confere cores características dos dois refinamentos, desenho com coordenadas finitas, estado imutável e fases geradas com quatro sementes. Os testes são automatizados; não representam teste em aparelho físico.
