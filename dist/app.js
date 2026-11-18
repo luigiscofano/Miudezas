@@ -19,7 +19,7 @@ const totalJogos=catalogo.length, porPagina=6, totalPaginas=Math.ceil(totalJogos
 let tela='inicio',modo='avulso',nivel=1,selecionado=0,pagina=0,volta=null,partida=null,ultimo=null;
 let quadro=0,observador=null,tempoAnterior=0,comSom=ler('som',false)===true;
 const trilha=criarAudio();
-criarConfiguracoes({ler,salvar,aoMudar:({musica,efeitos})=>trilha.volumes(musica/100,efeitos/100),aoAbrir:()=>{if(tela==='jogo')pausar();}});
+criarConfiguracoes({ler,salvar,aoMudar:({musica,efeitos})=>trilha.volumes(musica/100,efeitos/100),aoAbrir:()=>{if(tela==='preparando')voltarAsFases();else if(tela==='jogo')pausar();}});
 let recordeCelebrado=false;
 let limparCena=null,limparEnquadramento=null,geracaoGude=null;
 const segurando=new Map();

@@ -18,7 +18,7 @@ function navegador(salvo=null, busca='?janela=1&tela=roteiro&modo=circuito', rea
     return elementos.get(id);
   }
   const fabricas=Object.fromEntries(catalogo.map(j=>[j.id,(nivel,api,opcoes)=>{chamadas.push({id:j.id,nivel,...opcoes});return {press(){},release(){},cancelInput(){},draw(){},hud(){return 'Jogando';},snapshot(){return {alimentos:[]};},update(){},score(){return 0;}};}]));
-  const sandbox={solicitarTerrenoGude:gerador,criarConfiguracoes:()=>{},criarAudio,normalizarRecordes,registrarRecorde,normalizarVolta,catalogo,nomesNiveis,quintal:{...fabricas,...reais},esquina:{},varanda:{},pracinha:{},
+  const sandbox={solicitarTerrenoGude:gerador,criarConfiguracoes:({aoAbrir})=>{eventos.abrirConfiguracoes=aoAbrir;},criarAudio,normalizarRecordes,registrarRecorde,normalizarVolta,catalogo,nomesNiveis,quintal:{...fabricas,...reais},esquina:{},varanda:{},pracinha:{},
     icone:()=>'',escapar:s=>s,ler:(k,v)=>dados[k]??v,salvar:(k,v)=>{dados[k]=v;gravacoes.push(k);},
     URLSearchParams,URL, location:{search:busca,href:'https://example.com/?'+busca},
     ResizeObserver:class {observe(){} disconnect(){}},requestAnimationFrame:f=>{frames.set(++proximoFrame,f);return proximoFrame;},
@@ -250,4 +250,17 @@ test('Preparação cancelada ao sair/reiniciar ignora respostas antigas e permit
  assert.equal(n.executar('tela'),'nivel');
  n.executar('criarPartida();document.hidden=true');n.eventos.visibilitychange();assert.equal(tarefas[5].cancelada,true);
  assert.equal(n.executar('tela'),'nivel');
+});
+
+
+test('Configurações durante preparação cancela o worker e não abre jogo atrás do modal',async()=>{
+ let concluir,cancelada=false;
+ const gerar=()=>({promise:new Promise(r=>concluir=r),cancel(){cancelada=true;}});
+ const n=navegador(null,'?janela=1&tela=galeria',{},gerar);
+ n.executar("selecionado=8;tipoPartida='generated';semente=42;criarPartida()");
+ n.eventos.abrirConfiguracoes();assert.equal(cancelada,true);
+ assert.equal(n.executar('tela'),'nivel');assert.equal(n.executar('semente'),42);
+ const html=n.html();concluir({semente:42});await Promise.resolve();
+ assert.equal(n.html(),html);assert.equal(n.chamadas.length,0);assert.equal(n.frames.size,0);
+ assert.equal(n.executar('partida'),null);
 });
