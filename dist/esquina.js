@@ -312,11 +312,19 @@ const gardens = [
 const directions = {left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1]};
 const leaf = [["....gg.","...ghgg","..ghigg",".ghigg.","ghigg..","gig....","i......"],["...g...","..ghg..",".ghigg.","ghiggg.",".gigg..","..ig...","..i...."],[".....g.","...gghg","..ghigg",".ghigg.","ghigg..",".ig....","i......"]];
 const rock = ['..rr..', '.rrrr.', 'rrrrrr', '.rrrr.'];
-// O vaso maior ocupa 11 × 10 pixels e cabe também nas casas de 13 pixels.
+// Pote aprovado: boca arredondada e sombras escuras, dentro das casas de 13 pixels.
 const vasoDestino = [
-  '....rrrr...', '..rrrrbbbb.', '.arrrbbbbbb', 'aaarrbbbbbb',
-  'aaaarrbbbbb', 'aaaaarrbbb.', '.aaaaarrb..', '..aaaar....',
-  '...aaa.....', '....a......'
+  '....hhhhhh..',
+  '...hbbbbbbh.',
+  '..rrrbbbbbbd',
+  '.rmmmrrbbbbd',
+  'rmaaamrbbbbd',
+  'rmaaamrbbbdd',
+  'rmaaamrbbdd.',
+  '.rmmmrrdd...',
+  '..rrrdd.....',
+  '...ddd......',
+  '............'
 ];
 const snail = [
   '..sss....e.e', '.saaas...e.e', 'saassas.eeee', 'sas.saseeeee', 'saassaseeee.',
@@ -658,13 +666,14 @@ function rastro(level, api, options = {}) {
       const col = i % side, row = Math.floor(i / side);
       rect(ctx, (col + row) % 2 ? clay : peach, border + col * size, border + row * size, size - 1, size - 1);
       // Pequeno acabamento no ladrilho mantém o centro livre para a rota.
-      rect(ctx, (col + row) % 2 ? '#cb8a86' : '#f2b593', border + col * size + 1, border + row * size + 1, size - 3, 1);
+      // A faixa clara não aparece atrás do pote, conforme a arte aprovada.
+      if (tiles[i] !== 'P') rect(ctx, (col + row) % 2 ? '#cb8a86' : '#f2b593', border + col * size + 1, border + row * size + 1, size - 3, 1);
       const [x,y] = tileCenter(i);
       if (tiles[i] === 'L' && !leaves.has(i)) sprite(ctx, leaf[variantesFolhas.get(i)], {g: '#72a364', h: '#b7cb85', i: '#3f634b'}, x - 3, y - 3);
       if (tiles[i] === '#') sprite(ctx, rock, {r: '#526463'}, x - 3, y - 2);
       if (tiles[i] === 'P') {
         sprite(ctx, vasoDestino,
-          {a: '#404e48', b: '#b45e44', r: '#d97d55'}, x - 5, y - 5);
+          {a: '#211c1b', m: '#48291f', b: '#b5654e', r: '#d08060', h: '#cb7958', d: '#68382c'}, x - 6, y - 5);
       }
     }
     for (let i = 1; i < path.length; i++) {

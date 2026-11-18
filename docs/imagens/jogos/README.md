@@ -47,6 +47,8 @@ Reexecute após alterar a arte ou o level design e confira visualmente os dez ar
 
 ### rastro
 
+Cena atualizada com o pote aprovado em 18/11/2026: boca circular, sombras escuras e retirada somente da faixa clara atrás do destino. Renderizada pelo mesmo método descrito acima, após essa alteração visual.
+
 ![Cena atual de rastro](rastro.svg)
 
 ### luz
