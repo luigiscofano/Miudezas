@@ -1,0 +1,47 @@
+{
+  "inicio": {
+    "origem": "01_inicio_Janela_na_Tijuca.wav",
+    "segundos": 25.9459410430839,
+    "sha256": "e1901f6d1bb6ca33e3148287f127410a7340bc10c551400e41ccba84d49deb84"
+  },
+  "galeria": {
+    "origem": "02_catalogo_Passeio_no_Bairro.wav",
+    "segundos": 24.615374149659864,
+    "sha256": "a28b8db7bcc285161e0b5fb40d12710ffa4131612c9c8314ece0fa0158817a3d"
+  },
+  "nivel": {
+    "origem": "03_niveis_Uma_Coisa_de_Cada_Vez.wav",
+    "segundos": 25.9459410430839,
+    "sha256": "bba8f251638a0755907c70fadff1844669e021d6782f230c98d6e35855a6a2b2"
+  },
+  "jogo": {
+    "origem": "04_partida_Balanco_de_Quintal.wav",
+    "segundos": 24.0,
+    "sha256": "a030a20c22ff0ec202a250738afecbbdb692ed5fe1a366baabb47e657f72d98d"
+  },
+  "pausa": {
+    "origem": "05_pausa_Sombra_na_Varanda.wav",
+    "segundos": 29.09090702947846,
+    "sha256": "bbdfc618b419cd6d78c8015ab849ff9e67cb720df17b0cc8238cee479e4f7f61"
+  },
+  "roteiro": {
+    "origem": "06_rota_Volta_no_Bairro.wav",
+    "segundos": 24.615374149659864,
+    "sha256": "b8f25c7f304801fd3c1db30cfb61cb51683439dfd50d3f01747e6ab320ebac0a"
+  },
+  "parada": {
+    "origem": "07_parada_Ali_na_Esquina.wav",
+    "segundos": 25.26315192743764,
+    "sha256": "2f9741def9058b40630323deb826ff22a18db50e80ae514e7dff650e9b7bfe8d"
+  },
+  "resultado": {
+    "origem": "08_resultado_Respira_e_Tenta.wav",
+    "segundos": 28.235283446712018,
+    "sha256": "fcc6a39fff9db755c02dd726a963fcecaafa406904d08d678fe52dbad47e3197"
+  },
+  "resumo": {
+    "origem": "09_resumo_De_Volta_em_Casa.wav",
+    "segundos": 26.666666666666668,
+    "sha256": "9f267b81066cbe9c8c6f84a62043c1fdaa7474b1493de937b7657788641a12ab"
+  }
+}
