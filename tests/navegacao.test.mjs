@@ -141,12 +141,13 @@ test('Lagartixa oferece Sem Parar com recorde independente',()=>{
 test('Gude real integrado ao canvas: puxar não pausa e cancelamento não lança',()=>{
  const n=navegador(null,'?janela=1&tela=galeria',jogosVaranda);
  n.executar("selecionado=8;modo='avulso';criarPartida()");
- const c=n.elemento('canvas'),e={pointerId:8,button:0,clientX:64,clientY:320,preventDefault(){}};
- c.onpointerdown(e);c.onpointermove({...e,clientX:28});n.eventos.blur();
+ const inicio=n.executar('partida.snapshot()');
+ const c=n.elemento('canvas'),e={pointerId:8,button:0,clientX:inicio.x*4,clientY:inicio.y*4,preventDefault(){}};
+ c.onpointerdown(e);c.onpointermove({...e,clientX:e.clientX-36});n.eventos.blur();
  assert.equal(n.executar('tela'),'jogo');assert.equal(n.executar('partida.snapshot().jogadas'),0);
- c.onpointercancel(e);c.onpointerup({...e,clientX:28});
+ c.onpointercancel(e);c.onpointerup({...e,clientX:e.clientX-36});
  assert.equal(n.executar('partida.snapshot().jogadas'),0);
- c.onpointerdown(e);c.onpointermove({...e,clientX:28});c.onpointerup({...e,clientX:28});
+ c.onpointerdown(e);c.onpointermove({...e,clientX:e.clientX-36});c.onpointerup({...e,clientX:e.clientX-36});
  assert.equal(n.executar('partida.snapshot().jogadas'),1);assert.equal(n.executar('partida.moving'),true);
  assert.equal(n.executar('tela'),'jogo');
 });

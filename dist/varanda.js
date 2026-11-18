@@ -166,11 +166,23 @@ function luz(level, api, options={}) {
   };
 }
 
+// Fases autorais fixas: avançam de uma curva ampla para um retorno e depois
+// um percurso escalonado. O certificado é exercitado pelos testes, não exibido.
 const terrenos = [
-  { alvo:[77,20], pedras:[[48,48,10,8]] },
-  { alvo:[78,19], pedras:[[12,48,13,12],[49,43,13,10]] },
-  { alvo:[78,18], pedras:[[10,43,15,12],[72,51,15,12]] }
+  {
+    inicio:[69,29], alvo:[22,80], pedras:[[35,49,15,17],[54,82,18,8],[34,9,17,11]],
+    solucao:[{direcao:'left',duracao:(47-5)/68},{direcao:'down',duracao:(51-5)/68}]
+  },
+  {
+    inicio:[54,29], alvo:[52,69], pedras:[[18,65,19,10],[12,35,14,9],[51,46,14,13],[43,10,18,12]],
+    solucao:[{direcao:'right',duracao:(21-5)/68},{direcao:'down',duracao:(40-5)/68},{direcao:'left',duracao:(23-5)/68}]
+  },
+  {
+    inicio:[53,66], alvo:[15,45], pedras:[[32,77,18,10],[72,52,7,20],[28,27,10,24],[60,20,8,26],[10,51,8,18]],
+    solucao:[{direcao:'up',duracao:(47-5)/68},{direcao:'left',duracao:(38-5)/68},{direcao:'down',duracao:(26-5)/68}]
+  }
 ];
+
 const desenhoBolinha = ['..bbb..','.bbwwb.','bbbwwbb','bbwwbbb','bwwbbbb','.bbbbb.','..bbb..'];
 
 // Gerador determinístico: o mesmo código de semente reconstrói a tentativa.
