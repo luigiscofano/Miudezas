@@ -51,6 +51,8 @@ Gude é verificado por posições iniciais, quadrantes, famílias de rota, orien
 
 Rastro preserva a família estreita e acrescenta a aberta. Mil sementes resultaram em 667 mapas da família estreita e 333 da aberta, com 985 mapas únicos; 16 das abertas usaram fallback próprio (4,8%). O banco aberto possui dois modelos e oito orientações. A suíte inclui execução por gesto de 200 mapas abertos e regressão de 100 sementes estreitas. A área livre e as bifurcações são critérios verificáveis; dificuldade subjetiva ainda depende de teste humano.
 
+`mare-canais.test.mjs` executa 100 sementes de cada um dos cinco novos padrões e confere o estado após cada comando, incluindo comandos bloqueados e vitória única. Verifica anéis independentes, bifurcações, estreitos duplos indispensáveis, custo da maré, pedras relevantes, 40 reservas e pelo menos 35 geometrias por padrão após remover até a posição dos baixios. O hash de 269 sementes fora da nova seleção conserva o resultado completo do commit anterior. Sementes e contagens observadas estão na seção de geração do [Quintal](../docs/jogos/quintal/README.md).
+
 `mare-arte.test.mjs` confere os pixels da arte e que desenhar não modifica o estado da partida.
 
 ### Pipa: movimento obrigatório nas fases
