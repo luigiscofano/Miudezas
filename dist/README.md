@@ -102,6 +102,6 @@ Em dispositivos com mouse, a largura da janela durante a partida acompanha a alt
 
 [audio.js](audio.js) gerencia as trilhas, efeitos V2, pistas essenciais, cache limitado e suspensão. [configuracoes.js](configuracoes.js) e [configuracoes.css](configuracoes.css) criam a engrenagem acessível, volumes e Sobre. A navegação fornece tela/jogo ao player; não há trabalho sonoro por quadro. [Guia completo](../docs/audio/README.md). O diálogo pausa a partida e isola o teclado.
 
-O **Sobre o projeto** apresenta a memória familiar de Luigi na Tijuca, o cotidiano brasileiro e a referência à obra Balões ou Ritual do Vento, de Gabriel Fonseca. A fonte externa abre em nova aba com proteção de acesso à janela de origem. O texto não altera regras, som ou persistência.
+O **Sobre o projeto** apresenta a memória familiar de Luigi na Tijuca, o cotidiano brasileiro e a referência à obra Balões ou Ritual do Vento, de Gabriel Fonseca. O texto não contém link externo; a fonte artística permanece documentada no README principal e no guia de artes. O texto não altera regras, som ou persistência.
 
 O aviso © 2026 Luigi Scofano de Araujo aparece no Sobre e no rodapé da tela principal. O rodapé preserva as opções e a orientação de teclado ou toque. O aviso não modifica a licença do repositório nem os créditos artísticos.

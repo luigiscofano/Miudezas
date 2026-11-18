@@ -38,9 +38,6 @@ export function criarConfiguracoes({ler,salvar,aoMudar=()=>{},aoAbrir=()=>{},doc
     criar('p',null,'© 2026 Luigi Scofano de Araujo'),
     criar('p',null,'Progresso e preferências ficam neste navegador. Use o backup para guardar seus dados; não há conta nem sincronização automática.')
   );
-  const referencia=criar('p'),linkReferencia=criar('a',null,'Referência artística: Gabriel Fonseca — Balões ou Ritual do Vento');
-  linkReferencia.href='https://gabrielsculptor.com/about/';linkReferencia.target='_blank';linkReferencia.rel='noopener noreferrer';
-  referencia.append(linkReferencia);texto.append(referencia);
   sobre.append(sumario,texto);dialogo.append(cabecalho,explicacao,bloco,restaurar,sobre);
   const barra=documento.querySelector('.bar-actions');if(!barra)throw new Error('Barra de ações não encontrada');barra.append(botao);documento.body.append(dialogo);
   botao.addEventListener('click',()=>{if(dialogo.open)return;aoAbrir();dialogo.showModal();fechar.focus();});fechar.addEventListener('click',()=>dialogo.close());

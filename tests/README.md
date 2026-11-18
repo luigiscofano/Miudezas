@@ -135,6 +135,6 @@ Em dispositivos com mouse, a largura da janela durante a partida acompanha a alt
 
 Nesta entrega, a suíte inteira passou com 175 testes. Chromium local não pôde iniciar por restrição de socket/processo do ambiente; não houve teste em aparelho físico. Não confundir simulação de autoplay com validação no Safari/iOS. Os 18 arquivos foram verificados por decodificação; a escuta musical complementou as verificações técnicas.
 
-O teste do Sobre verifica os fatos familiares, a atribuição a Gabriel Fonseca, o link de referência protegido e a manutenção da orientação sobre backup local. Usa DOM simulado; não equivale a teste em aparelho físico.
+O teste do Sobre verifica os fatos familiares, a atribuição a Gabriel Fonseca, a ausência de link externo no diálogo e a manutenção da orientação sobre backup local. Usa DOM simulado; não equivale a teste em aparelho físico.
 
 A navegação verifica o aviso autoral no rodapé inicial e a preservação das duas opções de partida. O teste do Sobre verifica também a remoção da frase complementar solicitada.
