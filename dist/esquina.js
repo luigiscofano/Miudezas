@@ -522,6 +522,8 @@ function rastro(level, api, options = {}) {
     for (let i = 0; i < tiles.length; i++) {
       const col = i % side, row = Math.floor(i / side);
       rect(ctx, (col + row) % 2 ? clay : peach, border + col * size, border + row * size, size - 1, size - 1);
+      // Pequeno acabamento no ladrilho mantém o centro livre para a rota.
+      rect(ctx, (col + row) % 2 ? '#cb8a86' : '#f2b593', border + col * size + 1, border + row * size + 1, size - 3, 1);
       const [x,y] = tileCenter(i);
       if (tiles[i] === 'L' && !leaves.has(i)) sprite(ctx, leaf[variantesFolhas.get(i)], {g: '#72a364', h: '#b7cb85', i: '#3f634b'}, x - 3, y - 3);
       if (tiles[i] === '#') sprite(ctx, rock, {r: '#526463'}, x - 3, y - 2);

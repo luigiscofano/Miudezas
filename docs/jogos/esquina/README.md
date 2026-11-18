@@ -71,3 +71,7 @@ Os detalhes usam a grade nativa de 96 × 96, cores chapadas e bordas sem suaviza
 ## Folhas aprovadas de Rastro
 
 As três folhas finas têm silhuetas levemente diferentes e a mesma paleta. A ordem das folhas no mapa define sua variante, calculada uma vez ao iniciar a fase; reiniciar mantém a aparência. A diferença é decorativa: todas são recolhidas pelas mesmas regras e mantêm o mesmo valor.
+
+### Rastro: segunda prévia aprovada
+
+Cada ladrilho recebe uma linha clara de um pixel junto à borda superior, mantendo o centro livre para folhas e rastro. As folhas finas B, os sprites, mapas, gerador e regras permanecem iguais.

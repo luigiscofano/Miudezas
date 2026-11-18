@@ -58,3 +58,7 @@ Rádio de Pilha e Pão na Chapa: acabamento discreto em pixels, preservando todo
 Luz de Varanda e Três Petelecos: luz, texturas e sprites refinados sem mudar obstáculos ou física. A resolução lógica permanece 96 × 96, sem suavização ou nova dependência.
 
 Pisca preserva o desenho original dos vaga-lumes e da vegetação lateral em `varanda.js`. Rastro mantém três matrizes de folhas em `esquina.js`, atribuindo a variação uma única vez na criação da fase. Não há imagens remotas nem alteração de persistência.
+
+### Refinamento seletivo dos tabuleiros
+
+`quintal.js` e `esquina.js` acrescentam os detalhes aprovados de Maré e Rastro somente dentro de `draw()`. Grade, controles, geradores, colisões, soluções e saves continuam independentes da ornamentação.
