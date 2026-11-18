@@ -309,6 +309,12 @@ const gardens = [
 const directions = {left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1]};
 const leaf = [["....gg.","...ghgg","..ghigg",".ghigg.","ghigg..","gig....","i......"],["...g...","..ghg..",".ghigg.","ghiggg.",".gigg..","..ig...","..i...."],[".....g.","...gghg","..ghigg",".ghigg.","ghigg..",".ig....","i......"]];
 const rock = ['..rr..', '.rrrr.', 'rrrrrr', '.rrrr.'];
+// O vaso maior ocupa 11 × 10 pixels e cabe também nas casas de 13 pixels.
+const vasoDestino = [
+  '....rrrr...', '..rrrrbbbb.', '.arrrbbbbbb', 'aaarrbbbbbb',
+  'aaaarrbbbbb', 'aaaaarrbbb.', '.aaaaarrb..', '..aaaar....',
+  '...aaa.....', '....a......'
+];
 const snail = [
   '..sss....e.e', '.saaas...e.e', 'saassas.eeee', 'sas.saseeeee', 'saassaseeee.',
   '.saaassseee.', '..esssseee..', 'eeeeeeeee...'
@@ -528,8 +534,8 @@ function rastro(level, api, options = {}) {
       if (tiles[i] === 'L' && !leaves.has(i)) sprite(ctx, leaf[variantesFolhas.get(i)], {g: '#72a364', h: '#b7cb85', i: '#3f634b'}, x - 3, y - 3);
       if (tiles[i] === '#') sprite(ctx, rock, {r: '#526463'}, x - 3, y - 2);
       if (tiles[i] === 'P') {
-        sprite(ctx, ['..rrr...', '.rrbbbb.', 'arrbbbbb','aaarrbbb','aaaarrb.', '.aaar...','..aa....'],
-          {a: '#404e48', b: '#b45e44', r: '#d97d55'}, x - 4, y - 3);
+        sprite(ctx, vasoDestino,
+          {a: '#404e48', b: '#b45e44', r: '#d97d55'}, x - 5, y - 5);
       }
     }
     for (let i = 1; i < path.length; i++) {
