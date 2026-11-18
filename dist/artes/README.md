@@ -8,6 +8,10 @@
 
 A revisão das fachadas remove apenas as janelas que ocupavam o espaço de portas existentes. O mesmo arquivo é usado na abertura e nas imagens dos READMEs.
 
+## Referência e memória
+
+A capa interpreta **Balões ou Ritual do Vento**, de **Gabriel Fonseca**, a partir da lembrança de Luigi ao visitar a avó na Tijuca. A obra fica na Lagoa Rodrigo de Freitas, conforme o [catálogo mantido pela família do artista](https://gabrielsculptor.com/about/). A composição reúne essa referência e as memórias do bairro em uma paisagem afetiva. [História do projeto](../../README.md#memórias-tijuca-e-cotidiano-brasileiro).
+
 ## Inventário e usos atuais
 
 | Subpasta | Arquivos de imagem | Uso no aplicativo |
