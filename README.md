@@ -444,7 +444,7 @@ Maré Miúda recebeu espuma costeira, areia discreta, baixios destacados, pedras
 
 ## Ícones aprovados na seleção
 
-Rádio de Pilha, Três Petelecos e Pisca no Mato usam seus ícones em pixel art nos cartões de **Escolha um jogo**. As outras sete miniaturas permanecem como estavam. A mudança é só de apresentação: introduções, resultados, partidas, controles e dados salvos continuam iguais.
+Rádio de Pilha, Três Petelecos, Pisca no Mato e Luz de Varanda usam seus ícones em pixel art nos cartões de **Escolha um jogo**. As outras seis miniaturas permanecem como estavam. A mudança é só de apresentação: introduções, resultados, partidas, controles e dados salvos continuam iguais.
 
 | Rádio de Pilha | Três Petelecos | Pisca no Mato |
 |---|---|---|
@@ -455,3 +455,9 @@ Rádio de Pilha, Três Petelecos e Pisca no Mato usam seus ícones em pixel art 
 ### Destino mais visível em Rastro de Prata
 
 O vaso foi ampliado de 8 × 7 para 11 × 10 pixels, conservando a paleta e o estilo do desenho. Ele permanece dentro de uma única casa, inclusive nos tabuleiros de 7 × 7, sem alterar destino, colisões, caminhos ou progresso.
+
+### Luz de Varanda: opção A aprovada
+
+![Ícone aprovado de Luz de Varanda](dist/arte/icones/luz.svg)
+
+O cartão usa a opção A com apenas a perna esquerda afastada do corpo, conforme aprovação. Cauda, rosto com piscadinha e luz foram preservados. É uma imagem estática; não foi introduzida nova animação. A lagartixa e a iluminação dentro da partida não mudam.
