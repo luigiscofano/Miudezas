@@ -1,3 +1,5 @@
+import {criarConfiguracoes} from './configuracoes.js';
+import {criarAudio} from './audio.js';
 import {normalizarRecordes,registrarRecorde} from './recordes.js';
 import {normalizarVolta} from './progresso.js';
 import {catalogo,nomesNiveis} from './catalogo.js';
@@ -14,7 +16,10 @@ if(pequena) document.body.classList.add('popup');
 const ids=catalogo.map(j=>j.id);
 const totalJogos=catalogo.length, porPagina=6, totalPaginas=Math.ceil(totalJogos/porPagina);
 let tela='inicio',modo='avulso',nivel=1,selecionado=0,pagina=0,volta=null,partida=null,ultimo=null;
-let quadro=0,observador=null,tempoAnterior=0,audio=null,comSom=ler('som',false)===true;
+let quadro=0,observador=null,tempoAnterior=0,comSom=ler('som',false)===true;
+const trilha=criarAudio();
+criarConfiguracoes({ler,salvar,aoMudar:({musica,efeitos})=>trilha.volumes(musica/100,efeitos/100),aoAbrir:()=>{if(tela==='jogo')pausar();}});
+let recordeCelebrado=false;
 let limparCena=null,limparEnquadramento=null;
 const segurando=new Map();
 const teclas={ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right',ArrowUp:'up',w:'up',ArrowDown:'down',s:'down'};
@@ -37,18 +42,17 @@ function somUI(){
   somBotao.title=comSom?'Desligar som':'Ligar som';
   somBotao.setAttribute('aria-label',somBotao.title);
 }
-function ativarAudio(){
-  if(!comSom)return;
-  try{audio??=new (window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume().catch(()=>{});}catch{}
-}
+function ativarAudio(){void trilha.ativar(comSom);}
 function tom(hz,seg=.06){
-  if(!comSom||!audio||audio.state!=='running')return;
-  try{const o=audio.createOscillator(),g=audio.createGain(),t=audio.currentTime;
-    o.type='square';o.frequency.value=hz;g.gain.setValueAtTime(.035,t);
-    g.gain.exponentialRampToValueAtTime(.0005,t+seg);o.connect(g);g.connect(audio.destination);o.start(t);o.stop(t+seg);
-  }catch{}
+  if(['pisca','radio'].includes(atual().id)){trilha.sinal(hz,seg);return;}
+  // Alertas de vento e níveis do balde conservam sua informação de altura.
+  if(['fio','goteira','mare'].includes(atual().id)){trilha.sinal(hz,seg);return;}
+  void trilha.efeito(hz<200?'erro':atual().id==='rastro'?'coleta':'acerto');
 }
-somBotao.onclick=()=>{comSom=!comSom;salvar('som',comSom);somUI();ativarAudio();tom(370,.06);};
+somBotao.onclick=()=>{comSom=!comSom;salvar('som',comSom);somUI();ativarAudio();};
+// A preferência é conservada, mas o navegador só inicia áudio após interação.
+document.addEventListener('pointerdown',ativarAudio,{passive:true});
+document.addEventListener('keydown',ativarAudio);
 janelaBotao.innerHTML=icone('janela');somUI();
 
 function lerVolta(){
@@ -68,7 +72,7 @@ function interromperQuadros(){
 function mudar(nome){
   interromperQuadros();
   if(tela==='jogo'&&nome!=='jogo')desligarEntrada();
-  tela=nome;area.scrollTop=0;
+  tela=nome;area.scrollTop=0;trilha.mudar(nome,atual().id);
   barra.textContent=tela==='jogo'?atual().nome:'Miudezas';
   // A marca identifica os menus; durante a partida o nome do jogo continua visível.
   barra.classList.toggle('sr-only',tela!=='jogo');
@@ -119,7 +123,7 @@ function parada(){
 }
 function criarPartida(){
   const instancia=jogos[atual().id](nivel,{tone:tom,finish:finalizar},{mode:tipoPartida,seed:semente});
-  partida=instancia;ultimo=null;mostrarJogo();
+  partida=instancia;ultimo=null;recordeCelebrado=false;mostrarJogo();
 }
 function ativarDir(fonte,dir){
   if(tela!=='jogo'||segurando.has(fonte))return;
@@ -207,6 +211,7 @@ function mostrarJogo(){
     const pontos=tipoPartida==='endless'?esta.score():0;
     if(tipoPartida==='endless'&&pontos>(recordes[j.id]||0)){
       recordes=registrarRecorde(recordes,j.id,pontos);salvar('recordes',recordes);
+      if(!recordeCelebrado){recordeCelebrado=true;void trilha.efeito('recorde');}
     }
     const h=esta.hud()+(tipoPartida==='endless'?' · Pontos '+pontos+' · Recorde '+(recordes[j.id]||0):tipoPartida==='generated'?' · Fase '+semente:'');if(hud.textContent!==h)hud.textContent=h;
     if(chapa){
@@ -257,7 +262,7 @@ function finalizar(venceu,mensagem){
     if(atualizados!==recordes){recordes=atualizados;salvar('recordes',recordes);}
     mensagem+=' Pontuação: '+pontos+'. Recorde pessoal: '+(recordes[atual().id]||0)+'.';
   }
-  ultimo={venceu,mensagem};mudar('resultado');partida=null;
+  ultimo={venceu,mensagem};mudar('resultado');void trilha.efeito(venceu?'vitoria':'derrota');partida=null;
   const principal=modo==='circuito'?btn('avancar',selecionado===totalJogos-1?'Concluir a volta':'Próxima parada  ›'):(tipoPartida==='generated'&&venceu?btn('outra-fase','Gerar outra fase'):btn('repetir',tipoPartida==='generated'?'Tentar a mesma fase':'Jogar de novo'));
   const secundaria=modo==='circuito'?btn('repetir','Repetir parada','action secondary'):btn('lista','Escolher jogo','action secondary');
   area.innerHTML=paginaHTML('<div class="modal-box">'+foto(atual())+'<span class="small-title">'+atual().nome+'</span><h2>'+(venceu?'Conseguiu!':'Fim da rodada')+'</h2><p class="body-copy">'+escapar(mensagem)+'</p></div><div class="result-actions">'+principal+secundaria+'</div>');
@@ -288,6 +293,7 @@ function entrar(m){
 janelaBotao.onclick=()=>abrirJanela(tela);
 function acao(el){
   const a=el.dataset.do;
+  void trilha.efeito(['voltar','sair','voltar-fases','lista'].includes(a)?'voltar':['comecar','partir','continuar','repetir','outra-fase'].includes(a)?'confirmar':'selecionar');
   if(a==='avulso'||a==='circuito'){entrar(a);return;}
   if(a==='voltar'){voltar();return;}
   if(a==='sair'){inicio();return;}
@@ -342,7 +348,9 @@ document.addEventListener('keydown',e=>{
   bs[i<0?Math.max(0,bs.findIndex(b=>b.matches('.mode,.card,.action,.selected'))):(i+k+bs.length)%bs.length].focus({preventScroll:false});
 });
 document.addEventListener('keyup',e=>soltarDir('key'+e.code));
-document.addEventListener('visibilitychange',()=>{if(document.hidden)pausar();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pausar();trilha.visibilidade(!document.hidden);});
+window.addEventListener('pagehide',()=>trilha.visibilidade(false));
+window.addEventListener('pageshow',()=>trilha.visibilidade(!document.hidden));
 window.addEventListener('blur',()=>{
   // Alguns navegadores móveis emitem blur transitório durante interação.
   // A perda real de foco e a aba oculta continuam pausando imediatamente.

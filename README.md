@@ -575,6 +575,8 @@ flowchart TD
 |---|---|
 | [dist/](dist/README.md) | Aplicação que pode ser servida diretamente por HTTP. |
 | [index.html](dist/index.html) | Documento em português, barra de título, região de telas, rodapé e carregamento de módulos. |
+| [audio.js](dist/audio.js) | Contexto de áudio, carregamento, cache, mixagem, loops e proteção contra corridas. |
+| [configuracoes.js](dist/configuracoes.js) | Engrenagem, volumes persistentes e Sobre o projeto acessível. |
 | [app.js](dist/app.js) | Estado das telas, seleção, ciclo de animação, entrada, áudio, pausa, resultado e avanço da volta. |
 | [catalogo.js](dist/catalogo.js) | IDs estáveis, ordem das paradas, nomes, regras, comandos, nomes dos níveis, paletas de palco e tipo de controle. |
 | [interface.js](dist/interface.js) | Ícones vetoriais em grade, escape de texto e leitura/gravação local com tratamento de indisponibilidade. |
@@ -641,19 +643,34 @@ console.log(rodada.hud());
 
 ---
 
+## Trilha sonora e configurações
+
+A identidade sonora aprovada, **Interpretação Mais Natural**, reúne nove músicas relaxantes com síncopes brasileiras e nove efeitos instrumentais V2. Cada tipo de tela tem seu tema. A síntese combina cordas dedilhadas, madeira e percussão delicada; os mapas abaixo documentam eventos reais do compositor, não uma transcrição inventada.
+
+![Formas de onda das nove músicas](docs/audio/ondas-musicas.png)
+
+![Notas e fraseado das músicas](docs/audio/notas-musicas.png)
+
+[Ouvir/baixar as músicas](dist/audio/musicas/) · [Efeitos](dist/audio/efeitos/) · [Formas de onda, notas, acordes e explicação completa](docs/audio/README.md) · [Código de composição](scripts/audio/README.md).
+
+A **engrenagem** abre Configurações: música e efeitos têm controles independentes (padrões 70% e 100%), botão para restaurar os volumes e **Sobre o projeto**. O botão de som continua silenciando tudo e mantém a preferência anterior. O som começa somente após interação; ocultar a aba o suspende. Pisca e Rádio preservam suas pistas sonoras, com música de fundo atenuada. Configurações pausam a partida; fechar não retoma o jogo involuntariamente.
+
+---
+
 ## Dados e som
 
 | Chave local | Conteúdo | Momento de gravação |
 |---|---|---|
+| miudezas.v1.volumeMusica / volumeEfeitos | Inteiros entre 0 e 100; padrões 70/100. | Ao ajustar Configurações. |
 | miudezas.v1.som | Booleano. O padrão é desligado. | Ao alternar o som na barra superior. |
 | miudezas.v1.recordes | Melhores pontuações dos seis jogos Sem Parar, por ID. | Ao superar o recorde durante a partida e ao concluir. |
 | miudezas.v1.volta | Objeto com nivel, ids e resultados booleanos, migrado por IDs. | No começo da volta e ao avançar de parada. Ao completar a última, o valor passa a null. |
 
-Os seis recordes de Sem Parar, incluindo Luz de Varanda (`luz`), ficam em `miudezas.v1.recordes`, por ID de jogo, separados da volta e dos resultados autorais. O backup versão 2 inclui esse campo e aceita arquivos anteriores. Importar um backup antigo não deve apagar recordes já existentes. Os dados são locais ao navegador: limpar armazenamento ou trocar de dispositivo pode removê-los; use exportação/importação explícita. Não há conta, sincronização ou ranking inviolável.
+Os seis recordes de Sem Parar, incluindo Luz de Varanda (`luz`), ficam em `miudezas.v1.recordes`, por ID de jogo, separados da volta e dos resultados autorais. O backup versão 3 inclui esse campo e aceita arquivos anteriores. Importar um backup antigo não deve apagar recordes já existentes. Os dados são locais ao navegador: limpar armazenamento ou trocar de dispositivo pode removê-los; use exportação/importação explícita. Não há conta, sincronização ou ranking inviolável.
 
 Com `{"nivel":2,"resultados":[true,false]}`, a próxima parada é Último Fio em Animado. O resultado mais recente só entra no histórico ao escolher avançar. Repetir permite substituir a tentativa antes desse registro. A retomada depende da origem e do navegador. Outra cópia do site tem seu próprio histórico. Se o armazenamento estiver indisponível, a rodada segue em memória.
 
-O áudio usa um oscilador de onda quadrada com envelope curto. O contexto de áudio é ativado após interação. Em Goteira, a nota sobe conforme o balde enche. Em Pisca no Mato, as duas alturas distinguem esquerda e direita. As transmissões do rádio têm legendas escritas.
+As trilhas são FLAC sem perdas, carregadas sob demanda, com transição de 300 ms e cache limitado. Efeitos V2 usam WAV; sinais informativos preservam o oscilador de onda quadrada. O contexto de áudio é ativado após interação. Em Goteira, a nota sobe conforme o balde enche. Em Pisca no Mato, as duas alturas distinguem esquerda e direita. As transmissões do rádio têm legendas escritas.
 
 ---
 
