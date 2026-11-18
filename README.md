@@ -451,3 +451,7 @@ Rádio de Pilha, Três Petelecos e Pisca no Mato usam seus ícones em pixel art 
 | ![Ícone Rádio de Pilha](dist/arte/icones/radio.svg) | ![Ícone Três Petelecos](dist/arte/icones/gude.svg) | ![Ícone Pisca no Mato](dist/arte/icones/pisca.svg) |
 
 [Arquivos, proporções e manutenção dos ícones](dist/arte/icones/README.md).
+
+### Destino mais visível em Rastro de Prata
+
+O vaso foi ampliado de 8 × 7 para 11 × 10 pixels, conservando a paleta e o estilo do desenho. Ele permanece dentro de uma única casa, inclusive nos tabuleiros de 7 × 7, sem alterar destino, colisões, caminhos ou progresso.

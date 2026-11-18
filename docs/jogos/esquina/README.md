@@ -75,3 +75,7 @@ As três folhas finas têm silhuetas levemente diferentes e a mesma paleta. A or
 ### Rastro: segunda prévia aprovada
 
 Cada ladrilho recebe uma linha clara de um pixel junto à borda superior, mantendo o centro livre para folhas e rastro. As folhas finas B, os sprites, mapas, gerador e regras permanecem iguais.
+
+### Vaso de destino ampliado
+
+Para facilitar a leitura no celular, o vaso agora ocupa 11 × 10 pixels em vez de 8 × 7. A abertura escura e a cerâmica mantêm as mesmas cores. O desenho cabe com margem dentro da menor casa (13 pixels), sem encostar na divisória nem cobrir células vizinhas. A vitória continua exigindo recolher as folhas e entrar na casa P.
