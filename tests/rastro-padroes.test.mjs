@@ -30,10 +30,11 @@ function executarGesto(jogo, solucao) {
   jogo.point(...centro(posicao), 'up');
 }
 
-test('Rastro preserva integralmente as primeiras 100 sementes estreitas e abertas anteriores', () => {
+test('Rastro preserva integralmente as primeiras 100 sementes das três famílias anteriores', () => {
   const hashes = {
     estreito: '7a7578e9d61358188071d746c245ed9fdf83f94ca4804e19e02aa30a1b0edbd5',
-    aberto: '8e999763ab420c495cc61b365ce91774fb92a167f5ce9bd0b42043f7ee550f2a'
+    aberto: '8e999763ab420c495cc61b365ce91774fb92a167f5ce9bd0b42043f7ee550f2a',
+    irregular: 'a0f81e982ef1a16c8aed0da256bc1cbc568dc3923c464fe5662ee0b844afa1bc'
   };
   for (const [familia, esperado] of Object.entries(hashes)) {
     const fases = Array.from({length: 100}, (_, seed) => gerarRastro(seed, familia));
@@ -79,11 +80,60 @@ test('Rastro distingue análise inconclusiva de ordem impossível', () => {
   assert.equal(buscarAtalhoRastro(fase.mapa, 25, 0).conclusivo, false);
 });
 
-test('Rastro inclui novos padrões em um quarto das sementes e conserva famílias anteriores', () => {
+test('Rastro inclui travessias sem retirar nenhuma família anterior', () => {
   const familias = new Set();
   for (let seed = 0; seed < 24; seed++) {
     const fase = gerarRastro(seed); familias.add(fase.familia);
-    assert.equal(fase.familia, seed % 4 === 3 ? 'irregular' : seed % 3 === 1 ? 'aberto' : 'estreito');
+    assert.equal(fase.familia, seed % 4 === 2 ? 'travessia' : seed % 4 === 3 ? 'irregular' : seed % 3 === 1 ? 'aberto' : 'estreito');
   }
-  assert.deepEqual([...familias].sort(), ['aberto', 'estreito', 'irregular']);
+  assert.deepEqual([...familias].sort(), ['aberto', 'estreito', 'irregular', 'travessia']);
+});
+
+test('Rastro travessia: cinco padrões abertos difíceis, 500 sementes e reinício pelos controles', () => {
+  const grupos = new Map(), anteriores = new Set();
+  for (const familia of ['estreito', 'aberto', 'irregular']) {
+    for (let seed = 0; seed < 100; seed++) anteriores.add(normalizar(gerarRastro(seed, familia).mapa, true));
+  }
+  for (let seed = 0; seed < 500; seed++) {
+    const fase = gerarRastro(seed, 'travessia');
+    assert.deepEqual(fase, gerarRastro(seed, 'travessia'));
+    assert.ok(validarRastro(fase.mapa, fase.solucao));
+    assert.equal(fase.minimoPassos, 28);
+    assert.ok(fase.areaLivre >= 39 && fase.bifurcacoes >= 22 && fase.pracas >= 12);
+    const prova = buscarAtalhoRastro(fase.mapa, 27, 30000);
+    assert.equal(prova.conclusivo, true); assert.equal(prova.encontrado, false);
+    const resultados = [];
+    const options = {mode: 'generated', seed, family: 'travessia'};
+    const jogo = esquina.rastro(3, {finish: ok => resultados.push(ok)}, options);
+    const inicial = jogo.snapshot();
+    executarGesto(jogo, fase.solucao);
+    assert.deepEqual(resultados, [true]);
+    const reiniciado = esquina.rastro(3, {finish() {}}, options);
+    assert.deepEqual(reiniciado.snapshot(), inicial);
+    const grupo = grupos.get(fase.padrao) ?? {mapas: new Set(), pedras: new Set(), reservas: 0};
+    grupo.mapas.add(normalizar(fase.mapa)); grupo.pedras.add(normalizar(fase.mapa, true));
+    grupo.reservas += fase.fallback;
+    grupos.set(fase.padrao, grupo);
+  }
+  assert.deepEqual([...grupos.keys()].sort(), ['contrafluxo', 'cotovelo', 'enseada', 'ferradura', 'varanda']);
+  let reservas = 0;
+  for (const [padrao, grupo] of grupos) {
+    assert.ok(grupo.mapas.size >= 50, `${padrao}: layouts além de simetrias`);
+    assert.ok(grupo.pedras.size >= 20, `${padrao}: obstáculos realmente variados`);
+    assert.ok([...grupo.pedras].filter(mapa => !anteriores.has(mapa)).length >= 20, `${padrao}: novas topologias`);
+    reservas += grupo.reservas;
+  }
+  assert.ok(reservas > 0 && reservas < 125, `reservas próprias certificadas: ${reservas}`);
+});
+
+test('Rastro: o solver reconhece vitória trivial e certificado que viola as regras', () => {
+  const mapa = ['SLL', '##L', '..P'];
+  const solucao = ['right', 'right', 'down', 'down'];
+  assert.ok(validarRastro(mapa, solucao));
+  assert.equal(buscarAtalhoRastro(mapa, 4).encontrado, true);
+  assert.equal(buscarAtalhoRastro(mapa, 3).encontrado, false);
+  assert.equal(validarRastro(mapa, ['down', ...solucao]), false);
+  assert.equal(validarRastro(mapa, ['right', 'left', ...solucao]), false);
+  const fase = gerarRastro(0, 'travessia');
+  assert.equal(buscarAtalhoRastro(fase.mapa, 27, 0).conclusivo, false);
 });
