@@ -46,7 +46,7 @@ Medição Node de 100 sementes, sem aquecimento: p95 de geração Rastro 7,56 ms
 
 ## Diversidade dos caminhos
 
-Gude é verificado por posições iniciais, quadrantes, famílias de rota, orientações e sequências de direção, além do certificado físico. Em 400 sementes desta revisão: 229 origens, quatro quadrantes, 16 sequências e nenhum fallback. Isso evita considerar simples deslocamentos de pedras como diversidade suficiente.
+Gude é verificado por posições iniciais, quadrantes, famílias de rota, orientações e sequências de direção, além do certificado físico. O lote atual de 500 sementes exige três famílias, 24 sequências, inícios e alvos internos e pedras independentes. A assinatura de ocupação 6 × 6 normalizada por rotações/reflexões verifica variedade estrutural, não apenas coordenadas ou espelhos diferentes. Consulte os limites executáveis em `varanda-modos.test.mjs`.
 
 Rastro preserva a família estreita e acrescenta a aberta. Mil sementes resultaram em 667 mapas da família estreita e 333 da aberta, com 985 mapas únicos; 16 das abertas usaram fallback próprio (4,8%). O banco aberto possui dois modelos e oito orientações. A suíte inclui execução por gesto de 200 mapas abertos e regressão de 100 sementes estreitas. A área livre e as bifurcações são critérios verificáveis; dificuldade subjetiva ainda depende de teste humano.
 
