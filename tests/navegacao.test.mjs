@@ -221,3 +221,11 @@ test('Enquadramento adapta dez jogos e janelas desktop, sem mudar toque',()=>{
  assert.equal(n.elemento('.window').style.width,'');
  assert.equal(n.elemento('canvas').style.width,'384px');
 });
+
+test('Tela principal exibe copyright no rodapé sem substituir as opções',()=>{
+  const n=navegador(null,'');
+  n.executar('inicio()');
+  assert.match(n.elemento('#foot').innerHTML,/© 2026 Luigi Scofano de Araujo/);
+  assert.match(n.html(),/Jogo avulso/);
+  assert.match(n.html(),/Volta no Bairro/);
+});
