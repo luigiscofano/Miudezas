@@ -2,7 +2,7 @@
 
 A trilha combina leveza de videogame, harmonia com sétimas e nonas, síncopes brasileiras, cordas dedilhadas sintetizadas e percussão delicada inspirada em madeira, ganzá e platinelas. O objetivo é acompanhar o bairro e seus jogos sem transformar a experiência em uma sequência de alarmes.
 
-A direção musical é **Interpretação Mais Natural**. Os efeitos pertencem à **V2 instrumental**. As imagens desta pasta documentam os arquivos dessa direção, e não as alternativas anteriores.
+A direção musical é **Interpretação Mais Natural**. Os efeitos pertencem à **8-bit opção B**. As imagens desta pasta documentam os arquivos dessa direção, e não as alternativas anteriores.
 
 ---
 
@@ -63,43 +63,55 @@ As sementes de execução são determinísticas, permitindo reproduzir os mesmos
 
 ---
 
-## Efeitos instrumentais V2
+## Efeitos 8-bit opção B
 
-| Efeito | Intenção sonora | Notas-alvo ou gesto |
+Os nove efeitos de interface usam pulsos digitais curtos, suaves e discretos. Não usam cordas, acordes ou arpejos instrumentais. A música **Interpretação Mais Natural** permanece igual; somente os efeitos desta seção foram substituídos.
+
+| Efeito | Contorno de frequência-alvo | Inícios dos pulsos |
 |---|---|---|
-| Selecionar | Toque de madeira | Percussivo, sem altura definida |
-| Confirmar | Duas cordas | Dó4 → Sol4 |
-| Voltar | Corda grave | Sol3 |
-| Acerto | Dedilhado | Mi4 → Lá4 |
-| Erro | Madeira abafada e grave | Madeira + Dó3 |
-| Coleta | Nota curta | Dó5 |
-| Recorde | Acorde aberto | Dó4, Mi4, Sol4, Si4 |
-| Vitória | Pequena cadência | Sol3, Dó4, Mi4, Sol4 |
-| Derrota | Descanso | Si3 → Sol3 |
+| Selecionar | 420 Hz | 0 ms |
+| Confirmar | 560 → 840 Hz | 0 e 75 ms |
+| Voltar | 420 → 310 Hz | 0 e 75 ms |
+| Acerto | 740 → 990 Hz | 0 e 90 ms |
+| Erro | 210 Hz; depois 210 ↘ 170 Hz | 0 e 90 ms |
+| Coleta | 1120 ↗ 1500 Hz | 0 ms |
+| Recorde | 660 → 990 → 1320 Hz | 0, 85 e 170 ms |
+| Vitória | 600 → 800 → 1000 Hz | 0, 105 e 220 ms |
+| Derrota | 380 → 270 Hz; depois 190 ↘ 170 Hz | 0, 115 e 240 ms |
 
-O som de madeira combina ressonâncias breves e ruído amortecido. As cordas usam excitação por ruído filtrado, realimentação amortecida e pequenas ressonâncias de corpo. O ambiente é discreto. Não se trata de samples de madeira ou de um violão gravado.
+As setas entre pulsos indicam a sequência. ↗ e ↘ indicam uma varredura contínua dentro do pulso. Frequências são parâmetros do sintetizador, não notas temperadas de uma partitura nem medições espectrais. O som combina três componentes senoidais, fase quantizada em 32 passos, envelope de ataque/saída e filtro de suavização a 1900 Hz. Limites de pico e energia mantêm a proposta discreta. Os WAV têm 0,85 s, incluindo silêncio final; os eventos audíveis ocupam no máximo 0,36 s.
 
-![Formas de onda dos nove efeitos instrumentais V2](ondas-efeitos.png)
+![Formas de onda dos nove efeitos 8-bit opção B, em escala comum de −0,1 a +0,1](ondas-efeitos.png)
 
-![Mapa das notas e dos ataques de madeira dos efeitos V2](notas-efeitos.png)
+A escala dos efeitos é **−0,1 a +0,1**, a mesma entre todos eles. Não há normalização individual. Ela é mais próxima que a escala das músicas para mostrar os sinais discretos sem alterar seus valores de amplitude.
+
+![Contornos de frequência-alvo em Hz e tempo dos nove efeitos 8-bit](notas-efeitos.png)
+
+O nome histórico `notas-efeitos.png` foi mantido para preservar links, mas a figura agora é um **diagrama de frequência-alvo × tempo**, não um piano roll. As curvas seguem literalmente os eventos do código. Não incluem os harmônicos, ruído ou filtragem do espectro real. Os sinais informativos de Pisca no Mato, Rádio de Pilha e dos demais jogos continuam separados destes efeitos de interface.
 
 ---
 
 ## Reprodutibilidade das visualizações
 
-O script [gerar_visualizacoes.py](../../scripts/audio/gerar_visualizacoes.py) precisa de Python, NumPy, SciPy e Matplotlib. Recebe dois diretórios: um com `compor.py` e os nove WAV de música; outro com `efeitos_acusticos.py` e os nove `acustico_*.wav`.
+O script [gerar_visualizacoes.py](../../scripts/audio/gerar_visualizacoes.py) precisa de Python, NumPy, SciPy e Matplotlib. Recebe dois diretórios: um com `compor.py` e os nove WAV de música; outro com os nove WAV de efeitos. O fonte `scripts/audio/efeitos_8bit.py` é lido separadamente, por padrão; use `--fonte-efeitos` para outro caminho.
 
 ```bash
 python scripts/audio/gerar_visualizacoes.py \
   --musica /caminho/dos/masters-de-musica \
-  --efeitos /caminho/dos/masters-de-efeitos \
+  --efeitos dist/audio/efeitos \
   --saida /caminho/das/visualizacoes
 ```
 
 Para documentar os eventos musicais, o script executa **somente as definições e o agendamento do compositor confiável**, substituindo a síntese por registros. Não executa a etapa de renderização/exportação. Os dados de efeitos são lidos como literais da AST Python. Não use um compositor desconhecido como entrada: a parte musical executa código Python.
 
+Para atualizar somente os efeitos preservando os dados e as imagens musicais, execute da raiz:
+
+```bash
+python scripts/audio/gerar_visualizacoes.py --somente-efeitos --saida docs/audio
+```
+
 O manifesto guarda hashes SHA-256 dos dois fontes e dos 18 WAV utilizados. Isso permite conferir de quais arquivos saíram as imagens. As figuras foram geradas e inspecionadas visualmente. Elas não comprovam, por si, ausência de falhas de reprodução no navegador ou qualidade de transição entre telas; esses aspectos precisam dos testes do sistema de áudio.
 
 ## Reprodução no jogo
 
-[Player e limites](../../dist/audio/README.md) · [Recriar os arquivos](../../scripts/audio/README.md). As músicas de produção contêm o ganho de apresentação +2 dB e compressão FLAC sem perdas; efeitos mantêm WAV original. O controle de volume é independente do mute e viaja no backup versão 3, compatível com versões anteriores.
+[Player e limites](../../dist/audio/README.md) · [Recriar os arquivos](../../scripts/audio/README.md). As músicas de produção contêm o ganho de apresentação +2 dB e compressão FLAC sem perdas; efeitos usam os WAV 8-bit opção B. O controle de volume é independente do mute e viaja no backup versão 3, compatível com versões anteriores.

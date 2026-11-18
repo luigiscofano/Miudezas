@@ -1,4 +1,5 @@
 import {test} from 'node:test';
+import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import {criarAudio,TRILHAS,EFEITOS} from '../dist/audio.js';
@@ -69,4 +70,13 @@ test('Mudança de volume cancela rampa antiga antes de agendar novo ganho',async
 test('Player inicia com música 10% e efeitos 5% antes de qualquer ajuste',async()=>{
  const a=ambiente();await a.som.ativar();
  assert.equal(a.ganhos[1].gain.value,.05);assert.equal(a.ganhos[2].gain.value,.10);
+});
+
+test('Nove efeitos digitais correspondem exatamente ao manifesto de amostras',()=>{
+ const hashes=JSON.parse(readFileSync(new URL('../dist/audio/efeitos/manifesto.json',import.meta.url)));
+ assert.equal(Object.keys(hashes).length,9);
+ for(const nome of EFEITOS){
+  const bytes=readFileSync(new URL('../dist/audio/efeitos/'+nome+'.wav',import.meta.url));
+  assert.equal(createHash('sha256').update(bytes).digest('hex'),hashes[nome+'.wav']);
+ }
 });
