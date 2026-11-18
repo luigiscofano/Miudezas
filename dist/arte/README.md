@@ -42,4 +42,4 @@ A janela original `janela.png` continua ativa na barra superior, com uma cópia 
 
 ## Ícones da seleção
 
-A pasta [icones](icones/README.md) contém os quatro símbolos aprovados para Rádio de Pilha, Três Petelecos, Pisca no Mato e Luz de Varanda. Os PNGs de cenas desta pasta continuam disponíveis para introduções e resultados. Os demais jogos ainda utilizam suas miniaturas originais na seleção.
+A pasta [icones](icones/README.md) contém os sete símbolos aprovados para Rádio de Pilha, Três Petelecos, Pisca no Mato, Luz de Varanda, Maré Miúda, Último Fio e Rastro de Prata. Os PNGs de cenas desta pasta continuam disponíveis para introduções e resultados. Os demais jogos ainda utilizam suas miniaturas originais na seleção.

@@ -68,7 +68,7 @@ Os testes comparam as três dificuldades: nenhuma vence sem comandos, e uma traj
 
 ### Ícones aprovados
 
-`navegacao.test.mjs` verifica a galeria nas duas páginas: apenas Rádio, Gude, Pisca e Luz recebem os SVGs aprovados, os seis restantes preservam os PNGs e `foto()` fora da seleção conserva as cenas. Execute `node --test tests/*.test.mjs`. A inspeção local dos quatro SVGs também comparou seus pixels com as artes aprovadas. Essa comparação não equivale a teste em aparelho físico.
+`navegacao.test.mjs` verifica a galeria nas duas páginas: apenas Rádio, Gude, Pisca, Luz, Maré, Fio e Rastro recebem os SVGs aprovados, os três restantes preservam os PNGs e `foto()` fora da seleção conserva as cenas. Execute `node --test tests/*.test.mjs`. A inspeção local dos sete SVGs também comparou seus pixels com as artes aprovadas. Essa comparação não equivale a teste em aparelho físico.
 
 `rastro-vaso.test.mjs` verifica dimensões de 11 × 10 pixels, permanência dentro da casa P nas três dificuldades e em cinco sementes geradas, além da preservação do estado e da solução durante o desenho.
 

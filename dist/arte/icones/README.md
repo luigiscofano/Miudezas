@@ -1,6 +1,6 @@
 # Ícones aprovados da seleção
 
-Estes quatro desenhos substituem somente as miniaturas correspondentes na galeria de jogos. Luz de Varanda foi adicionada após aprovação específica da opção A com ajuste restrito a uma perna.
+Estes sete desenhos substituem somente as miniaturas correspondentes na galeria de jogos. Luz de Varanda foi adicionada após aprovação específica da opção A com ajuste restrito a uma perna.
 
 | Arquivo | Jogo | Referência |
 |---|---|---|
@@ -22,3 +22,15 @@ As artes aprovadas usam uma matriz de 48 × 48 pixels. Os SVGs representam os me
 ## Verificação
 
 O teste de navegação confere os dez cartões e a preservação das imagens fora da galeria. A rasterização local foi comparada pixel a pixel com os PNGs aprovados. Testes automatizados não substituem revisão em dispositivos físicos.
+
+## Aprovação dos três sprites
+
+| Arquivo | Jogo | Arte aprovada |
+|---|---|---|
+| `mare.svg` | Maré Miúda | Caranguejo da proposta 5 |
+| `fio.svg` | Último Fio | Bem-te-vi da proposta 5 |
+| `rastro.svg` | Rastro de Prata | Caracol da proposta 5, sem folha |
+
+![Caranguejo](mare.svg) ![Bem-te-vi](fio.svg) ![Caracol](rastro.svg)
+
+Somente a seleção muda. Folhas e sprites dentro das partidas não são alterados. Goteira, Pão na Chapa e Pipa de Laje permanecem com as miniaturas anteriores até aprovação dos seus ícones.

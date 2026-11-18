@@ -444,7 +444,7 @@ Maré Miúda recebeu espuma costeira, areia discreta, baixios destacados, pedras
 
 ## Ícones aprovados na seleção
 
-Rádio de Pilha, Três Petelecos, Pisca no Mato e Luz de Varanda usam seus ícones em pixel art nos cartões de **Escolha um jogo**. As outras seis miniaturas permanecem como estavam. A mudança é só de apresentação: introduções, resultados, partidas, controles e dados salvos continuam iguais.
+Rádio de Pilha, Três Petelecos, Pisca no Mato, Luz de Varanda, Maré Miúda, Último Fio e Rastro de Prata usam seus ícones em pixel art nos cartões de **Escolha um jogo**. As outras três miniaturas permanecem como estavam. A mudança é só de apresentação: introduções, resultados, partidas, controles e dados salvos continuam iguais.
 
 | Rádio de Pilha | Três Petelecos | Pisca no Mato |
 |---|---|---|
@@ -466,3 +466,9 @@ O cartão usa a opção A com apenas a perna esquerda afastada do corpo, conform
 ### Pão francês aprovado
 
 Pão na Chapa usa a versão aprovada baseada na referência enviada: pão francês alongado, com dois cortes diagonais e cores chapadas. O sprite tem 13 × 16 pixels, desenhado em escala 2 na chapa. As quatro paletas mostram antes do ponto, no ponto, tostado e queimado, preservando a fumaça. Ovo, utensílios, áreas de toque, tempos, metas, reposições e alternância de lados não mudam. Os testes de identidade verificam o novo desenho em ambos os lados; a suíte mantém os testes dos três níveis, vitória, queima e três erros.
+
+### Ícones de Maré Miúda, Último Fio e Rastro de Prata
+
+![Maré Miúda](dist/arte/icones/mare.svg) ![Último Fio](dist/arte/icones/fio.svg) ![Rastro de Prata](dist/arte/icones/rastro.svg)
+
+Os três ícones aprovados usam os sprites dos respectivos jogos como referência. O caracol não inclui folha no ícone; as folhas coletáveis dentro da partida permanecem intactas. Pão na Chapa, Goteira e Pipa continuam com miniaturas, aguardando aprovação de novos ícones.
