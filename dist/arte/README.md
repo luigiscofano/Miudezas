@@ -39,3 +39,7 @@ A abertura usa a [capa Tijuca](../artes/capas/README.md). Este diretório manté
 ## Ícone atual
 
 A janela original `janela.png` continua ativa na barra superior, com uma cópia documentada em [artes/marca](../artes/marca/README.md). O favicon atual é o [ícone verde aprovado](../artes/marca/miudezas-icone-verde.png), documentado na [marca](../artes/marca/README.md).
+
+## Ícones da seleção
+
+A pasta [icones](icones/README.md) contém os três símbolos aprovados para Rádio de Pilha, Três Petelecos e Pisca no Mato. Os PNGs de cenas desta pasta continuam disponíveis para introduções e resultados. Os demais jogos ainda utilizam suas miniaturas originais na seleção.

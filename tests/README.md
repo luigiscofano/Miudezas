@@ -63,3 +63,7 @@ Os testes comparam as três dificuldades: nenhuma vence sem comandos, e uma traj
 `varanda-arte.test.mjs` verifica cores características da arte aprovada, coordenadas finitas e ausência de mutação de estado/HUD durante o desenho. São testes de renderização isolada, não testes de aparelho físico.
 
 `pisca-rastro-arte.test.mjs` verifica as três matrizes de folhas, a paleta, o fundo original de Pisca e a preservação do estado ao desenhar.
+
+### Ícones aprovados
+
+`navegacao.test.mjs` verifica a galeria nas duas páginas: apenas Rádio, Gude e Pisca recebem os SVGs aprovados, os sete restantes preservam os PNGs e `foto()` fora da seleção conserva as cenas. Execute `node --test tests/*.test.mjs`. A inspeção local dos três SVGs também comparou seus pixels com as artes aprovadas. Essa comparação não equivale a teste em aparelho físico.

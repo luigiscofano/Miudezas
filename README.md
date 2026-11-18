@@ -437,3 +437,13 @@ Luz de Varanda e Três Petelecos: luz, texturas e sprites refinados sem mudar ob
 ### Visual de Pisca e Rastro
 
 Pisca no Mato mantém o visual original dos vaga-lumes e da vegetação lateral, restaurado a pedido do autor. Sem Parar, recordes e sequência continuam inalterados. Rastro de Prata apresenta três folhas finas com silhuetas distintas, na mesma paleta e escala. São mudanças de desenho: regras, controles, mapas e saves permanecem iguais.
+
+## Ícones aprovados na seleção
+
+Rádio de Pilha, Três Petelecos e Pisca no Mato usam seus ícones em pixel art nos cartões de **Escolha um jogo**. As outras sete miniaturas permanecem como estavam. A mudança é só de apresentação: introduções, resultados, partidas, controles e dados salvos continuam iguais.
+
+| Rádio de Pilha | Três Petelecos | Pisca no Mato |
+|---|---|---|
+| ![Ícone Rádio de Pilha](dist/arte/icones/radio.svg) | ![Ícone Três Petelecos](dist/arte/icones/gude.svg) | ![Ícone Pisca no Mato](dist/arte/icones/pisca.svg) |
+
+[Arquivos, proporções e manutenção dos ícones](dist/arte/icones/README.md).

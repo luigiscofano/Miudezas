@@ -25,7 +25,8 @@ let tipoPartida='classic',semente=1,recordes=normalizarRecordes(ler('recordes',{
 const novoMapa=()=>{semente=(Math.random()*4294967296)>>>0;};
 const nomeModo=()=>tipoPartida==='endless'?'Sem Parar':tipoPartida==='generated'?'Caminho Novo':nomesNiveis[nivel-1];
 const atual=()=>catalogo[selecionado];
-const foto=(j,extra='')=>'<img src="./arte/'+(j.imagem||j.id+'.png')+'" alt="" '+extra+'>';
+// Apenas a galeria usa os ícones aprovados; introduções e resultados mantêm suas cenas.
+const foto=(j,extra='',selecao=false)=>'<img src="./arte/'+((selecao&&j.icone)||j.imagem||j.id+'.png')+'" alt="" '+extra+'>';
 const btn=(acao,titulo,classe='action',extra='')=>'<button type="button" class="'+classe+'" data-do="'+acao+'" '+extra+'>'+titulo+'</button>';
 const paginaHTML=(conteudo,classe='')=>'<section class="screen-page '+classe+'">'+conteudo+'</section>';
 function topo(titulo,direita=''){return '<div class="page-head">'+btn('voltar',icone('volta'),'back','aria-label="Voltar"')+'<h2>'+titulo+'</h2>'+(direita?'<span class="count">'+direita+'</span>':'')+'</div>';}
@@ -87,7 +88,7 @@ function galeria(){
   modo='avulso';mudar('galeria');
   pagina=Math.max(0,Math.min(totalPaginas-1,pagina));
   const inicioPag=pagina*porPagina;
-  const cards=catalogo.slice(inicioPag,inicioPag+porPagina).map((j,k)=>btn('escolher',foto(j)+'<span>'+j.nome+'</span>','card','data-index="'+(inicioPag+k)+'"')).join('');
+  const cards=catalogo.slice(inicioPag,inicioPag+porPagina).map((j,k)=>btn('escolher',foto(j,'',true)+'<span>'+j.nome+'</span>','card','data-index="'+(inicioPag+k)+'"')).join('');
   const pontos=Array.from({length:totalPaginas},(_,i)=>'<i class="'+(pagina===i?'on':'')+'"></i>').join('');
   area.innerHTML=paginaHTML(topo('Escolha um jogo',(pagina+1)+' / '+totalPaginas)+'<div class="gallery">'+cards+'</div><div class="pager">'+
     btn('anterior','‹ Anterior','small-btn',pagina===0?'disabled':'')+'<span class="pips" aria-hidden="true">'+pontos+'</span>'+
