@@ -1,5 +1,5 @@
 /** Preferências adicionais não alteram a chave legada que liga/desliga todo o som. */
-export const VOLUMES_PADRAO = Object.freeze({musica:70, efeitos:100});
+export const VOLUMES_PADRAO = Object.freeze({musica:10, efeitos:25});
 export const CHAVES_VOLUME = Object.freeze({musica:'volumeMusica', efeitos:'volumeEfeitos'});
 export function normalizarVolume(valor,padrao){
   return typeof valor==='number'&&Number.isFinite(valor)?Math.max(0,Math.min(100,Math.round(valor))):padrao;
