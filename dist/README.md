@@ -82,3 +82,7 @@ A pausa usa a mesma imagem da seleção: ícone aprovado quando disponível e mi
 ### Goteira, Pipa e Pão na Chapa: últimos ícones aprovados
 
 Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavização: balde com alça simples e pipa inclinada. São compartilhados pela seleção e pela pausa; não alteram cenas jogáveis, colisões, controles ou saves. Pão na Chapa usa a versão intermediária aprovada de 32 × 32 pixels, com pão francês e ovo baseados nos sprites reais.
+
+### Maré: padrões avançados misturados
+
+`gerarMare()` conserva as prioridades de enseadas e arquipélagos e intercala dois conjuntos avançados nas demais sementes. A prova considera posição, maré e última areia segura. Pontes indispensáveis, custo de sincronização, escolhas alcançáveis e praças secas complementam o comprimento. A geração ocorre somente ao criar a fase, tem tentativas limitadas e reservas certificadas; repetir mantém a semente. Nenhum save, controle, desenho ou fase autoral foi modificado. Consulte [os critérios do Quintal](../docs/jogos/quintal/README.md).

@@ -316,11 +316,168 @@ function gerarArquipelagoMare(seed) {
   if (!arquipelagoMareValido(metrics)) throw new Error('Reserva do arquipélago inválida.');
   return {seed, grid, solution: metrics.solution, metrics, fallback: true, family: 'arquipelago'};
 }
+export const criteriosMareAvancada = Object.freeze({
+  'muito-dificil': Object.freeze({minPassos: 30, maxPassos: 48, custoMare: 12, custoMaximo: 17, portais: 5}),
+  'muitissimo-dificil': Object.freeze({minPassos: 38, maxPassos: 60, custoMare: 18, portais: 6})
+});
+function escolhasMare(grid) {
+  const passavel = cell => '.SC='.includes(cell ?? '!');
+  let start;
+  grid.forEach((row, y) => { if (row.includes('S')) start = [row.indexOf('S'), y]; });
+  const visited = new Set([start.join(',')]), queue = [start];
+  let escolhas = 0, ciclosAreia = 0;
+  for (let head = 0; head < queue.length; head++) {
+    const [x, y] = queue[head];
+    const neighbors = Object.values(delta).map(([dx, dy]) => [x + dx, y + dy])
+      .filter(([nx, ny]) => passavel(grid[ny]?.[nx]));
+    if (neighbors.length >= 3) escolhas++;
+    // Uma praça 2×2 oferece duas rotas secas para ajustar a fase antes de atravessar.
+    if ([[0, 0], [1, 0], [0, 1], [1, 1]].every(([dx, dy]) => '.SC'.includes(grid[y + dy]?.[x + dx] ?? '!'))) ciclosAreia++;
+    for (const neighbor of neighbors) {
+      const key = neighbor.join(',');
+      if (!visited.has(key)) { visited.add(key); queue.push(neighbor); }
+    }
+  }
+  return {escolhas, ciclosAreia};
+}
+function mareAvancadaValida(metrics, tier) {
+  const limits = criteriosMareAvancada[tier];
+  return metrics && metrics.passos >= limits.minPassos && metrics.passos <= limits.maxPassos &&
+    metrics.passos - metrics.passosSemMare >= limits.custoMare &&
+    metrics.passos - metrics.passosSemMare <= (limits.custoMaximo ?? Infinity) &&
+    metrics.baixiosObrigatorios >= limits.portais && metrics.passosSemPedras < metrics.passos &&
+    metrics.escolhas >= 8 && metrics.ciclosAreia >= 2;
+}
+const reservasMareAvancada = {
+  "muito-dificil": [
+    [
+      "..~..#.C",
+      "..=..=..",
+      "~~#~~##=",
+      "..~..~..",
+      "..=..#..",
+      "=##=~~~=",
+      "..~..=..",
+      "S#~..~.."
+    ],
+    [
+      ".##.#=#C",
+      "..=..~..",
+      "~~~~~##=",
+      "..=..~..",
+      "..#..#..",
+      "#=~#=~=#",
+      "..~..~..",
+      "S.#..=.."
+    ]
+  ],
+  "muitissimo-dificil": [
+    [
+      "..=..=.C",
+      "..~..~..",
+      "~~~~~#=#",
+      "..=..~..",
+      "#.~..#..",
+      "~=~~=~=~",
+      "..~..~..",
+      "S##..=.."
+    ],
+    [
+      "..=..#.C",
+      "..~.#=..",
+      "~~#~#~~=",
+      "..=..##.",
+      "..~..~..",
+      "#=~=~~=~",
+      "..~..=..",
+      "S.~#.~.#"
+    ],
+    [
+      "..=..#.C",
+      "..~#.=..",
+      "~~#~~~~=",
+      "..#..~..",
+      "..=..~..",
+      "~=~=#~=~",
+      "..#..#..",
+      "S.#..=.."
+    ],
+    [
+      "..~..~.C",
+      "..~..=..",
+      "=#~~=~##",
+      ".#~..~#.",
+      "..#..=..",
+      "~=#~~~=~",
+      "..=..~..",
+      "S.~..=.."
+    ],
+    [
+      "..~#.=.C",
+      "..=#.~..",
+      "~~~~#~=#",
+      "..~..~..",
+      "..=..~..",
+      "~=~=~~~=",
+      "#.~..~..",
+      "S.#..=.."
+    ],
+    [
+      "..#..#.C",
+      ".##..=.#",
+      "=~~~=~#~",
+      "..~..=..",
+      ".##..#..",
+      "=~#~~#=#",
+      "..=..#..",
+      "S.~..=.."
+    ],
+    [
+      "..~..=.C",
+      "..~..~..",
+      "#=~=#~~~",
+      "#.#..~..",
+      "..#..=..",
+      "~=~~~~=#",
+      "..=..=..",
+      "S.#..~.."
+    ],
+    [
+      "..=..#.C",
+      "..~#.=..",
+      "##~~#~~=",
+      "..~..~#.",
+      "..=..~..",
+      "~=~~=#~=",
+      "..~..~..",
+      "S.~..=.."
+    ]
+  ]
+};
+function gerarMareAvancada(seed, tier) {
+  let state = (seed ^ 0xc2b2ae35) >>> 0;
+  const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
+  const limits = criteriosMareAvancada[tier];
+  for (let attempt = 0; attempt < 64; attempt++) {
+    const grid = criarArquipelagoMare(random), solution = resolverMare(grid);
+    if (!solution || solution.length < limits.minPassos || solution.length > limits.maxPassos) continue;
+    const metrics = {...analisarMare(grid), ...escolhasMare(grid)};
+    if (mareAvancadaValida(metrics, tier)) return {seed, grid, solution: metrics.solution, metrics, fallback: false, family: tier};
+  }
+  // A reserva conserva sincronização, escolhas e obstáculos; não reduz o desafio.
+  const reservas = reservasMareAvancada[tier];
+  const grid = orientarMare(reservas[Math.floor(random() * reservas.length)], Math.floor(random() * 8));
+  const metrics = {...analisarMare(grid), ...escolhasMare(grid)};
+  if (!mareAvancadaValida(metrics, tier)) throw new Error('Reserva avançada da maré inválida.');
+  return {seed, grid, solution: metrics.solution, metrics, fallback: true, family: tier};
+}
 export function gerarMare(seed = 1) {
   const original = Number(seed) >>> 0;
   // A prioridade preserva as enseadas; o restante alterna arquipélagos e família original.
   if (original % 3 === 0) return gerarMareIrregular(original);
   if (original % 7 === 0) return gerarArquipelagoMare(original);
+  if (original % 13 === 0) return gerarMareAvancada(original, 'muitissimo-dificil');
+  if (original % 11 === 0) return gerarMareAvancada(original, 'muito-dificil');
   let state = original;
   const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
   const orientation = Math.floor(random() * 8);

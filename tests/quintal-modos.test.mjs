@@ -1,11 +1,12 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {quintal,gerarMare,resolverMare,criteriosMare,analisarMare} from '../dist/quintal.js';
+import {quintal,gerarMare,resolverMare,criteriosMare,analisarMare,criteriosMareAvancada} from '../dist/quintal.js';
 function criar(id,level=1,options={}){const results=[];const game=quintal[id](level,{tone(){},finish(...r){results.push(r);}},options);return {game,results};}
 test('Maré: 300 sementes reproduzíveis, solução executada com maré real',()=>{
  for(let seed=0;seed<300;seed++){
   const map=gerarMare(seed); assert.deepEqual(map,gerarMare(seed));
-  assert.ok(map.metrics.passos>=criteriosMare.passosMinimos && map.metrics.passos<=criteriosMare.passosMaximos);
+  const advanced=criteriosMareAvancada[map.family];
+  assert.ok(map.metrics.passos>=(advanced?.minPassos??criteriosMare.passosMinimos) && map.metrics.passos<=(advanced?.maxPassos??criteriosMare.passosMaximos));
   assert.ok(map.metrics.passos-map.metrics.passosSemMare>=criteriosMare.custoMinimoMare);
   assert.ok(map.metrics.baixiosObrigatorios>=criteriosMare.baixiosObrigatorios);
   assert.ok(map.metrics.passosSemPedras<map.metrics.passos, 'pedras devem impedir atalhos');
