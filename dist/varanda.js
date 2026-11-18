@@ -67,6 +67,7 @@ function lagartixa(ctx, x, y, angulo) {
 
 function luz(level, api, options={}) {
   const infinito=options.mode==='endless';
+  const limiteErros = 3;
   let erros=0;
   const velocidade=()=>infinito?Math.min(3.8,1.98+capturas*.07):(1.55+.43*level);
   const meta = level + 1;
@@ -87,7 +88,9 @@ function luz(level, api, options={}) {
   function terminar() {
     if (acabou) return;
     acabou = true;
-    api.finish(!infinito && capturas >= meta, capturas + (capturas === 1 ? ' mosquito capturado.' : ' mosquitos capturados.'));
+    const resumo = capturas + (capturas === 1 ? ' mosquito capturado.' : ' mosquitos capturados.');
+    api.finish(!infinito && capturas >= meta && erros < limiteErros,
+      erros >= limiteErros ? 'Três botes errados. ' + resumo : resumo);
   }
   function atacar() {
     if (acabou || bote) return;
@@ -103,7 +106,12 @@ function luz(level, api, options={}) {
     snapshot(){return {capturas,erros,acabou,desvio:desvio(),velocidade:velocidade(),emBote:Boolean(bote)};},
     press: atacar, release: semAcao,
     point(x,y,phase) { if (phase === 'down') atacar(); },
-    hud() { if(infinito)return capturas+' mosquitos · '+(3-erros)+' erros restantes'; return capturas + '/' + meta + ' mosquitos · ' + Math.max(0, Math.ceil(limite - tempo)) + ' s'; },
+    hud() {
+      const restantes = limiteErros - erros;
+      const tentativas = restantes + (restantes === 1 ? ' erro restante' : ' erros restantes');
+      if (infinito) return capturas + ' mosquitos · ' + tentativas;
+      return capturas + '/' + meta + ' mosquitos · ' + Math.max(0, Math.ceil(limite - tempo)) + ' s · ' + tentativas;
+    },
     update(dt) {
       if (acabou) return;
       tempo += dt;
@@ -115,7 +123,8 @@ function luz(level, api, options={}) {
             indice = (indice+1) % pousos.length;
             if (!infinito && capturas === meta) { terminar(); return; }
           }
-          if(infinito&&!bote.acerto&&++erros===3){terminar();return;}
+          // Só a conclusão de um bote conta: cliques repetidos durante a animação não gastam tentativas.
+          if (!bote.acerto && ++erros >= limiteErros) { terminar(); return; }
           bote = null;
           mira = -1.3;
         }

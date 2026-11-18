@@ -102,3 +102,7 @@ Os testes executam o motor e os controles públicos em automação. Isso não eq
 ## Pipa em V
 
 `pipa-aves.test.mjs` verifica simetria e quantidade das aves, compara colisão com todos os pixels sólidos e confirma ausência de barreira invisível no interior do V. Simula dez minutos de Sem Parar em cada dificuldade, mantendo a lista de obstáculos limitada. `quintal-modos.test.mjs` também verifica vitória com controle ativo em 30/60/120 Hz, derrota parado e após acomodar na primeira passagem, encerramento único e velocidades/margens. São testes da lógica, não toque em aparelho físico.
+
+### Lagartixa: três erros em todos os níveis
+
+`luz-erros.test.mjs` executa cada dificuldade: erro contado após um bote, entradas repetidas ignoradas durante a animação, derrota única no terceiro erro, estado congelado após terminar, reinício, vitória com dois erros e prazo preservado. Também confirma que Sem Parar continua sem limite de tempo. As entradas usam os métodos reais do jogo; não substituem teste de toque em aparelho físico.
