@@ -27,7 +27,7 @@ Uma fábrica recebe o nível de 1 a 3, uma API com callbacks de som e conclusão
 
 ![Capa](artes/capas/miudezas-tijuca.png)
 
-A [pasta artes](artes/README.md) guarda a composição oficial. A capa é exibida inteira, sem esticamento; regras e progresso não foram alterados.
+A [pasta artes](artes/README.md) guarda a composição oficial. A capa é exibida inteira, sem esticamento; regras e progresso não foram alterados. Em telas de até 540 px de largura, a abertura acompanha a altura natural da arte, eliminando as faixas alaranjadas acima e abaixo. A janela dos jogos e a composição no desktop conservam suas dimensões; em alturas reduzidas, a área central permite rolagem.
 
 ## Marca da interface
 
