@@ -31,3 +31,7 @@ body.popup .desktop{padding:0}body.popup .window{width:min(492px,100vw,100svh);h
 .chapa-game .pad button{min-height:44px;flex:1;font:12px var(--pixel)}
 .chapa-game .game-hud{min-height:34px;font-size:12px}
 .chapa-game .stage{min-height:150px}
+
+/* A pausa compartilha a arte da seleção e centraliza só a saída ao menu. */
+.modal-box .pause-art{object-fit:contain}
+.pause-actions>[data-do="sair"]{grid-column:1/-1;justify-self:center;width:calc((100% - 9px)/2)}
