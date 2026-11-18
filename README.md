@@ -52,9 +52,12 @@ Para experimentar no celular, conecte os dois aparelhos à mesma rede local, exe
 
 ## Modos e telas
 
+<details>
+<summary>Expandir modos e telas</summary>
+
 | Tela | O que se faz nela |
 |---|---|
-| Início | Escolher entre uma partida avulsa e a sequência. A barra oferece som e abertura da janela no desktop. |
+| Início | Escolher entre uma partida avulsa e a sequência. A barra oferece som, engrenagem de configurações e abertura da janela no desktop. |
 | Galeria | Percorrer duas páginas com até seis miniaturas cada. A ordem segue o percurso do bairro. |
 | Roteiro | Ver as dez paradas. Com progresso salvo, escolher entre retomar e iniciar uma nova volta. |
 | Seleção de nível | Escolher **Sossegado**, **Animado** ou **Puxado**, além do modo adicional nos jogos elegíveis. As fases autorais permanecem disponíveis. |
@@ -66,7 +69,7 @@ Para experimentar no celular, conecte os dois aparelhos à mesma rede local, exe
 
 ### Telas reais da versão publicada
 
-Capturas feitas no [GitHub Pages](https://luigiscofano.github.io/Miudezas/), sem cursor, em 18/11/2026. Cada imagem mostra a **janela completa da aplicação**, incluindo cabeçalho, conteúdo, controles e rodapé. Apenas a margem vazia externa do navegador foi recortada; nenhuma parte da interface foi redesenhada.
+Capturas feitas no [GitHub Pages](https://luigiscofano.github.io/Miudezas/), sem cursor, em 18/11/2026. As seis imagens abaixo mostram a **janela completa da aplicação**, agora com a engrenagem de configurações visível, incluindo cabeçalho, conteúdo, controles e rodapé. Apenas a margem vazia externa do navegador foi recortada; nenhuma parte da interface foi redesenhada.
 
 | Menu inicial | Seleção de jogos |
 |:---:|:---:|
@@ -113,7 +116,13 @@ Teclado e botões direcionais continuam sendo alternativas ao arrasto; não é n
 
 ---
 
+
+</details>
+
 ## Identidade visual
+
+<details>
+<summary>Expandir identidade visual</summary>
 
 ### Memórias, Tijuca e cotidiano brasileiro
 
@@ -184,7 +193,13 @@ As cores de enquadramento de cada jogo continuam nas respectivas fichas. Esta se
 
 ---
 
+
+</details>
+
 ## Elementos visuais dentro dos jogos
+
+<details>
+<summary>Expandir elementos visuais dentro dos jogos</summary>
 
 O [acervo organizado por jogo](docs/elementos-visuais/README.md) reúne **47 famílias de elementos reais dos dez jogos**: pote, três folhas, caracol, siri, concha, bolinha e buraco, lagartixa, mosquito, vagalumes, bem-te-vi, mariposa, alimentos, utensílios, obstáculos e cenários. O pote inclui a versão mais recente.
 
@@ -304,7 +319,13 @@ Fundo noturno e vegetação; Vagalumes, asas, abdômen e sinais de luz.
 
 ---
 
+
+</details>
+
 ## Jogos e level design
+
+<details>
+<summary>Expandir jogos e level design</summary>
 
 Cada ficha mostra o ícone atual, a miniatura já armazenada e uma cena atual do tabuleiro, além do objetivo, dos comandos e da diferença implementada entre os três níveis. Nos jogos de tempo, a dificuldade altera a margem de reação. Nos de percurso, ela altera o mapa. Nos de memória, amplia o que o jogador precisa reter.
 
@@ -530,7 +551,13 @@ Palco `#1A393B` · [Implementação de Pisca no Mato](dist/varanda.js)
 
 ---
 
+
+</details>
+
 ## Geração e validação de fases
+
+<details>
+<summary>Expandir geração e validação de fases</summary>
 
 Os três geradores usam sementes, orçamento finito de tentativas e reservas validadas. Repetir conserva a fase; “Nova fase” troca a semente. As fases fixas não dependem do sorteio. A dificuldade é estimada por restrições verificáveis, não uma garantia subjetiva de dificuldade para toda pessoa.
 
@@ -558,7 +585,13 @@ O certificado usa o **mesmo motor do jogo**, a 30, 60 e 120 atualizações por s
 
 ---
 
+
+</details>
+
 ## Arquitetura
+
+<details>
+<summary>Expandir arquitetura</summary>
 
 O navegador carrega o HTML e o módulo principal. A navegação usa elementos HTML, o cenário usa Canvas 2D e cada fábrica de jogo mantém o próprio estado em uma closure. Isso permite pausar uma rodada conservando o balde, a trilha do caracol ou a posição do ponteiro do rádio.
 
@@ -653,7 +686,13 @@ console.log(rodada.hud());
 
 ---
 
+
+</details>
+
 ## Trilha sonora e configurações
+
+<details>
+<summary>Expandir trilha sonora e configurações</summary>
 
 A identidade sonora, **Interpretação Mais Natural**, reúne nove músicas relaxantes com síncopes brasileiras e nove efeitos 8-bit discretos (opção B). Cada tipo de tela tem seu tema. A música combina cordas dedilhadas e percussão delicada; os efeitos usam pulsos curtos de videogame, sem cordas ou acordes; os mapas abaixo documentam eventos reais do compositor, não uma transcrição inventada.
 
@@ -673,7 +712,60 @@ A **engrenagem** abre Configurações: música e efeitos têm controles independ
 
 ---
 
+
+</details>
+
+## Configurações e Sobre o projeto
+
+<details>
+<summary>Expandir configurações e sobre o projeto</summary>
+
+A engrenagem permanece na barra superior do início, catálogo, seletor, partida e pausa. Ela abre o mesmo painel sem abandonar o jogo selecionado.
+
+| Controle | Comportamento |
+|---|---|
+| Música | Ajusta somente a trilha, de 0 a 100%. Padrão: **10%**. |
+| Efeitos sonoros | Ajusta os efeitos, de 0 a 100%. Padrão: **5%**. |
+| Restaurar volumes padrão | Retorna os dois controles a 10% e 5%; não apaga progresso ou recordes. |
+| Botão de som na barra | Liga ou silencia o conjunto, conservando os volumes escolhidos. |
+| Sobre o projeto | Expande o texto de apresentação, memórias, referência artística e aviso de armazenamento local. |
+| Fechar | Fecha o painel; se a partida foi pausada, ela não reinicia sozinha. |
+
+As preferências são locais a este navegador. Os padrões não sobrescrevem valores que a pessoa já salvou. A implementação está em [configuracoes.js](dist/configuracoes.js), com o áudio em [audio.js](dist/audio.js).
+
+![Painel real de Configurações, com música em 10%, efeitos em 5% e botão para restaurar padrões](docs/imagens/telas/configuracoes.jpg)
+
+### Texto do Sobre
+
+O painel apresenta o texto abaixo; a referência externa fica nesta documentação, não como link dentro do jogo.
+
+> Miudezas reúne dez jogos de bairro em uma pequena janela. Cenas do cotidiano brasileiro viram desafios curtos de atenção, memória, coordenação e planejamento.
+>
+> Meus dois pais viveram a vida toda na Tijuca. Foi nesse bairro e nas minhas memórias de família que busquei inspiração para a identidade visual de Miudezas. Trouxe temas do cotidiano brasileiro para criar um jogo confortável e aconchegante, como essas lembranças.
+>
+> Entre essas memórias está a obra Balões ou Ritual do Vento, do escultor Gabriel Fonseca, que eu sempre via ao ir para a casa da minha avó na Tijuca. Suas formas e cores aparecem reinterpretadas em pixel art na capa, junto das casas, dos morros, da pipa e do bem-te-vi.
+>
+> Quis transformar essas pequenas cenas em um lugar para desacelerar, explorar e brincar. A arte em pixels e a música suave acompanham esse sentimento de acolhimento.
+>
+> © 2026 Luigi Scofano de Araujo
+>
+> Progresso e preferências ficam neste navegador. Use o backup para guardar seus dados; não há conta nem sincronização automática.
+
+| Sobre aberto | Continuação após rolar o painel |
+|:---:|:---:|
+| ![Parte superior do painel real com Sobre o projeto expandido](docs/imagens/telas/sobre.jpg) | ![Continuação real do Sobre, incluindo aviso de armazenamento local](docs/imagens/telas/sobre-continuacao.jpg) |
+
+Estas duas capturas mostram partes do mesmo painel rolável, sem montagem. A [referência artística e sua contextualização geográfica](#memórias-tijuca-e-cotidiano-brasileiro) distinguem a memória da Tijuca da localização da obra. Consulte também o [catálogo mantido pela família de Gabriel Fonseca](https://gabrielsculptor.com/about/).
+
+---
+
+
+</details>
+
 ## Dados e som
+
+<details>
+<summary>Expandir dados e som</summary>
 
 | Chave local | Conteúdo | Momento de gravação |
 |---|---|---|
@@ -690,7 +782,13 @@ As trilhas são FLAC sem perdas, carregadas sob demanda, com transição de 300 
 
 ---
 
+
+</details>
+
 ## Manutenção e testes
+
+<details>
+<summary>Expandir manutenção e testes</summary>
 
 **Onde editar.** Para alterar o tempo de uma rajada, edite a fábrica em quintal.js. Para alterar a explicação mostrada antes do jogo, edite catalogo.js. Uma mudança que altere a meta precisa aparecer nos dois lugares. Para revisar uma cor, identifique primeiro se ela pertence à interface, à margem do palco ou ao desenho da cena.
 
@@ -716,7 +814,13 @@ O teste rápido de sintaxe pode ser feito com Node recente, por exemplo `node --
 
 ---
 
+
+</details>
+
 ## Publicação no GitHub Pages
+
+<details>
+<summary>Expandir publicação no github pages</summary>
 
 **Site público:** [luigiscofano.github.io/Miudezas](https://luigiscofano.github.io/Miudezas/). O site não depende de o computador do autor estar ligado. O conteúdo servido é `dist/`, sem compilação ou backend.
 
@@ -726,7 +830,13 @@ Para transferir progresso de outra origem, exporte pela página de backup naquel
 
 ---
 
+
+</details>
+
 ## Mapa da documentação
+
+<details>
+<summary>Expandir mapa da documentação</summary>
 
 | Guia | Conteúdo |
 |---|---|
@@ -742,7 +852,13 @@ Para transferir progresso de outra origem, exporte pela página de backup naquel
 
 ---
 
+
+</details>
+
 ## Referências
+
+<details>
+<summary>Expandir referências</summary>
 
 **Inspirações de criação.** As referências visuais partem das cenas e dos objetos dos jogos do catálogo. A moldura vem da ideia de um jogo de janela para computador. O bairro dá unidade a cenas que pedem gestos diferentes, como dar um peteleco, acertar o ponto do pão, ajustar um rádio e observar os vaga-lumes. O quintal do caracol traz o raciocínio espacial ao chão de ladrilhos. Esses exemplos descrevem as escolhas tomadas para Miudezas.
 
@@ -758,3 +874,5 @@ Para transferir progresso de outra origem, exporte pela página de backup naquel
 ### Enquadramento dos jogos no computador
 
 Em dispositivos com mouse, a largura da janela durante a partida acompanha a altura livre do tabuleiro quadrado. Isso remove as faixas laterais sem esticar os pixels, cortar a cena ou mudar coordenadas de controle. O ajuste reage ao redimensionamento e à altura do HUD, e é desfeito ao pausar ou voltar aos menus. Telas de toque mantêm o enquadramento anterior. Os testes de navegação cobrem os dez jogos, larguras de 492 a 1920 pixels, saída/retomada e preservação do toque; a simulação DOM não substitui avaliação em aparelho físico.
+
+</details>

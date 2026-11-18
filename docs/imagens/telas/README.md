@@ -4,7 +4,7 @@
 
 Capturadas em **18 de novembro de 2026**, navegando pela versão pública em [GitHub Pages](https://luigiscofano.github.io/Miudezas/), em navegador Chromium de computador. Foram usados os controles reais da aplicação; não são simulações, montagens ou imagens geradas.
 
-Cada JPEG contém a janela completa da aplicação: título, conteúdo, controles e rodapé. O recorte remove somente a margem vazia externa do navegador. O ponteiro foi mantido fora da região capturada. As imagens preservam a apresentação efetivamente exibida, sem retoques.
+As seis capturas de navegação contêm a janela completa da aplicação, com a engrenagem visível: título, conteúdo, controles e rodapé. O recorte remove somente a margem vazia externa do navegador. O ponteiro foi mantido fora da região capturada. As imagens preservam a apresentação efetivamente exibida, sem retoques.
 
 ---
 
@@ -18,6 +18,20 @@ Cada JPEG contém a janela completa da aplicação: título, conteúdo, controle
 | [partida-mare.jpg](partida-mare.jpg) | Partida real de Maré Miúda, nível Puxado. |
 | [pausa.jpg](pausa.jpg) | Pausa da partida, regras e navegação. |
 | [volta-bairro.jpg](volta-bairro.jpg) | Roteiro das dez paradas. |
+
+---
+
+## Configurações e Sobre
+
+As três imagens adicionais registram o painel real. `configuracoes.jpg` mostra os padrões 10%/5%. `sobre.jpg` mostra o Sobre expandido e `sobre-continuacao.jpg` registra a continuação após rolar. São vistas distintas de um painel rolável, não uma montagem nem uma captura de conteúdo oculto.
+
+| Arquivo | Conteúdo |
+|---|---|
+| [configuracoes.jpg](configuracoes.jpg) | Música, efeitos, restaurar padrões e acesso ao Sobre. |
+| [sobre.jpg](sobre.jpg) | Apresentação e memórias familiares. |
+| [sobre-continuacao.jpg](sobre-continuacao.jpg) | Referência artística, copyright e armazenamento local. |
+
+A captura usa valores restaurados somente no navegador de teste. A atualização documental não modifica as preferências de visitantes. Texto e comportamento foram conferidos em [configuracoes.js](../../../dist/configuracoes.js); o [README principal](../../../README.md#configurações-e-sobre-o-projeto) transcreve o Sobre e explica os controles.
 
 ---
 
