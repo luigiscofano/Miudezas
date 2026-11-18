@@ -586,7 +586,11 @@ Famílias estreita, aberta e irregular convivem com cinco novos padrões de trav
 
 O gerador cria o trajeto antes de distribuir pedras independentes: dois ou três tiros, três a sete pedras e posições internas ou próximas das bordas. Um subconjunto acrescenta três tiros e cinco a oito pedras alongadas, exigindo sensibilidade a variações amplas de força. Não é apenas uma rotação de duas plantas fixas.
 
+As famílias anteriores continuam nas sementes ímpares. As pares (50% do total) acrescentam cinco padrões planejados: **chicane, ferradura, ilha, degraus e bolso**, com disposições próprias de início, buraco, pedras e percurso; cada família recebe 10% das sementes. Os novos candidatos precisam perder em pelo menos quatro das seis alterações de força de ±30% e passar por uma busca dirigida de atalhos em dois tiros, com 824 primeiras jogadas amostradas. A busca é limitada e não prova ausência global de atalhos.
+
 O certificado usa o **mesmo motor do jogo**, a 30, 60 e 120 atualizações por segundo, com variações de ±15 ms no teclado e ±0,25 pixel lógico no arrasto. Também rejeita mapas resolvíveis por uma mira direta trivial. Isso prova a existência de uma sequência executável dentro das tolerâncias testadas, não a vitória com qualquer lançamento ou compatibilidade com todos os dispositivos. [Geometria, desempenho e testes](docs/jogos/varanda/README.md).
+
+Nos novos padrões, a validação cobre oito combinações únicas de teclado e 64 combinações independentes de imprecisão nos dois eixos dos três arrastos, em cada frequência. A interface prepara e valida a fase em **Web Worker**, mantendo a navegação responsiva; sair, reiniciar, ocultar a aba ou abrir configurações durante a preparação cancela o cálculo. Respostas antigas não reabrem a partida. Erros oferecem nova tentativa na mesma semente, sem gerar sincronamente na interface nem apresentar terreno sem certificado. Há até 12 candidatos novos antes do gerador anterior e seu fallback validado, executados no Worker. A API síncrona permanece disponível para ferramentas e testes.
 
 ---
 

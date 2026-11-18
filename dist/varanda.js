@@ -215,25 +215,34 @@ export function validarTerrenoGude(terreno) {
     if(venceu)return false;
   }
   for (const dt of [1/30,1/60,1/120]) {
-    for (let combinacao=0; combinacao<8; combinacao++) {
-      let venceu=false;
-      const jogo=gude(1,{tone(){},finish(ok){venceu=ok;}},{terrenoValidado:terreno});
-      for (const [indice,passo] of terreno.solucao.entries()) {
-        jogo.press(passo.direcao);
-        // Tolerância de 15 ms por gesto; evita certificados sem margem de execução.
-        jogo.update(passo.duracao + ((combinacao>>indice)&1 ? .015 : -.015));
-        jogo.release(passo.direcao);
-        for(let quadro=0;quadro<600 && jogo.moving;quadro++) jogo.update(dt);
+    const planejado=terreno.familia?.startsWith('planejado-');
+    for (let combinacao=0; combinacao<(planejado?64:8); combinacao++) {
+      // Os três bits do teclado têm só oito casos únicos; os demais bits
+      // pertencem aos eixos independentes do toque, não a novos tempos.
+      if(combinacao<8){
+        let venceu=false;
+        const jogo=gude(1,{tone(){},finish(ok){venceu=ok;}},{terrenoValidado:terreno});
+        for (const [indice,passo] of terreno.solucao.entries()) {
+          jogo.press(passo.direcao);
+          // Tolerância de 15 ms por gesto; evita certificados sem margem de execução.
+          jogo.update(passo.duracao + ((combinacao>>indice)&1 ? .015 : -.015));
+          jogo.release(passo.direcao);
+          for(let quadro=0;quadro<600 && jogo.moving;quadro++) jogo.update(dt);
+        }
+        if(!venceu) return false;
       }
-      if(!venceu) return false;
       // Repete pelo arrasto real: erros de 0,25 pixel lógico em ambos os eixos.
       let toqueVenceu=false;
       const toque=gude(3,{tone(){},finish(ok){toqueVenceu=ok;}},{terrenoValidado:terreno});
       for(const [indice,passo] of terreno.solucao.entries()){
-        const {x,y}=toque.snapshot(),[dx,dy]=direcoes[passo.direcao];
+        const {x,y}=toque.position(),[dx,dy]=direcoes[passo.direcao];
         const distancia=(5+68*passo.duracao)/3.6;
         const erro=((combinacao>>indice)&1)?.25:-.25;
-        const px=x-dx*distancia+erro,py=y-dy*distancia-erro;
+        // Nos novos padrões, cobre independentemente os dois eixos de cada
+        // um dos três gestos: 4³ combinações, inclusive erros acumulados.
+        const erroX=planejado?((combinacao>>(2*indice))&1? .25:-.25):erro;
+        const erroY=planejado?((combinacao>>(2*indice+1))&1? .25:-.25):-erro;
+        const px=x-dx*distancia+erroX,py=y-dy*distancia+erroY;
         if(px<0||px>96||py<0||py>96)return false;
         toque.point(x,y,'down');toque.point(px,py,'up');
         for(let q=0;q<600&&toque.moving;q++)toque.update(dt);
@@ -281,7 +290,87 @@ function contarErrosDeForcaGude(terreno) {
   return falhas;
 }
 
+// Cinco plantas com decisões espaciais próprias; as simetrias são variações,
+// não famílias adicionais. Pontos intermediários indicam onde parar cada tiro.
+const padroesPlanejadosGude = [
+  {familia:'chicane', pontos:[[18,78],[76,78],[76,20],[90,20]],
+    pedras:[[5,5,62,61],[84,34,7,56],[76,5,15,7]]},
+  {familia:'ferradura', pontos:[[28,60],[28,24],[72,24],[72,64]],
+    pedras:[[39,39,22,36],[9,15,8,25],[79,41,10,14],[9,63,10,18],[34,4,9,9],[70,78,21,13],[46,82,18,8]]},
+  {familia:'ilha', pontos:[[30,72],[75,72],[75,24],[45,24]],
+    pedras:[[35,35,29,24],[12,22,12,30],[43,81,21,9],[31,16,8,11],[4,70,13,19],[63,8,8,9],[71,80,8,9]]},
+  {familia:'degraus', pontos:[[20,20],[20,70],[76,70],[76,88]],
+    pedras:[[30,5,12,55],[47,48,43,12],[5,80,60,12],[84,65,8,25],[57,15,15,18]]},
+  {familia:'bolso', pontos:[[74,48],[18,48],[18,16],[64,16]],
+    pedras:[[28,27,62,12],[28,57,62,33],[84,44,8,8]]}
+];
+
+function montarPadraoGude(padrao,seed,orientacao,escala=[1,1],deslocamento=[0,0]) {
+  const coordenada=(v,eixo)=>Math.round(48+(v-48)*escala[eixo]+deslocamento[eixo]);
+  const pontos=padrao.pontos.map(p=>p.map(coordenada));
+  const pedras=padrao.pedras.map(([x,y,w,h])=>[
+    coordenada(x,0),coordenada(y,1),coordenada(x+w,0)-coordenada(x,0),coordenada(y+h,1)-coordenada(y,1)
+  ]);
+  const terreno=orientarTerrenoGude(pontos,pedras,orientacao,seed,'planejado-'+padrao.familia);
+  return terreno;
+}
+
+// Busca finita de atalhos em dois tiros pelo arrasto público. O primeiro tiro
+// amostra 24 direções: alcances 4..94 por pixel nas quatro cardinais e
+// 6..94 de quatro em quatro nas outras vinte; o segundo mira o buraco da posição real,
+// inclusive após ricochetes. Não é uma prova sobre todos os ângulos possíveis.
+export function encontrarAtalhoGude(terreno) {
+  function arrastar(jogo,angulo,alcance) {
+    const {x,y}=jogo.position();
+    const px=x-Math.cos(angulo)*alcance/3.6,py=y-Math.sin(angulo)*alcance/3.6;
+    if(px<0||px>96||py<0||py>96)return false;
+    jogo.point(x,y,'down');jogo.point(px,py,'up');
+    for(let quadro=0;quadro<600&&jogo.moving;quadro++)jogo.update(1/60);
+    return true;
+  }
+  for(let graus=0;graus<360;graus+=15)for(let alcance=graus%90===0?4:6;alcance<=94;alcance+=graus%90===0?1:4){
+    let venceu=false;
+    const jogo=gude(3,{tone(){},finish(ok){venceu=ok;}},{terrenoValidado:terreno});
+    const angulo=graus*Math.PI/180;
+    if(!arrastar(jogo,angulo,alcance))continue;
+    const tiros=[{angulo,alcance}];
+    if(venceu)return tiros;
+    const {x,y}=jogo.position(),dx=terreno.alvo[0]-x,dy=terreno.alvo[1]-y;
+    const distancia=Math.hypot(dx,dy),mira=Math.atan2(dy,dx);
+    if(distancia>94)continue;
+    if(arrastar(jogo,mira,distancia)&&venceu)return [...tiros,{angulo:mira,alcance:distancia}];
+  }
+  return null;
+}
+
+function pedrasSeparadasGude(pedras) {
+  return pedras.every(([x,y,w,h],i)=>x>=0&&y>=0&&x+w<=96&&y+h<=96&&
+    pedras.slice(i+1).every(([a,b,c,d])=>x+w+5<=a||a+c+5<=x||y+h+5<=b||b+d+5<=y));
+}
+
+// No máximo 12 variantes; a última é a planta conhecida na orientação original.
+// Mesmo a saída conhecida passa pelo certificado, nunca apenas por uma promessa.
+function criarPadraoPlanejadoGude(seed) {
+  const padrao=padroesPlanejadosGude[(Number(seed)>>>0)%padroesPlanejadosGude.length];
+  const random=aleatorioComSemente(seed);
+  for(let tentativa=0;tentativa<12;tentativa++){
+    const base=tentativa===11;
+    const escala=base?[1,1]:[.94+random()*.12,.94+random()*.12];
+    const deslocamento=base?[0,0]:[Math.floor(random()*5)-2,Math.floor(random()*5)-2];
+    const terreno=montarPadraoGude(padrao,seed,base?0:Math.floor(random()*8),escala,deslocamento);
+    if(!pedrasSeparadasGude(terreno.pedras)||!validarTerrenoGude(terreno))continue;
+    const desafioForca=contarErrosDeForcaGude(terreno);
+    if(desafioForca>=4&&!encontrarAtalhoGude(terreno))return {...terreno,desafioForca};
+  }
+  return null;
+}
+
 export function criarTerrenoGude(seed=1) {
+  // Metade das sementes recebe plantas novas; a outra mantém as famílias antigas.
+  if((Number(seed)>>>0)%2===0){
+    const planejado=criarPadraoPlanejadoGude(seed);
+    if(planejado)return planejado;
+  }
   // Reserva um terço das sementes para desafios adicionais sem substituir os antigos.
   if((Number(seed)>>>0)%3===0){
     const novo=criarTerrenoGudeBase(seed,true);
@@ -388,6 +477,8 @@ function gude(level, api, options={}) {
   }
   return {
     get moving(){return Boolean(tiro);},
+    // Cópia mínima, sem expor o terreno nem clonar suas pedras nas simulações.
+    position(){return {x,y};},
     snapshot(){return {x,y,jogadas,acabou,emMovimento:Boolean(tiro),terreno:structuredClone(terreno)};},
     press(dir) {
       if (!direcoes[dir] || acabou || tiro || arrasto || tecla) return;
