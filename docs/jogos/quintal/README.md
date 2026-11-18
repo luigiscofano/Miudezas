@@ -27,7 +27,7 @@ As cinco posições de mariposas se repetem, sem vitória automática na quinta.
 
 ## Maré Miúda: prova executável de solução
 
-A família original, preservada em dois terços das sementes, usa um PRNG determinístico e tenta no máximo 48 candidatos. A família adicional é descrita abaixo. Para cada candidato, uma busca em largura considera **posição, número de passos módulo seis e última posição segura em areia**. Ela reproduz as regras reais: bloquear baixios na maré alta, alterar a maré a cada três passos, retornar à última areia se a subida ocorrer sobre um baixio e reconhecer a concha antes da mudança de maré.
+A família original, preservada nas sementes não destinadas às duas famílias novas, usa um PRNG determinístico e tenta no máximo 48 candidatos. A família adicional é descrita abaixo. Para cada candidato, uma busca em largura considera **posição, número de passos módulo seis e última posição segura em areia**. Ela reproduz as regras reais: bloquear baixios na maré alta, alterar a maré a cada três passos, retornar à última areia se a subida ocorrer sobre um baixio e reconhecer a concha antes da mudança de maré.
 
 A referência histórica da geração é o mapa anterior de **Puxado**, mantido separado das fases fixas: solução mínima de 17 comandos, contra 14 sem maré, e dois baixios individualmente indispensáveis. Cada mapa deve exigir **17 a 27 comandos**, custo adicional da maré de **pelo menos três comandos** e **dois baixios obrigatórios** (bloquear qualquer um impede chegar à concha). Além disso, remover as pedras precisa reduzir o caminho mínimo: pedras meramente decorativas não satisfazem esse critério. Essas verificações rejeitam atalhos secos e mapas solucionáveis sem lidar com o ciclo da maré.
 
@@ -78,3 +78,13 @@ Esses testes exercitam lógica discreta. Não constituem avaliação humana de d
 O mapa da captura identificada pela semente `1428316038` foi fixado como Puxado. Areia, água, pedras, baixios e concha conservam suas posições; apenas o início passa para a última linha, coluna 4 (coordenadas zero-based x=3, y=7). O siri da captura estava durante uma tentativa, não era uma indicação de onde iniciar.
 
 A solução mínima tem 21 comandos, contra 15 sem maré, e quatro baixios indispensáveis. A concha continua na coluna 1, linha 2. O teste compara a grade à semente original com somente a posição inicial substituída, executa a solução no jogo e confere vitória única. Sossegado, Animado, saves e regras não mudam. A referência histórica de geração foi isolada para não transformar outros mapas por efeito colateral.
+
+## Arquipélagos: escolhas entre ilhas e travessias
+
+Uma terceira família amplia os padrões sem substituir as duas anteriores. Sementes divisíveis por três continuam usando enseadas irregulares; entre as demais, múltiplos de sete recebem `arquipelago`. As restantes conservam o gerador original. A semente de referência **1428316038** permanece na família irregular, com seu mapa inalterado.
+
+O arquipélago distribui nove pequenas ilhas de areia, interligadas por uma árvore de travessias rasas. As salas permitem circular e preparar o ciclo da maré, em vez de oferecer somente um corredor autoevitante. Pedras dentro das ilhas alteram desvios; pedras entre ilhas bloqueiam atalhos. A árvore e a posição das pontes variam por semente. A direção até a concha não implica que a travessia seguinte esteja disponível naquele momento.
+
+São exigidos **23–27 comandos mínimos**, **sete comandos adicionais de planejamento da maré**, **três baixios indispensáveis** e redução do caminho caso as pedras fossem retiradas. A certificação continua incluindo posição, ciclo da maré e última areia segura; não basta conexão geométrica. Há no máximo 48 tentativas, seguidas de uma reserva testada pelos mesmos critérios. Nenhum timer ou reflexo extra é introduzido.
+
+`tests/mare-variacoes.test.mjs` executa soluções de 100 sementes no jogo real, verifica reprodução, diversidade normalizada sem contar rotação/reflexão ou pedras decorativas, e pelo menos oito casas com três ou mais saídas em cada mapa. As duas famílias anteriores permanecem acessíveis. No benchmark local em Node, 100 gerações levaram aproximadamente 918 ms no total (mediana 7,3 ms; percentil 95 de 31,2 ms; máximo 60,6 ms), com uma reserva acionada. Esses tempos são observações da máquina de testes, não garantia de desempenho em celulares.
