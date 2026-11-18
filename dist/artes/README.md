@@ -34,3 +34,7 @@ A janela de quatro vidraças foi preservada e restaurada no canto esquerdo da ba
 ### Porta da lojinha na capa
 
 A entrada sob o toldo listrado usa verde discreto e maçaneta clara para se distinguir da fachada escura e da vitrine âmbar. A porta chega à calçada, sem parecer uma extensão solta da fachada. A revisão é apenas na imagem: proporção, controles, regras e dados dos jogos permanecem inalterados.
+
+## Cenas atuais para documentação
+
+As [dez cenas atuais dos tabuleiros](../../docs/imagens/jogos/README.md) ficam fora da pasta publicada, em `docs/imagens/jogos/`. São exportações das funções de desenho reais, usadas nas fichas do README, e não substituem os ícones, as miniaturas ou os assets ativos.

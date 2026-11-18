@@ -110,3 +110,7 @@ Os testes executam o motor e os controles públicos em automação. Isso não eq
 ### Auditoria documental
 
 O teste da lagartixa também verifica se o catálogo informa o terceiro erro em qualquer modo, mantendo o prazo autoral. A reorganização documental confere links e âncoras locais, referências de imagens, decodificação de PNGs e XML dos SVGs; imagens armazenadas não são apresentadas como capturas novas. Essa auditoria não substitui teste visual do Markdown renderizado pelo GitHub.
+
+## Imagens atuais da documentação
+
+`cenas-documentacao.test.mjs` compara as dez imagens versionadas com uma nova renderização das fábricas reais, confere repetibilidade e a transformação espelhada do caracol. Execute o gerador de cenas após mudanças visuais intencionais, inspecione os resultados e mantenha as imagens no mesmo PR.

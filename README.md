@@ -24,7 +24,7 @@
 - **Novidades consolidadas:** Maré com cinco famílias e faixas avançadas, Gude com terrenos variados e níveis recalibrados, Rastro com percursos abertos e irregulares, Pipa com aves em V e colisão por pixels, lagartixa com três erros em todos os níveis.
 - **Dados locais:** preferência de som, Volta no Bairro e recordes exportáveis. Não há conta, sincronização, ranking online ou sistema de medalhas implementado.
 
-> Este README descreve a implementação atual. Imagens de marca são artes; as PNGs dos jogos são miniaturas armazenadas, não capturas novas da versão publicada. Os ícones atuais aparecem ao lado de cada ficha.
+> Este README descreve a implementação atual. Imagens de marca são artes; cada ficha conserva o ícone e a miniatura armazenada e inclui uma **cena atual renderizada pelo próprio motor do jogo**, sem cursor. Essas cenas mostram o tabuleiro do nível Puxado, não uma captura da interface inteira. [Origem e reprodução das imagens](docs/imagens/jogos/README.md).
 
 ## Executar
 
@@ -133,11 +133,15 @@ As cores de cada palco aparecem nas fichas abaixo. São as cores de enquadrament
 
 ## Jogos e level design
 
-Cada ficha mostra o ícone atual e uma miniatura de cena já armazenada, o objetivo, os comandos e a diferença implementada entre os três níveis. Nos jogos de tempo, a dificuldade altera a margem de reação. Nos de percurso, ela altera o mapa. Nos de memória, amplia o que o jogador precisa reter.
+Cada ficha mostra o ícone atual, a miniatura já armazenada e uma cena atual do tabuleiro, além do objetivo, dos comandos e da diferença implementada entre os três níveis. Nos jogos de tempo, a dificuldade altera a margem de reação. Nos de percurso, ela altera o mapa. Nos de memória, amplia o que o jogador precisa reter.
 
 ### 01 · Goteira
 
 <img src="dist/arte/icones/goteira.svg" width="64" alt="Ícone atual"> <img src="dist/arte/goteira.png" width="192" alt="Miniatura armazenada de goteira">
+
+**Cena atual · Puxado**
+
+<img src="docs/imagens/jogos/goteira.svg" width="288" alt="Cena atual do jogo goteira, renderizada pelo motor no nível Puxado, sem cursor">
 
 Pegue as gotas por um minuto. O balde comporta quatro. Encoste no ralo à esquerda para esvaziá-lo. **Comandos.** ← e → movem o balde. No celular, segure um lado da cena.
 
@@ -158,6 +162,10 @@ O caranguejo jogável usa a arte aprovada em pixel art: pinças simétricas, olh
 
 <img src="dist/arte/icones/mare.svg" width="64" alt="Ícone atual"> <img src="dist/arte/mare.png" width="192" alt="Miniatura armazenada de mare">
 
+**Cena atual · Puxado**
+
+<img src="docs/imagens/jogos/mare.svg" width="288" alt="Cena atual do jogo mare, renderizada pelo motor no nível Puxado, sem cursor">
+
 Leve o caranguejo até a concha. A maré muda a cada três passos. Se ela cobrir seus pés, você volta à areia. **Comandos.** Use as quatro direções ou deslize o dedo na cena.
 
 | Sossegado | Animado | Puxado |
@@ -173,6 +181,10 @@ Palco `#205E60` · [Implementação de Maré Miúda](dist/quintal.js)
 ### 03 · Último Fio
 
 <img src="dist/arte/icones/fio.svg" width="64" alt="Ícone atual"> <img src="dist/arte/fio.png" width="192" alt="Miniatura armazenada de fio">
+
+**Cena atual · Puxado**
+
+<img src="docs/imagens/jogos/fio.svg" width="288" alt="Cena atual do jogo fio, renderizada pelo motor no nível Puxado, sem cursor">
 
 Pegue cinco mariposas. Quando um fio tremer, pule para outro antes da rajada. **Comandos.** ← e → dão pulinhos. ↑ e ↓ trocam de fio. No celular, deslize.
 
@@ -192,6 +204,10 @@ Palco `#E9A17E` · [Implementação de Último Fio](dist/quintal.js)
 
 <img src="dist/arte/icones/pipa.svg" width="64" alt="Ícone atual"> <img src="dist/arte/pipa.png" width="192" alt="Miniatura armazenada de pipa">
 
+**Cena atual · Puxado**
+
+<img src="docs/imagens/jogos/pipa.svg" width="288" alt="Cena atual do jogo pipa, renderizada pelo motor no nível Puxado, sem cursor">
+
 Chegue à última laje com a rabiola inteira. Passe entre os postes e os pássaros. **Comandos.** ↑ solta linha e ↓ recolhe. No celular, segure a parte de cima ou de baixo.
 
 | Sossegado | Animado | Puxado |
@@ -208,6 +224,10 @@ Palco `#60C3BD` · [Implementação de Pipa de Laje](dist/quintal.js)
 
 <img src="dist/arte/icones/radio.svg" width="64" alt="Ícone atual"> <img src="dist/arte/radio.png" width="192" alt="Miniatura armazenada de radio">
 
+**Cena atual · Puxado**
+
+<img src="docs/imagens/jogos/radio.svg" width="288" alt="Cena atual do jogo radio, renderizada pelo motor no nível Puxado, sem cursor">
+
 Encontre três estações antes que a pilha acabe. Quando a luz firmar, pare para ouvir. **Comandos.** ← e → ajustam o ponteiro. No celular, arraste pelo mostrador.
 
 | Sossegado | Animado | Puxado |
@@ -223,6 +243,10 @@ Palco `#4F2A48` · [Implementação de Rádio de Pilha](dist/esquina.js)
 ### 06 · Pão na Chapa
 
 <img src="dist/arte/icones/pao.svg" width="64" alt="Ícone atual"> <img src="dist/arte/pao.png" width="192" alt="Miniatura armazenada de pao">
+
+**Cena atual · Puxado**
+
+<img src="docs/imagens/jogos/pao.svg" width="288" alt="Cena atual do jogo pao, renderizada pelo motor no nível Puxado, sem cursor">
 
 Use **espátula no ovo** e **pinça no pão**. Selecione o utensílio por clique/toque ou pelas teclas **1 e 2**, depois clique/toque no alimento. **← e →** continuam recolhendo o lado correspondente com o utensílio selecionado. Os botões mostram alimento e lado; os rótulos acessíveis também informam o ponto. Cores e fumaça indicam o preparo na cena, sem quadradinhos de estado adicionais.
 
@@ -251,6 +275,10 @@ Palco `#A25843` · [Implementação de Pão na Chapa](dist/esquina.js)
 
 <img src="dist/arte/icones/rastro.svg" width="64" alt="Ícone atual"> <img src="dist/arte/rastro.png" width="192" alt="Miniatura armazenada de rastro">
 
+**Cena atual · Puxado**
+
+<img src="docs/imagens/jogos/rastro.svg" width="288" alt="Cena atual do jogo rastro, renderizada pelo motor no nível Puxado, sem cursor">
+
 Pegue três folhas e entre no vaso. Seu rastro bloqueia o caminho. Volte pela última casa para desfazer o passo. **Comandos.** Use as quatro direções como alternativa ou inicie no caracol e trace o percurso pelas casas vizinhas com mouse ou toque.
 
 | Sossegado | Animado | Puxado |
@@ -266,6 +294,10 @@ Palco `#C18E86` · [Implementação de Rastro de Prata](dist/esquina.js)
 ### 08 · Luz de Varanda
 
 <img src="dist/arte/icones/luz.svg" width="64" alt="Ícone atual"> <img src="dist/arte/luz.png" width="192" alt="Miniatura armazenada de luz">
+
+**Cena atual · Puxado**
+
+<img src="docs/imagens/jogos/luz.svg" width="288" alt="Cena atual do jogo luz, renderizada pelo motor no nível Puxado, sem cursor">
 
 Espere a lagartixa apontar para um mosquito e dê o bote. Alcance a meta antes de a lâmpada apagar. **Comandos.** Aperte uma seta ou toque na cena para dar o bote.
 
@@ -283,6 +315,10 @@ Palco `#30234B` · [Implementação de Luz de Varanda](dist/varanda.js)
 
 <img src="dist/arte/icones/gude.svg" width="64" alt="Ícone atual"> <img src="dist/arte/gude.png" width="192" alt="Miniatura armazenada de gude">
 
+**Cena atual · Puxado**
+
+<img src="docs/imagens/jogos/gude.svg" width="288" alt="Cena atual do jogo gude, renderizada pelo motor no nível Puxado, sem cursor">
+
 Acerte o buraco em até três petelecos. Quanto mais tempo segurar a direção, mais longe a bolinha vai. **Comandos.** Segure uma seta e solte. Com mouse ou toque, inicie na bolinha, puxe para trás e solte; cancelar o gesto não lança.
 
 | Sossegado | Animado | Puxado |
@@ -299,6 +335,10 @@ Palco `#BE7749` · [Implementação de Três Petelecos](dist/varanda.js)
 ### 10 · Pisca no Mato
 
 <img src="dist/arte/icones/pisca.svg" width="64" alt="Ícone atual"> <img src="dist/arte/pisca.png" width="192" alt="Miniatura armazenada de pisca">
+
+**Cena atual · Puxado**
+
+<img src="docs/imagens/jogos/pisca.svg" width="288" alt="Cena atual do jogo pisca, renderizada pelo motor no nível Puxado, sem cursor">
 
 Observe os vaga-lumes e repita as piscadas na ordem. A cada acerto a sequência ganha uma luz. **Comandos.** ← acende o da esquerda e → o da direita. No celular, toque no vaga-lume.
 
