@@ -59,3 +59,15 @@ Os detalhes usam a grade nativa de 96 × 96, cores chapadas e bordas sem suaviza
 ## Visual original de Pisca restaurado
 
 A primeira matriz dos vaga-lumes disponível no GitHub foi recuperada do commit `9cc7bbb` (PR #1), com 11 × 7 pixels e asas erguidas. Ela substitui a matriz intermediária de 10 × 6; o fundo com vegetação lateral continua sem o capim adicional. A reversão é restrita ao desenho dentro da partida. Ícones, Sem Parar, recordes, toque, sequência, duração da luz e os outros jogos permanecem intactos.
+
+## Padrões adicionais: passagens escalonadas
+
+O Caminho Novo mantém as famílias anteriores. Dois terços das sementes continuam produzindo exatamente o mapa anterior; no terço restante, tenta uma versão mais exigente antes de recorrer ao gerador conhecido.
+
+Esta versão não reutiliza uma planta fixa: sorteia três segmentos, origens e destinos também internos, e cinco a oito pedras alongadas independentes, em direções diferentes. A folga de referência cai de seis para cinco pixels lógicos, ainda sujeita ao certificado completo. Há variantes de travessia e retorno; a física, a aparência, os controles e o limite de três petelecos não mudam.
+
+Além da validação original, seis ensaios alteram a força de **um** dos três petelecos em −30% ou +30%. O mapa somente entra se pelo menos quatro desses ensaios falharem. Isso mede a necessidade de calibrar a força; não significa que todo caminho alternativo esteja excluído nem que a dificuldade subjetiva seja igual para todos. Os gestos corretos continuam validados com ±15 ms de teclado e ±0,25 pixel lógico no toque, a 30, 60 e 120 atualizações/s.
+
+A busca continua limitada a 64 candidatos, com até 120 amostras de pedras por candidato. Se o padrão exigente não passar, usa o gerador anterior e seu fallback certificado, sem apresentar um mapa insolúvel. Nada é gerado por quadro.
+
+Verificação do novo subconjunto (100 sementes múltiplas de três): 92 retornos e oito travessias, 66 inícios internos e 23 destinos internos; nenhuma queda para o gerador anterior nesta amostra. O teste exige pelo menos 75 configurações distintas após normalizar rotações/reflexões em uma grade de ocupação 6×6. Geração p95 aproximada de 22 ms neste ambiente, não uma garantia para celulares. Dez testes passam, incluindo 500 sementes gerais e hashes de regressão que conferem mapas anteriores byte a byte.
