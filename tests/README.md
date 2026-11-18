@@ -142,3 +142,5 @@ A navegação verifica o aviso autoral no rodapé inicial e a preservação das 
 ## Efeitos 8-bit opção B
 
 `audio.test.mjs` inclui validação do manifesto dos nove efeitos e dos arquivos de áudio. As figuras de efeitos e os contornos em Hz são gerados dos mesmos WAV/fontes; os dados e gráficos musicais permanecem inalterados nesta revisão.
+
+O player verifica continuidade entre todas as telas, navegação rápida durante download, retomada de posição após mute/aba oculta e ciclos completos, sem reinício por navegação.

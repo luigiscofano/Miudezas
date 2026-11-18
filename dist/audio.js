@@ -7,9 +7,13 @@ export function criarAudio({contexto=()=>new (globalThis.AudioContext||globalThi
   const cache=new Map(), carregando=new Map(), fontes=new Set();
   let ultimoEfeito=-Infinity,volumeMusica=.10,volumeEfeitos=.05,geracaoEfeitos=0,prioridadePendente=0;
   const efeitosAtivos=new Map();
+  let temaContinuo=null,posicaoMusical=0;
   const ativo=()=>habilitado&&visivel&&ctx?.state==='running';
   function encerrar(fonte){try{fonte.stop();}catch{} fontes.delete(fonte);}
-  function parar(){revisao++;ciclo++;geracaoEfeitos++;prioridadePendente=0;for(const fonte of fontes)encerrar(fonte);efeitosAtivos.clear();musica=null;}
+  function parar(){
+    // Guardar a posição congela a música durante mute/aba oculta, sem voltar à introdução.
+    if(musica)posicaoMusical=(musica.offset+Math.max(0,ctx.currentTime-musica.inicio))%musica.duracao;
+    revisao++;ciclo++;geracaoEfeitos++;prioridadePendente=0;for(const fonte of fontes)encerrar(fonte);efeitosAtivos.clear();musica=null;}
   function ajustarGanho(parametro,valor,tempo){
     const agora=ctx.currentTime;
     // Um slider pode mudar durante o fade-in: não deixe a rampa antiga restaurar o volume.
@@ -46,17 +50,19 @@ export function criarAudio({contexto=()=>new (globalThis.AudioContext||globalThi
     try{return await promessa;}finally{carregando.delete(chave);}
   }
   async function tocarTela(){
-    if(!ativo()||musica?.tela===tela)return;
-    const versao=++revisao, destino=tela;
+    if(!ativo()||musica)return;
+    // A primeira tela sonorizada escolhe o tema; navegar não troca nem reinicia a faixa.
+    temaContinuo??=tela;
+    const versao=++revisao, destino=temaContinuo;
     try{
       const buffer=await carregar('musicas/'+destino+'.flac');
       if(!ativo()||versao!==revisao)return;
-      const anterior=musica, fonte=ctx.createBufferSource(), ganho=ctx.createGain(), agora=ctx.currentTime;
+      const fonte=ctx.createBufferSource(), ganho=ctx.createGain(), agora=ctx.currentTime;
       fonte.buffer=buffer;fonte.loop=true;fonte.connect(ganho);ganho.connect(master);
       ganho.gain.setValueAtTime(0,agora);ganho.gain.linearRampToValueAtTime(volume(),agora+.30);
       fontes.add(fonte);fonte.onended=()=>{fontes.delete(fonte);fonte.disconnect();ganho.disconnect();};
-      fonte.start();musica={fonte,ganho,tela:destino};
-      if(anterior){anterior.ganho.gain.cancelScheduledValues(agora);anterior.ganho.gain.setValueAtTime(anterior.ganho.gain.value,agora);anterior.ganho.gain.linearRampToValueAtTime(0,agora+.30);anterior.fonte.stop(agora+.32);}
+      const duracao=buffer.duration,offset=posicaoMusical%duracao;
+      fonte.start(0,offset);musica={fonte,ganho,tela:destino,inicio:agora,offset,duracao};
     }catch{ /* O jogo continua em silêncio se rede ou decodificador falhar. */ }
   }
   async function ativar(valor=true){
@@ -74,9 +80,8 @@ export function criarAudio({contexto=()=>new (globalThis.AudioContext||globalThi
   }
   function mudar(novaTela,id=''){
     if(!TRILHAS.includes(novaTela))return;
-    const mudou=tela!==novaTela;tela=novaTela;jogo=id;
-    if(mudou)revisao++;
-    if(musica?.tela===tela)ajustarGanho(musica.ganho.gain,volume(),.08);
+    tela=novaTela;jogo=id;
+    if(musica)ajustarGanho(musica.ganho.gain,volume(),.08);
     else void tocarTela();
   }
   function visibilidade(valor){
