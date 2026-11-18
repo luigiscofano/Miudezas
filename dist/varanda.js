@@ -215,7 +215,8 @@ export function validarTerrenoGude(terreno) {
     if(venceu)return false;
   }
   for (const dt of [1/30,1/60,1/120]) {
-    for (let combinacao=0; combinacao<8; combinacao++) {
+    const planejado=terreno.familia?.startsWith('planejado-');
+    for (let combinacao=0; combinacao<(planejado?64:8); combinacao++) {
       let venceu=false;
       const jogo=gude(1,{tone(){},finish(ok){venceu=ok;}},{terrenoValidado:terreno});
       for (const [indice,passo] of terreno.solucao.entries()) {
@@ -233,7 +234,11 @@ export function validarTerrenoGude(terreno) {
         const {x,y}=toque.snapshot(),[dx,dy]=direcoes[passo.direcao];
         const distancia=(5+68*passo.duracao)/3.6;
         const erro=((combinacao>>indice)&1)?.25:-.25;
-        const px=x-dx*distancia+erro,py=y-dy*distancia-erro;
+        // Nos novos padrões, cobre independentemente os dois eixos de cada
+        // um dos três gestos: 4³ combinações, inclusive erros acumulados.
+        const erroX=planejado?((combinacao>>(2*indice))&1? .25:-.25):erro;
+        const erroY=planejado?((combinacao>>(2*indice+1))&1? .25:-.25):-erro;
+        const px=x-dx*distancia+erroX,py=y-dy*distancia+erroY;
         if(px<0||px>96||py<0||py>96)return false;
         toque.point(x,y,'down');toque.point(px,py,'up');
         for(let q=0;q<600&&toque.moving;q++)toque.update(dt);
@@ -281,7 +286,62 @@ function contarErrosDeForcaGude(terreno) {
   return falhas;
 }
 
+// Cinco plantas com decisões espaciais próprias; as simetrias são variações,
+// não famílias adicionais. Pontos intermediários indicam onde parar cada tiro.
+const padroesPlanejadosGude = [
+  {familia:'chicane', pontos:[[22,72],[46,72],[46,24],[78,24]],
+    pedras:[[10,38,25,17],[57,40,25,18],[23,12,12,14]]},
+  {familia:'ferradura', pontos:[[28,60],[28,24],[72,24],[72,64]],
+    pedras:[[39,39,22,36],[9,15,8,25],[79,41,10,14]]},
+  {familia:'ilha', pontos:[[30,72],[75,72],[75,24],[45,24]],
+    pedras:[[35,35,29,24],[12,22,12,30],[43,81,21,9]]},
+  {familia:'degraus', pontos:[[26,26],[26,56],[68,56],[68,80]],
+    pedras:[[38,10,20,33],[10,65,45,15],[79,35,10,26]]},
+  {familia:'ricochete', pontos:[[40,60],[30,60],[30,24],[72,24]],
+    pedras:[[42,35,20,15],[42,71,20,12],[10,28,9,20]], ricochete:true}
+];
+
+function montarPadraoGude(padrao,seed,orientacao,escala=[1,1],deslocamento=[0,0]) {
+  const coordenada=(v,eixo)=>Math.round(48+(v-48)*escala[eixo]+deslocamento[eixo]);
+  const pontos=padrao.pontos.map(p=>p.map(coordenada));
+  const pedras=padrao.pedras.map(([x,y,w,h])=>[
+    coordenada(x,0),coordenada(y,1),coordenada(x+w,0)-coordenada(x,0),coordenada(y+h,1)-coordenada(y,1)
+  ]);
+  const terreno=orientarTerrenoGude(pontos,pedras,orientacao,seed,'planejado-'+padrao.familia);
+  if(padrao.ricochete){
+    const passo=terreno.solucao[0], [dx,dy]=direcoes[passo.direcao];
+    const eixo=dx?0:1, sinal=dx||dy, borda=sinal<0?3:92;
+    // A borda física é assimétrica (3..92). Recalcular após orientar evita
+    // presumir um ricochete perfeito em um tabuleiro geométrico de 0..96.
+    const inicio=terreno.inicio[eixo], fim=inicio+sinal*Math.abs(pontos[1][0]-pontos[0][0]);
+    passo.duracao=(Math.abs(inicio-borda)+Math.abs(fim-borda)-5)/68;
+  }
+  return terreno;
+}
+
+// No máximo 12 variantes; a última é a planta conhecida na orientação original.
+// Mesmo a saída conhecida passa pelo certificado, nunca apenas por uma promessa.
+function criarPadraoPlanejadoGude(seed) {
+  const padrao=padroesPlanejadosGude[Math.floor((Number(seed)>>>0)/17)%padroesPlanejadosGude.length];
+  const random=aleatorioComSemente(seed);
+  for(let tentativa=0;tentativa<12;tentativa++){
+    const base=tentativa===11;
+    const escala=base?[1,1]:[.94+random()*.12,.94+random()*.12];
+    const deslocamento=base?[0,0]:[Math.floor(random()*5)-2,Math.floor(random()*5)-2];
+    const terreno=montarPadraoGude(padrao,seed,base?0:Math.floor(random()*8),escala,deslocamento);
+    if(!validarTerrenoGude(terreno))continue;
+    const desafioForca=contarErrosDeForcaGude(terreno);
+    if(desafioForca>=4)return {...terreno,desafioForca};
+  }
+  return null;
+}
+
 export function criarTerrenoGude(seed=1) {
+  // Preserva 16 de cada 17 sementes, inclusive suas famílias escalonadas.
+  if((Number(seed)>>>0)%17===0){
+    const planejado=criarPadraoPlanejadoGude(seed);
+    if(planejado)return planejado;
+  }
   // Reserva um terço das sementes para desafios adicionais sem substituir os antigos.
   if((Number(seed)>>>0)%3===0){
     const novo=criarTerrenoGudeBase(seed,true);

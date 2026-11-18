@@ -65,7 +65,7 @@ test('Gude valida 500 sementes usando controles, colisões e física reais',()=>
  }
  assert.ok(layouts.size>490);assert.ok(origens.size>350);assert.ok(normalizados.size>300);assert.ok(iniciosInternos>150);assert.ok(alvosInternos>50);assert.equal(quadrantes.size,4);
  assert.equal(rotas.size,24);assert.equal(orientacoes.size,8);
- assert.deepEqual([...familias].sort(),['cotovelo','escalonado-retorno','escalonado-travessia','retorno','travessia']);assert.deepEqual([...quantidades].sort(),[3,4,5,6,7,8]);
+ assert.deepEqual([...familias].sort(),['cotovelo','escalonado-retorno','escalonado-travessia','planejado-chicane','planejado-degraus','planejado-ferradura','planejado-ilha','planejado-ricochete','retorno','travessia']);assert.deepEqual([...quantidades].sort(),[3,4,5,6,7,8]);
 });
 test('Gude reinício reconstrói mapa; dificuldades autorais têm alvos fixos',()=>{
  for(const level of [1,2,3])assert.deepEqual(varanda.gude(level,api()).snapshot().terreno.alvo,[[22,80],[52,69],[15,45]][level-1]);
