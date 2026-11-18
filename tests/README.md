@@ -134,3 +134,5 @@ Em dispositivos com mouse, a largura da janela durante a partida acompanha a alt
 `audio.test.mjs`: inventário de nove faixas/nove efeitos, mute, ausência de autoplay/rede antes de gesto, reutilização/cache limitado, troca obsoleta, falha de rede, suspensão e limite de vozes. Contexto Web Audio simulado. `configuracoes.test.mjs`: normalização/persistência de volumes, restauração, diálogo, Escape e foco em DOM simulado. `backup.test.mjs`: schema 3, volumes e compatibilidade v1/v2.
 
 Nesta entrega, a suíte inteira passou com 175 testes. Chromium local não pôde iniciar por restrição de socket/processo do ambiente; não houve teste em aparelho físico. Não confundir simulação de autoplay com validação no Safari/iOS. Os 18 arquivos foram verificados por decodificação; a escuta musical complementou as verificações técnicas.
+
+O teste do Sobre verifica os fatos familiares, a atribuição a Gabriel Fonseca, o link de referência protegido e a manutenção da orientação sobre backup local. Usa DOM simulado; não equivale a teste em aparelho físico.

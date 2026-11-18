@@ -115,6 +115,16 @@ Teclado e botões direcionais continuam sendo alternativas ao arrasto; não é n
 
 ## Identidade visual
 
+### Memórias, Tijuca e cotidiano brasileiro
+
+Meus dois pais viveram a vida toda na Tijuca. Busquei no bairro e nas minhas memórias de família a inspiração para a identidade visual de **Miudezas**. Os temas do cotidiano brasileiro dão forma a um jogo que quis tornar confortável e aconchegante, como essas lembranças.
+
+Eu sempre via a obra **Balões ou Ritual do Vento**, do escultor **Gabriel Fonseca**, ao ir para a casa da minha avó na Tijuca. Suas formas e cores são reinterpretadas em pixel art na capa, junto das casas, dos morros, da pipa e do bem-te-vi. A arte e a música suave procuram transmitir esse acolhimento, criando um lugar para desacelerar, explorar e brincar.
+
+— Luigi Scofano de Araujo
+
+**Referência artística:** [catálogo de Gabriel Fonseca](https://gabrielsculptor.com/about/), mantido pela família do artista. A obra é situada na Lagoa Rodrigo de Freitas pela fonte; a Tijuca se refere à memória familiar e ao destino das visitas, não à localização do monumento. A paisagem da capa é uma composição afetiva, não uma reprodução geográfica do bairro.
+
 O nome **Miudezas** reúne acontecimentos pequenos o bastante para caber numa janela. A capa os situa no mesmo bairro. O bem-te-vi pousa no telhado com uma nota musical; a linha da pipa parte de trás de uma casa. As fachadas, árvores apoiadas no chão e montanhas evocam a Tijuca. Um Cristo discreto e uma interpretação do Ritual do Vento completam a paisagem. Uma janela verde com a letra M funciona como ícone do conjunto, inclusive na aba do navegador.
 
 | Elemento | Aplicação e critério |
