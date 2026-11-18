@@ -40,9 +40,26 @@ A nova família **aberta** constrói certificados de 32–39 casas e exige simul
 - três folhas e vaso alcançáveis sem cruzar o rastro, com certificado real validado;
 - busca conclusiva rejeitando qualquer vitória de até 21 comandos, com o mesmo orçamento de 30.000 estados.
 
-A seleção padrão usa um terço das sementes para a família aberta e dois terços para a estreita. Ambas permanecem acessíveis; a semente reproduz a seleção e o mapa no reinício. Para diagnóstico e testes, `gerarRastro(seed, 'aberto')` e `options.family: 'aberto'` selecionam a família explicitamente. Os metadados `familia`, `areaLivre`, `bifurcacoes`, `pracas` e `fallback` permitem medir o resultado, sem prometer dificuldade subjetiva absoluta. Mais espaço oferece alternativas de ordem e decisões de caminho, mas não torna automaticamente toda fase mais difícil para todo jogador.
+A seleção padrão mantém as famílias anteriores e acrescenta a irregular: em cada bloco de doze sementes, seis são estreitas, três abertas e três irregulares. As três permanecem acessíveis; a semente reproduz a seleção e o mapa no reinício. Para diagnóstico e testes, `gerarRastro(seed, 'aberto')` e `options.family: 'aberto'` selecionam a família explicitamente. Os metadados `familia`, `areaLivre`, `bifurcacoes`, `pracas` e `fallback` permitem medir o resultado, sem prometer dificuldade subjetiva absoluta. Mais espaço oferece alternativas de ordem e decisões de caminho, mas não torna automaticamente toda fase mais difícil para todo jogador.
 
-Em 1.000 sementes sequenciais da seleção padrão, foram obtidos 985 mapas distintos; a amostra registrou 667 estreitas (14 reservas) e 333 abertas (16 reservas). As abertas tiveram em média cerca de **42,7 casas livres e 32 bifurcações**, contra 32,5 e 17,3 na família anterior. Geração ocorre apenas ao criar uma fase, nunca por quadro. Medições Node são indicadores locais, não garantias de desempenho em celulares.
+### Família irregular: trajetos que exigem planejar a ordem
+
+A família **irregular** é uma adição, não uma substituição das anteriores. `gerarRastro(seed, 'irregular')` ou `options.family: 'irregular'` seleciona essa família explicitamente. O tabuleiro continua 7 × 7 e todas as regras, desenhos, gestos, fases autorais e saves permanecem iguais.
+
+O gerador parte de oito topologias certificadas diferentes e aplica até **16 tentativas de mutação**: altera de uma a cinco casas fora da trilha-testemunha e desloca as três folhas ao longo dela. Rotações e reflexões diversificam a orientação, mas não são a única fonte de variedade. Cada resultado precisa atender simultaneamente:
+
+- entre **30 e 38 casas livres**, pelo menos **dez bifurcações** e **três grupos separados de pedras**;
+- solução executável, sem cruzar o próprio rastro, que recolhe as três folhas antes do vaso;
+- nenhuma vitória em até **25 movimentos**: mínimo demonstrado de 26, superior ao limite de 22 das famílias anteriores;
+- somente **uma a três das seis ordens possíveis de coleta** permitem vencer.
+
+`analisarOrdensRastro` examina cada permutação de folhas separadamente. O estado da busca inclui a posição, todas as casas já ocupadas pelo rastro e a próxima folha da ordem. Portanto, não basta que as folhas estejam conectadas: reservar uma passagem e escolher a ordem realmente importa. Desfazer continua permitido pelas regras reais, devolvendo folhas do trecho desfeito. Qualquer vitória final corresponde a um caminho simples, exatamente o tipo de percurso analisado.
+
+A busca de atalhos tem limite de **12.000 estados**; a análise de ordem usa **6.000 por permutação**. Se qualquer busca esgotar o orçamento, o candidato é rejeitado como inconclusivo, nunca aceito como uma prova de impossibilidade. Depois das 16 tentativas, usa-se o próprio modelo irregular orientado, novamente validado pelos mesmos critérios. Não há conversão silenciosa para família estreita ou aberta. O trabalho ocorre apenas na criação da fase, nunca por quadro.
+
+Na amostra das sementes 0–299, a família irregular produziu **280 layouts distintos após normalizar as oito simetrias**, incluindo **227 topologias diferentes de pedras**, 270 conjuntos de posições de folhas e 21 posições iniciais. Das 300 fases, 170 aceitaram somente uma ordem de coleta, 122 aceitaram duas e oito aceitaram três. Houve 21 reservas próprias (7%). Esses indicadores demonstram variedade estrutural e restrições adicionais; não prometem dificuldade subjetiva idêntica ou superior em absolutamente todas as partidas.
+
+As primeiras 100 sementes explícitas de cada família antiga são comparadas integralmente com fixtures da versão anterior, incluindo mapas e certificados. O gerador estreito/aberto não foi alterado para acomodar a nova família.
 
 ### Traçar o rastro com mouse ou toque
 
@@ -57,10 +74,10 @@ As fábricas recebem `(nivel, api, options)`. `options.mode` é `classic`, `endl
 Execute:
 
 ```sh
-node --test tests/pao.test.mjs tests/esquina-modos.test.mjs
+node --test tests/pao.test.mjs tests/esquina-modos.test.mjs tests/rastro-padroes.test.mjs
 ```
 
-A suíte verifica identidades, utensílios, toque, trocas, queimas únicas, três erros, metas separadas e vitória imediata nos três níveis; simula 20 minutos de Sem Parar; percorre **1.000 sementes** por controles reais, valida repetibilidade e variedade; desenha os mapas autorais; resolve os três autorais e 100 gerados com gestos de eventos espaçados; verifica bloqueio, início no caracol, cancelamento, preservação ao soltar e devolução de folha ao desfazer; e rejeita atalhos em 150 sementes, incluindo a reserva. A família aberta é testada separadamente em 200 sementes, incluindo execução por gesto, áreas livres, bifurcações, ausência de atalhos e reserva da mesma família. Testes automatizados não substituem a inspeção visual final no navegador e em dispositivos reais.
+A suíte verifica identidades, utensílios, toque, trocas, queimas únicas, três erros, metas separadas e vitória imediata nos três níveis; simula 20 minutos de Sem Parar; percorre **1.000 sementes** por controles reais, valida repetibilidade e variedade; desenha os mapas autorais; resolve os três autorais e 100 gerados com gestos de eventos espaçados; verifica bloqueio, início no caracol, cancelamento, preservação ao soltar e devolução de folha ao desfazer; e rejeita atalhos em 150 sementes, incluindo a reserva. A família aberta é testada separadamente em 200 sementes, incluindo execução por gesto, áreas livres, bifurcações, ausência de atalhos e reserva da mesma família. O teste adicional de padrões valida 300 fases irregulares, incluindo execução por gestos rápidos, ausência de atalhos, seis ordens de coleta, diversidade normalizada e fallback. Testes automatizados não substituem a inspeção visual final no navegador e em dispositivos reais.
 
 ## Acabamento visual aprovado
 
