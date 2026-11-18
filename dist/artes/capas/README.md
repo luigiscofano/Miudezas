@@ -2,7 +2,7 @@
 
 ![Capa completa](miudezas-tijuca.png)
 
-`miudezas-tijuca.png`: PNG, 1672 × 941 pixels. Arquivo aprovado, sem reamostragem, recorte ou alteração.
+`miudezas-tijuca.png`: PNG, 1672 × 941 pixels. Composição aprovada, sem recorte. Revisão pontual: removidas as janelas sobrepostas às portas das casas verde, laranja e amarela; as demais janelas permanecem.
 
 ## Elementos aprovados
 
