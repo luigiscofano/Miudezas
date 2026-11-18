@@ -461,3 +461,8 @@ O vaso foi ampliado de 8 × 7 para 11 × 10 pixels, conservando a paleta e o est
 ![Ícone aprovado de Luz de Varanda](dist/arte/icones/luz.svg)
 
 O cartão usa a opção A com apenas a perna esquerda afastada do corpo, conforme aprovação. Cauda, rosto com piscadinha e luz foram preservados. É uma imagem estática; não foi introduzida nova animação. A lagartixa e a iluminação dentro da partida não mudam.
+
+
+### Pão francês aprovado
+
+Pão na Chapa usa a versão aprovada baseada na referência enviada: pão francês alongado, com dois cortes diagonais e cores chapadas. O sprite tem 13 × 16 pixels, desenhado em escala 2 na chapa. As quatro paletas mostram antes do ponto, no ponto, tostado e queimado, preservando a fumaça. Ovo, utensílios, áreas de toque, tempos, metas, reposições e alternância de lados não mudam. Os testes de identidade verificam o novo desenho em ambos os lados; a suíte mantém os testes dos três níveis, vitória, queima e três erros.

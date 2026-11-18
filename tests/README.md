@@ -71,3 +71,8 @@ Os testes comparam as três dificuldades: nenhuma vence sem comandos, e uma traj
 `navegacao.test.mjs` verifica a galeria nas duas páginas: apenas Rádio, Gude, Pisca e Luz recebem os SVGs aprovados, os seis restantes preservam os PNGs e `foto()` fora da seleção conserva as cenas. Execute `node --test tests/*.test.mjs`. A inspeção local dos quatro SVGs também comparou seus pixels com as artes aprovadas. Essa comparação não equivale a teste em aparelho físico.
 
 `rastro-vaso.test.mjs` verifica dimensões de 11 × 10 pixels, permanência dentro da casa P nas três dificuldades e em cinco sementes geradas, além da preservação do estado e da solução durante o desenho.
+
+
+### Pão francês aprovado
+
+Pão na Chapa usa a versão aprovada baseada na referência enviada: pão francês alongado, com dois cortes diagonais e cores chapadas. O sprite tem 13 × 16 pixels, desenhado em escala 2 na chapa. As quatro paletas mostram antes do ponto, no ponto, tostado e queimado, preservando a fumaça. Ovo, utensílios, áreas de toque, tempos, metas, reposições e alternância de lados não mudam. Os testes de identidade verificam o novo desenho em ambos os lados; a suíte mantém os testes dos três níveis, vitória, queima e três erros.
