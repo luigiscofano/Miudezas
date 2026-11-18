@@ -13,3 +13,7 @@ Título Miudezas com iluminação pixelada; árvores enraizadas no solo; Cristo 
 A abertura usa `object-fit: contain` para preservar a proporção. O título não é redesenhado por HTML. Há um `h1` exclusivo para leitura assistiva. Não substitua o arquivo por uma captura do navegador.
 
 [Índice das artes](../README.md) · [Manual principal](../../../README.md)
+
+### Porta da lojinha na capa
+
+A entrada sob o toldo listrado usa verde discreto e maçaneta clara para se distinguir da fachada escura e da vitrine âmbar. A porta chega à calçada, sem parecer uma extensão solta da fachada. A revisão é apenas na imagem: proporção, controles, regras e dados dos jogos permanecem inalterados.

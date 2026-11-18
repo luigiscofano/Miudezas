@@ -483,3 +483,7 @@ A pausa usa a mesma imagem da seleção: ícone aprovado quando disponível e mi
 Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavização: balde com alça simples e pipa inclinada. São compartilhados pela seleção e pela pausa; não alteram cenas jogáveis, colisões, controles ou saves. Pão na Chapa usa a versão intermediária aprovada de 32 × 32 pixels, com pão francês e ovo baseados nos sprites reais.
 
 ![Goteira](dist/arte/icones/goteira.svg) ![Pipa](dist/arte/icones/pipa.svg) ![Pão na Chapa](dist/arte/icones/pao.svg)
+
+### Porta da lojinha na capa
+
+A entrada sob o toldo listrado usa verde discreto e maçaneta clara para se distinguir da fachada escura e da vitrine âmbar. A porta chega à calçada, sem parecer uma extensão solta da fachada. A revisão é apenas na imagem: proporção, controles, regras e dados dos jogos permanecem inalterados.
