@@ -155,6 +155,23 @@ Os caminhos existentes foram mantidos para não quebrar o jogo. A organização 
 
 As cores de cada palco aparecem nas fichas abaixo. São as cores de enquadramento definidas pelo catálogo. Os sprites e fundos internos têm paletas próprias nas funções de desenho. [Folha de estilos](dist/style.css) · [Catálogo](dist/catalogo.js) · [Acervo visual](dist/arte/README.md)
 
+### Cores recorrentes nos desenhos dos jogos
+
+Além das oito cores estruturais da interface, estas oito amostras mostram tons reutilizados nos cenários, alimentos e utensílios. A seleção prioriza cores com **três ou mais ocorrências literais nos módulos ativos de desenho**, agrupadas pelo uso visual, sem listar cada variação de sombra. Isso indica recorrência no código, não a porcentagem de pixels na tela: uma cor declarada uma única vez pode preencher um fundo inteiro. Cores dos módulos legados foram excluídas.
+
+| Tom | Amostra e código | Uso real e fonte |
+|---|---|---|
+| Azul profundo | <img src="docs/imagens/paleta/azul-profundo.svg" width="72" height="24" alt="Amostra Azul profundo: #263653"> `#263653` | Traços repetidos do cenário de Goteira. [quintal.js](dist/quintal.js) |
+| Pêssego | <img src="docs/imagens/paleta/pessego.svg" width="72" height="24" alt="Amostra Pêssego: #F8BE92"> `#F8BE92` | Blocos das nuvens no céu de Último Fio. [quintal.js](dist/quintal.js) |
+| Terracota | <img src="docs/imagens/paleta/terracota.svg" width="72" height="24" alt="Amostra Terracota: #D98A71"> `#D98A71` | Volumes de construções no cenário de Último Fio. [quintal.js](dist/quintal.js) |
+| Cinza metálico | <img src="docs/imagens/paleta/metal.svg" width="72" height="24" alt="Amostra Cinza metálico: #B9BDC8"> `#B9BDC8` | Partes metálicas da espátula e da pinça em Pão na Chapa. [esquina.js](dist/esquina.js) |
+| Castanho da crosta | <img src="docs/imagens/paleta/crosta.svg" width="72" height="24" alt="Amostra Castanho da crosta: #A9512F"> `#A9512F` | Crosta e sombras do pão em diferentes pontos de preparo. [esquina.js](dist/esquina.js) |
+| Creme dos alimentos | <img src="docs/imagens/paleta/clara.svg" width="72" height="24" alt="Amostra Creme dos alimentos: #FFF2D7"> `#FFF2D7` | Clara do ovo, detalhe do pão e base dos seletores de utensílios. [esquina.js](dist/esquina.js) |
+| Violeta da parede | <img src="docs/imagens/paleta/violeta-parede.svg" width="72" height="24" alt="Amostra Violeta da parede: #3A2A65"> `#3A2A65` | Linhas de relevo da parede em Luz de Varanda. [varanda.js](dist/varanda.js) |
+| Violeta claro | <img src="docs/imagens/paleta/violeta-detalhe.svg" width="72" height="24" alt="Amostra Violeta claro: #4D3976"> `#4D3976` | Pequenas marcas na parede em Luz de Varanda. [varanda.js](dist/varanda.js) |
+
+As cores de enquadramento de cada jogo continuam nas respectivas fichas. Esta seleção complementa a paleta da interface; não substitui as paletas específicas dos sprites.
+
 ---
 
 ## Jogos e level design
