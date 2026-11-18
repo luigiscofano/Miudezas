@@ -1,3 +1,4 @@
+import {createHash} from 'node:crypto';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {varanda,criarTerrenoGude,validarTerrenoGude} from '../dist/varanda.js';
@@ -62,9 +63,9 @@ test('Gude valida 500 sementes usando controles, colisões e física reais',()=>
   }
   assert.equal(a.resultados.length,1);assert.equal(a.resultados[0].ok,true);jogo.draw(quadro);
  }
- assert.ok(layouts.size>490);assert.ok(origens.size>400);assert.ok(normalizados.size>300);assert.ok(iniciosInternos>200);assert.ok(alvosInternos>50);assert.equal(quadrantes.size,4);
+ assert.ok(layouts.size>490);assert.ok(origens.size>350);assert.ok(normalizados.size>300);assert.ok(iniciosInternos>150);assert.ok(alvosInternos>50);assert.equal(quadrantes.size,4);
  assert.equal(rotas.size,24);assert.equal(orientacoes.size,8);
- assert.deepEqual([...familias].sort(),['cotovelo','retorno','travessia']);assert.deepEqual([...quantidades].sort(),[3,4,5,6,7]);
+ assert.deepEqual([...familias].sort(),['cotovelo','escalonado-retorno','escalonado-travessia','retorno','travessia']);assert.deepEqual([...quantidades].sort(),[3,4,5,6,7,8]);
 });
 test('Gude reinício reconstrói mapa; dificuldades clássicas mantêm alvos',()=>{
  for(const level of [1,2,3])assert.deepEqual(varanda.gude(level,api()).snapshot().terreno.alvo,[[77,20],[78,19],[78,18]][level-1]);
@@ -103,3 +104,18 @@ test('Certificado rejeita mapa trivial e área inferior às pedras do Puxado',()
  assert.equal(validarTerrenoGude({...t,pedras:[]}),false);
  assert.equal(validarTerrenoGude({...t,pedras:[[2,2,15,12],[70,70,15,12]],alvo:[40,80]}),false);
 });
+
+ test('Sementes fora do novo subconjunto mantêm mapas anteriores byte a byte',()=>{
+ const anteriores={1:'ca429dcb4f54cae65d096574174b39154d6ce26801b2879e80655c66a7498699',2:'69e6f847765f1a1d288d0b1d812c1764984f90f4fec0f8bab5a4715947f46573',4:'4cfaaed9b37860c56f9927911cd9722ae30c016eae25fa4c09ed58172284809e',5:'77e2369c9aa78674bbd5369236e533f83b0d4d10c4b22add42fce286280d2f49'};
+ for(const [seed,hash]of Object.entries(anteriores))assert.equal(createHash('sha256').update(JSON.stringify(criarTerrenoGude(Number(seed)))).digest('hex'),hash);
+ });
+ test('Subconjunto escalonado varia geometria e exige calibrar força',()=>{
+ const geometrias=new Set(),familias=new Set();let internos=0,novos=0;
+ for(let seed=0;seed<300;seed+=3){
+ const t=criarTerrenoGude(seed);if(!t.familia.startsWith('escalonado-'))continue;
+ novos++;familias.add(t.familia);geometrias.add(assinaturaGeometrica(t));
+ if(t.inicio.every(v=>v>=28&&v<=68))internos++;
+ assert.equal(t.solucao.length,3);assert.ok(t.pedras.length>=5);assert.ok(t.desafioForca>=4);
+ }
+ assert.ok(novos>=80);assert.equal(familias.size,2);assert.ok(geometrias.size>=75);assert.ok(internos>=30);
+ });

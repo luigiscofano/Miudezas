@@ -244,7 +244,32 @@ function orientarTerrenoGude(pontos,pedras,orientacao,seed,familia) {
     semente:Number(seed)>>>0,familia,orientacao};
 }
 
+// Verifica que a força faz diferença: perturba um único peteleco em ±30%.
+function contarErrosDeForcaGude(terreno) {
+  let falhas=0;
+  for(let indice=0;indice<3;indice++)for(const fator of [.7,1.3]){
+    let venceu=false;
+    const jogo=gude(3,{tone(){},finish(ok){venceu=ok;}},{terrenoValidado:terreno});
+    for(const [n,passo] of terreno.solucao.entries()){
+      const alcance=(5+68*passo.duracao)*(n===indice?fator:1);
+      jogo.press(passo.direcao);jogo.update((alcance-5)/68);jogo.release(passo.direcao);
+      for(let q=0;q<600&&jogo.moving;q++)jogo.update(1/60);
+    }
+    if(!venceu)falhas++;
+  }
+  return falhas;
+}
+
 export function criarTerrenoGude(seed=1) {
+  // Reserva um terço das sementes para desafios adicionais sem substituir os antigos.
+  if((Number(seed)>>>0)%3===0){
+    const novo=criarTerrenoGudeBase(seed,true);
+    if(novo)return novo;
+  }
+  return criarTerrenoGudeBase(seed);
+}
+
+function criarTerrenoGudeBase(seed,exigente=false) {
   // Avalanche da semente: sementes vizinhas não escolhem sempre a mesma região.
   let mistura=(Number(seed)>>>0)^0x9e3779b9;
   mistura=Math.imul(mistura^(mistura>>>16),0x21f0aaad);
@@ -257,7 +282,7 @@ export function criarTerrenoGude(seed=1) {
   for(let tentativa=0;tentativa<64;tentativa++) {
     const interno=inteiro(0,1)===1;
     const inicio=[inteiro(interno?29:13,interno?67:83),inteiro(interno?29:13,interno?67:83)];
-    const pontos=[inicio],trechos=inteiro(2,3);
+    const pontos=[inicio],trechos=exigente?3:inteiro(2,3);
     let eixo=inteiro(0,1),invalido=false;
     for(let n=0;n<trechos;n++){
       const anterior=pontos.at(-1),proximo=[...anterior];
@@ -273,18 +298,20 @@ export function criarTerrenoGude(seed=1) {
       pontos.push(proximo);eixo=1-eixo;
     }
     if(invalido||Math.hypot(...pontos.at(-1).map((v,i)=>v-inicio[i]))<25)continue;
-    const pedras=[],quantidade=inteiro(3,7);
+    const pedras=[],quantidade=exigente?inteiro(5,8):inteiro(3,7);
+    const folga=exigente?5:6;
     function livreDoPercurso([x,y,w,h]){
       for(let n=1;n<pontos.length;n++){
         const a=pontos[n-1],b=pontos[n];
         // Folga maior que o raio protege os gestos com pequenas imprecisões.
-        if(Math.max(a[0],b[0])>=x-6&&Math.min(a[0],b[0])<=x+w+6&&
-           Math.max(a[1],b[1])>=y-6&&Math.min(a[1],b[1])<=y+h+6)return false;
+        if(Math.max(a[0],b[0])>=x-folga&&Math.min(a[0],b[0])<=x+w+folga&&
+           Math.max(a[1],b[1])>=y-folga&&Math.min(a[1],b[1])<=y+h+folga)return false;
       }
       return !pedras.some(([a,b,c,d])=>x<a+c+5&&x+w>a-5&&y<b+d+5&&y+h>b-5);
     }
     for(let amostra=0;amostra<120&&pedras.length<quantidade;amostra++){
-      const w=inteiro(8,19),h=inteiro(8,19);
+      let w=exigente?inteiro(7,12):inteiro(8,19),h=exigente?inteiro(14,26):inteiro(8,19);
+      if(exigente&&inteiro(0,1))[w,h]=[h,w];
       const pedra=[inteiro(5,91-w),inteiro(5,91-h),w,h];
       if(livreDoPercurso(pedra))pedras.push(pedra);
     }
@@ -292,9 +319,14 @@ export function criarTerrenoGude(seed=1) {
     const primeira=pontos[1].map((v,i)=>v-pontos[0][i]);
     const ultima=pontos.at(-1).map((v,i)=>v-pontos.at(-2)[i]);
     const familia=trechos===2?'cotovelo':primeira[0]*ultima[0]+primeira[1]*ultima[1]>0?'travessia':'retorno';
-    const terreno=orientarTerrenoGude(pontos,pedras,orientacao,seed,familia);
-    if(validarTerrenoGude(terreno))return terreno;
+    const terreno=orientarTerrenoGude(pontos,pedras,orientacao,seed,exigente?'escalonado-'+familia:familia);
+    if(validarTerrenoGude(terreno)){
+      if(!exigente)return terreno;
+      const falhas=contarErrosDeForcaGude(terreno);
+      if(falhas>=4)return {...terreno,desafioForca:falhas};
+    }
   }
+  if(exigente)return null;
   // Saída conhecida ainda é certificada, inclusive após orientar seus controles.
   const seguro=orientarTerrenoGude([[20,76],[44,76],[44,28],[80,28]],
     [[52,40,16,18],[10,36,14,13]],orientacao,seed,'seguranca');
