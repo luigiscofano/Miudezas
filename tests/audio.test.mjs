@@ -6,7 +6,7 @@ import {criarAudio,TRILHAS,EFEITOS} from '../dist/audio.js';
 function ambiente({falha=false,adiar=false}={}){
  const fontes=[],pedidos=[],pendentes=[],ganhos=[];let criados=0;
  const param=()=>({value:1,eventos:[],setValueAtTime(v){this.value=v;this.eventos.push(['set',v]);},linearRampToValueAtTime(v){this.value=v;this.eventos.push(['ramp',v]);},exponentialRampToValueAtTime(v){this.value=v;},setTargetAtTime(v){this.value=v;this.eventos.push(['target',v]);},cancelScheduledValues(){this.eventos.push(['cancel']);}});
- const ctx={state:'suspended',currentTime:1,destination:{},resume:async()=>{ctx.state='running';},suspend:async()=>{ctx.state='suspended';},decodeAudioData:async x=>({x}),createGain:()=>{const g={gain:param(),connect(){},disconnect(){}};ganhos.push(g);return g;},createBufferSource:()=>{const f={connect(){},disconnect(){},start(){this.started=true;},stop(t){this.stopped=true;if(!t)this.onended?.();}};fontes.push(f);return f;},createOscillator(){const f=this.createBufferSource();f.frequency={};return f;}};
+ const ctx={state:'suspended',currentTime:1,destination:{},resume:async()=>{ctx.state='running';},suspend:async()=>{ctx.state='suspended';},decodeAudioData:async x=>({x,duration:20}),createGain:()=>{const g={gain:param(),connect(){},disconnect(){}};ganhos.push(g);return g;},createBufferSource:()=>{const f={connect(){},disconnect(){},start(...args){this.started=true;this.startArgs=args;},stop(t){this.stopped=true;if(!t)this.onended?.();}};fontes.push(f);return f;},createOscillator(){const f=this.createBufferSource();f.frequency={};return f;}};
  const som=criarAudio({contexto:()=>{criados++;return ctx;},buscar:url=>{pedidos.push(url.pathname);const resposta={ok:!falha,arrayBuffer:async()=>new ArrayBuffer(8)};return adiar?new Promise(r=>pendentes.push(()=>r(resposta))):Promise.resolve(resposta);}});
  return {som,ctx,fontes,pedidos,pendentes,ganhos,get criados(){return criados;}};
 }
@@ -24,8 +24,8 @@ test('Nenhum contexto/rede antes da ativação; mute encerra fontes; reativar fu
 });
 test('Navegação repetida reutiliza buffers e não reinicia a mesma tela',async()=>{
  const a=ambiente();await a.som.ativar();a.som.mudar('inicio');await limpar();assert.equal(a.fontes.length,1);
- a.som.mudar('jogo','pisca');await limpar();assert.equal(a.fontes.length,2);assert.ok(a.fontes[0].stopped);
- a.som.mudar('inicio');await limpar();assert.equal(a.pedidos.length,2);
+ a.som.mudar('jogo','pisca');await limpar();assert.equal(a.fontes.length,1);assert.ok(!a.fontes[0].stopped);assert.equal(a.ganhos[2].gain.value,.10/7);
+ a.som.mudar('inicio');await limpar();assert.equal(a.pedidos.length,1);
 });
 test('Requisição obsoleta não toca; desligar durante download não vaza áudio',async()=>{
  const a=ambiente({adiar:true});const p=a.som.ativar();a.som.mudar('pausa');await limpar();a.som.ativar(false);
@@ -41,9 +41,9 @@ test('Sinais essenciais conservam frequência e efeitos respeitam limite de voze
  for(let i=0;i<30;i++){a.ctx.currentTime+=.1;await a.som.efeito('coleta');}
  assert.ok(a.fontes.filter(x=>!x.stopped).length<=10);
 });
-test('Cache musical limitado permite recarregar faixa antiga',async()=>{
- const a=ambiente();await a.som.ativar();for(const t of ['galeria','nivel','jogo']){a.som.mudar(t);await limpar();}
- a.som.mudar('inicio');await limpar();assert.equal(a.pedidos.filter(p=>p.endsWith('/inicio.flac')).length,2);
+test('Navegar entre todas as telas mantém uma única faixa e download',async()=>{
+ const a=ambiente();await a.som.ativar();for(const t of TRILHAS){a.som.mudar(t);await limpar();}
+ a.som.mudar('inicio');await limpar();assert.equal(a.pedidos.filter(p=>p.endsWith('/inicio.flac')).length,1);
 });
 
 test('Vitória/derrota/recorde não são bloqueados pelo acerto do mesmo quadro',async()=>{
@@ -79,4 +79,19 @@ test('Nove efeitos digitais correspondem exatamente ao manifesto de amostras',()
   const bytes=readFileSync(new URL('../dist/audio/efeitos/'+nome+'.wav',import.meta.url));
   assert.equal(createHash('sha256').update(bytes).digest('hex'),hashes[nome+'.wav']);
  }
+});
+
+test('Mute e aba oculta retomam posição musical, incluindo ciclos completos',async()=>{
+ const a=ambiente();await a.som.ativar();a.ctx.currentTime=26;
+ await a.som.ativar(false);a.som.mudar('resultado');a.ctx.currentTime=100;
+ await a.som.ativar();assert.deepEqual(a.fontes.at(-1).startArgs,[0,5]);
+ a.ctx.currentTime=103;a.som.visibilidade(false);await limpar();
+ a.som.visibilidade(true);a.ctx.currentTime=110;await a.som.ativar();
+ assert.deepEqual(a.fontes.at(-1).startArgs,[0,8]);assert.equal(a.pedidos.length,1);
+});
+test('Navegação rápida durante carregamento inicial cria somente uma fonte musical',async()=>{
+ const a=ambiente({adiar:true});const p=a.som.ativar();await limpar();
+ for(const t of TRILHAS)a.som.mudar(t);
+ a.pendentes.forEach(f=>f());await p;await limpar();
+ assert.equal(a.fontes.length,1);assert.equal(a.pedidos.length,1);
 });

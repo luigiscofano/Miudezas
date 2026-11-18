@@ -115,3 +115,7 @@ O manifesto guarda hashes SHA-256 dos dois fontes e dos 18 WAV utilizados. Isso 
 ## Reprodução no jogo
 
 [Player e limites](../../dist/audio/README.md) · [Recriar os arquivos](../../scripts/audio/README.md). As músicas de produção contêm o ganho de apresentação +2 dB e compressão FLAC sem perdas; efeitos usam os WAV 8-bit opção B. O controle de volume é independente do mute e viaja no backup versão 3, compatível com versões anteriores.
+
+### Continuidade musical
+
+A música acompanha a navegação sem reiniciar: o tema escolhido na primeira ativação do som permanece durante a sessão, inclusive em pausa, configurações e resultados. As nove composições continuam disponíveis como temas de entrada. Silenciar ou ocultar a aba guarda o ponto da faixa para a próxima interação; recarregar a página começa uma nova sessão. As pistas sonoras dos jogos e os volumes independentes são preservados.

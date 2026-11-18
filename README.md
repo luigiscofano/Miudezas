@@ -876,3 +876,7 @@ Para transferir progresso de outra origem, exporte pela página de backup naquel
 Em dispositivos com mouse, a largura da janela durante a partida acompanha a altura livre do tabuleiro quadrado. Isso remove as faixas laterais sem esticar os pixels, cortar a cena ou mudar coordenadas de controle. O ajuste reage ao redimensionamento e à altura do HUD, e é desfeito ao pausar ou voltar aos menus. Telas de toque mantêm o enquadramento anterior. Os testes de navegação cobrem os dez jogos, larguras de 492 a 1920 pixels, saída/retomada e preservação do toque; a simulação DOM não substitui avaliação em aparelho físico.
 
 </details>
+
+### Continuidade musical
+
+A música acompanha a navegação sem reiniciar: o tema escolhido na primeira ativação do som permanece durante a sessão, inclusive em pausa, configurações e resultados. As nove composições continuam disponíveis como temas de entrada. Silenciar ou ocultar a aba guarda o ponto da faixa para a próxima interação; recarregar a página começa uma nova sessão. As pistas sonoras dos jogos e os volumes independentes são preservados.
