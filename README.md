@@ -12,7 +12,7 @@
 
 **Autor:** Luigi Scofano de Araujo · [Jogar no GitHub Pages](https://luigiscofano.github.io/Miudezas/) · [Licença MIT](LICENSE)
 
-[Começar](#executar) · [Modos e telas](#modos-e-telas) · [Identidade e artes](#identidade-visual) · [Os dez jogos](#jogos-e-level-design) · [Geração de fases](#geração-e-validação-de-fases) · [Arquitetura](#arquitetura) · [Dados e backup](#dados-e-som) · [Qualidade](#manutenção-e-testes) · [Publicação](#publicação-no-github-pages) · [Guias](#mapa-da-documentação)
+[Começar](#executar) · [Modos e telas](#modos-e-telas) · [Capturas reais](#telas-reais-da-versão-publicada) · [Identidade e artes](#identidade-visual) · [Os dez jogos](#jogos-e-level-design) · [Geração de fases](#geração-e-validação-de-fases) · [Arquitetura](#arquitetura) · [Dados e backup](#dados-e-som) · [Qualidade](#manutenção-e-testes) · [Publicação](#publicação-no-github-pages) · [Guias](#mapa-da-documentação)
 
 ---
 
@@ -24,7 +24,9 @@
 - **Novidades consolidadas:** Maré com cinco famílias e faixas avançadas, Gude com terrenos variados e níveis recalibrados, Rastro com percursos abertos e irregulares, Pipa com aves em V e colisão por pixels, lagartixa com três erros em todos os níveis.
 - **Dados locais:** preferência de som, Volta no Bairro e recordes exportáveis. Não há conta, sincronização, ranking online ou sistema de medalhas implementado.
 
-> Este README descreve a implementação atual. Imagens de marca são artes; cada ficha conserva o ícone e a miniatura armazenada e inclui uma **cena atual renderizada pelo próprio motor do jogo**, sem cursor. Essas cenas mostram o tabuleiro do nível Puxado, não uma captura da interface inteira. [Origem e reprodução das imagens](docs/imagens/jogos/README.md).
+> Este README descreve a implementação atual. Imagens de marca são artes; cada ficha conserva o ícone e a miniatura armazenada e inclui uma **cena atual renderizada pelo próprio motor do jogo**, sem cursor. Essas cenas mostram o tabuleiro do nível Puxado. A seção de telas reais apresenta, separadamente, capturas completas da interface publicada. [Origem e reprodução das imagens](docs/imagens/jogos/README.md).
+
+---
 
 ## Executar
 
@@ -46,6 +48,8 @@ py -m http.server 8000 --bind 127.0.0.1 --directory dist
 
 Para experimentar no celular, conecte os dois aparelhos à mesma rede local, execute o servidor com `--bind 0.0.0.0` e abra no celular o endereço IP local do computador na porta 8000. Para hospedar uma cópia, use o conteúdo de `dist/` como raiz do servidor estático. O endereço oficial no GitHub Pages é público e pode ser aberto em outros computadores ou celulares. A cópia local roda diretamente.
 
+---
+
 ## Modos e telas
 
 | Tela | O que se faz nela |
@@ -59,6 +63,26 @@ Para experimentar no celular, conecte os dois aparelhos à mesma rede local, exe
 | Pausa | Consultar regras, continuar, **Voltar às fases** ou sair ao menu. Voltar às fases preserva o jogo selecionado e os dados salvos, sem registrar uma derrota artificial. Perder o foco ou ocultar a aba também pausa a partida. |
 | Resultado | No avulso, repetir ou voltar à galeria. Na volta, repetir a parada ou avançar mesmo depois de uma derrota. |
 | Resumo | Após a 10ª parada, ver os desafios vencidos e as dez miniaturas com seus resultados. |
+
+### Telas reais da versão publicada
+
+Capturas feitas no [GitHub Pages](https://luigiscofano.github.io/Miudezas/), sem cursor, em 18/11/2026. Cada imagem mostra a **janela completa da aplicação**, incluindo cabeçalho, conteúdo, controles e rodapé. Apenas a margem vazia externa do navegador foi recortada; nenhuma parte da interface foi redesenhada.
+
+| Menu inicial | Seleção de jogos |
+|:---:|:---:|
+| ![Tela inicial completa de Miudezas, com capa e opções de partida](docs/imagens/telas/inicio.jpg) | ![Primeira página da seleção de jogos com os ícones atuais](docs/imagens/telas/selecao-jogos.jpg) |
+
+| Seleção de níveis | Partida em andamento |
+|:---:|:---:|
+| ![Seleção de níveis e Caminho Novo de Maré Miúda](docs/imagens/telas/selecao-niveis.jpg) | ![Maré Miúda no nível Puxado, com tabuleiro, controles e rodapé](docs/imagens/telas/partida-mare.jpg) |
+
+| Menu de pausa | Volta no Bairro |
+|:---:|:---:|
+| ![Pausa de Maré Miúda com ícone, regras, retorno às fases e ao menu](docs/imagens/telas/pausa.jpg) | ![Roteiro completo das dez paradas da Volta no Bairro](docs/imagens/telas/volta-bairro.jpg) |
+
+[Procedência e atualização das capturas](docs/imagens/telas/README.md). As fichas abaixo também apresentam o desenho atual do tabuleiro de **cada um dos dez jogos**, separado destas capturas de interface.
+
+---
 
 ### Modos adicionais por jogo
 
@@ -86,6 +110,8 @@ O gesto principal atua sobre o objeto do jogo: em **Rastro de Prata**, comece no
 Teclado e botões direcionais continuam sendo alternativas ao arrasto; não é necessário dominar o gesto para jogar. A restrição de gestos nativos (`touch-action`) fica limitada ao tabuleiro interativo, sem bloquear a rolagem da página inteira. Confira também foco visível, leitura das instruções e funcionamento em telas estreitas.
 
 **Comandos gerais.** Setas e WASD têm a mesma função nas partidas. Nos menus, use setas para navegar e Enter para selecionar. Esc volta ou pausa. No celular, os botões sob a cena complementam os gestos próprios de cada jogo. O computador solicita uma janela de 492 × 492 quando a área tem ao menos 700 px de largura e o dispositivo aponta com precisão. Se o navegador bloquear a abertura, o jogo segue na página.
+
+---
 
 ## Identidade visual
 
@@ -352,6 +378,8 @@ Em **Sem Parar**, a sequência continua crescendo e a pontuação é a maior seq
 
 Palco `#1A393B` · [Implementação de Pisca no Mato](dist/varanda.js)
 
+---
+
 ## Geração e validação de fases
 
 Os três geradores usam sementes, orçamento finito de tentativas e reservas validadas. Repetir conserva a fase; “Nova fase” troca a semente. As fases fixas não dependem do sorteio. A dificuldade é estimada por restrições verificáveis, não uma garantia subjetiva de dificuldade para toda pessoa.
@@ -471,6 +499,8 @@ console.log(rodada.hud());
 3. Se a rodada continuar, o jogo desenha o quadro e atualiza o indicador quando o texto muda. Um `ResizeObserver` ajusta a apresentação ao espaço disponível. A resolução lógica continua em 96 × 96.
 4. Uma vitória ou derrota chama `finish`. A interface cancela os quadros, libera os controles e apresenta o resultado. Pausar conserva a instância. Repetir cria outra.
 
+---
+
 ## Dados e som
 
 | Chave local | Conteúdo | Momento de gravação |
@@ -484,6 +514,8 @@ Os seis recordes de Sem Parar, incluindo Luz de Varanda (`luz`), ficam em `miude
 Com `{"nivel":2,"resultados":[true,false]}`, a próxima parada é Último Fio em Animado. O resultado mais recente só entra no histórico ao escolher avançar. Repetir permite substituir a tentativa antes desse registro. A retomada depende da origem e do navegador. Outra cópia do site tem seu próprio histórico. Se o armazenamento estiver indisponível, a rodada segue em memória.
 
 O áudio usa um oscilador de onda quadrada com envelope curto. O contexto de áudio é ativado após interação. Em Goteira, a nota sobe conforme o balde enche. Em Pisca no Mato, as duas alturas distinguem esquerda e direita. As transmissões do rádio têm legendas escritas.
+
+---
 
 ## Manutenção e testes
 
@@ -509,6 +541,8 @@ Na auditoria documental após o PR #51, a suíte recebeu também uma verificaç�
 
 O teste rápido de sintaxe pode ser feito com Node recente, por exemplo `node --check dist/app.js`. Os cenários acima verificam comportamento e interação. O repositório inclui os testes automáticos e este roteiro de verificação manual.
 
+---
+
 ## Publicação no GitHub Pages
 
 **Site público:** [luigiscofano.github.io/Miudezas](https://luigiscofano.github.io/Miudezas/). O site não depende de o computador do autor estar ligado. O conteúdo servido é `dist/`, sem compilação ou backend.
@@ -516,6 +550,8 @@ O teste rápido de sintaxe pode ser feito com Node recente, por exemplo `node --
 O [workflow](.github/workflows/pages.yml) executa os testes e publica automaticamente após um push/merge em `main`; também permite `workflow_dispatch`. Uma alteração só deve ser anunciada como publicada após conferir a execução e a versão pública. [Histórico de execuções](https://github.com/luigiscofano/Miudezas/actions) · [Guia de publicação e reversão](docs/github-pages.md).
 
 Para transferir progresso de outra origem, exporte pela página de backup naquela origem e importe na [página de backup do Pages](https://luigiscofano.github.io/Miudezas/backup.html). Domínios e navegadores não compartilham armazenamento automaticamente. A ferramenta valida schema e dados; backup versão 1 continua aceito, sem apagar recordes atuais ausentes no arquivo antigo. Não substitui conta ou sincronização.
+
+---
 
 ## Mapa da documentação
 
@@ -530,6 +566,8 @@ Para transferir progresso de outra origem, exporte pela página de backup naquel
 | [Varanda](docs/jogos/varanda/README.md) | Lagartixa, Gude e Pisca. |
 | [Dados](docs/dados/README.md) | Persistência, validação e compatibilidade de backup. |
 | [Testes](tests/README.md) | Comandos, cobertura e roteiro manual. |
+
+---
 
 ## Referências
 
