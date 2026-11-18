@@ -1,49 +1,44 @@
-# Acervo visual de Miudezas
+# Recursos visuais das cenas e menus
 
-A capa estabelece o bairro; as miniaturas apresentam o recorte de cada parada. O código de jogo desenha os personagens em movimento no Canvas. Assim, trocar uma miniatura altera a seleção e os cartões de resultado, enquanto uma mudança no sprite jogável pertence à fábrica correspondente.
+Esta pasta contém **dez miniaturas PNG ativas**, **dez ícones SVG de seleção**, a fonte local e três recursos históricos. As cenas jogáveis são desenhadas em Canvas pelo código: os PNGs não são folhas de sprites nem capturas automaticamente atualizadas do jogo.
 
-| Arquivo | Formato | Uso |
+## Miniaturas ativas
+
+Todos os PNGs abaixo medem **128 × 120 pixels**. O ID corresponde ao catálogo. Em `app.js`, `foto(j)` usa essas imagens na seleção de dificuldade, no roteiro da Volta, na introdução da próxima parada e no resultado. O resumo da Volta também usa os PNGs. Já galeria e pausa pedem os SVGs de [icones/](icones/README.md).
+
+| ID | Jogo | Arquivo | Cena jogável |
+|---|---|---|---|
+| goteira | Goteira | [goteira.png](goteira.png) | [quintal.js](../quintal.js) |
+| mare | Maré Miúda | [mare.png](mare.png) | [quintal.js](../quintal.js) |
+| fio | Último Fio | [fio.png](fio.png) | [quintal.js](../quintal.js) |
+| pipa | Pipa de Laje | [pipa.png](pipa.png) | [quintal.js](../quintal.js) |
+| radio | Rádio de Pilha | [radio.png](radio.png) | [esquina.js](../esquina.js) |
+| pao | Pão na Chapa | [pao.png](pao.png) | [esquina.js](../esquina.js) |
+| rastro | Rastro de Prata | [rastro.png](rastro.png) | [esquina.js](../esquina.js) |
+| luz | Luz de Varanda | [luz.png](luz.png) | [varanda.js](../varanda.js) |
+| gude | Três Petelecos | [gude.png](gude.png) | [varanda.js](../varanda.js) |
+| pisca | Pisca no Mato | [pisca.png](pisca.png) | [varanda.js](../varanda.js) |
+
+<img src="goteira.png" width="128" alt="Miniatura estática de Goteira"> <img src="mare.png" width="128" alt="Miniatura estática de Maré Miúda"> <img src="rastro.png" width="128" alt="Miniatura estática de Rastro de Prata">
+
+## Fonte e recursos históricos
+
+| Arquivo | Tipo / dimensões | Estado e uso verificável |
 |---|---|---|
-| [bairro.png](bairro.png) | PNG, 192 × 88 | Paisagem legada; não é mais usada na abertura. |
-| [janela.png](janela.png) | PNG, 16 × 16 | Favicon e símbolo da barra de título. |
-| [miudezas.ttf](miudezas.ttf) | TrueType | Títulos, níveis, controles e indicadores pixelados, com caracteres acentuados em português. |
+| [miudezas.ttf](miudezas.ttf) | TrueType | Ativa: `@font-face` em [style.css](../style.css), família Miudezas. |
+| [bairro.png](bairro.png) | PNG, 192 × 88 | Paisagem histórica, sem referência na abertura atual. Não substituir a capa Tijuca por ela. |
+| [janela.png](janela.png) | PNG, 16 × 16 | Original arquivado; o HTML usa a cópia idêntica [janela-original.png](../artes/marca/janela-original.png). Não é o favicon atual. |
+| [peteca.svg](peteca.svg) | SVG, viewBox 96 × 96 | Legado de Peteca, fora do catálogo e do aplicativo ativo. |
+| [sombra.svg](sombra.svg) | SVG, viewBox 96 × 96 | Legado de Gato na Sombra, fora do catálogo e do aplicativo ativo. |
 
-## Miniaturas
+O [gerador histórico de miniaturas](../../scripts/gerar-miniaturas.mjs) lê `pracinha.js` e escreve os SVGs de seus jogos legados. Ele **não** gera os dez ícones atuais nem os dez PNGs acima. Executá-lo não reintroduz jogos na seleção; a lista ativa é definida por [catalogo.js](../catalogo.js).
 
-Cada PNG da coleção original abaixo mede 128 × 120. O nome-base corresponde ao ID usado no catálogo.
+## O que editar para cada necessidade
 
-| Quintal | Esquina | Varanda |
-|---|---|---|
-| [Goteira](goteira.png) | [Rádio de Pilha](radio.png) | [Luz de Varanda](luz.png) |
-| [Maré Miúda](mare.png) | [Pão na Chapa](pao.png) | [Três Petelecos](gude.png) |
-| [Último Fio](fio.png) | — | — |
-| [Pipa de Laje](pipa.png) | [Rastro de Prata](rastro.png) | [Pisca no Mato](pisca.png) |
+- Ícone da galeria ou pausa: [icones/](icones/README.md) e o campo `icone` do catálogo.
+- Miniatura de introdução ou resultado: PNG do jogo nesta pasta.
+- Personagem, folhas, água, alimento ou obstáculo dentro da partida: função `draw` do módulo correspondente.
+- Capa, logotipo e favicon: [artes/](../artes/README.md).
+- Paleta, enquadramento e ampliação pixelada: [style.css](../style.css), catálogo e desenho Canvas, conforme a camada.
 
-O fundo contínuo, o contorno em degraus e os poucos pontos de destaque permitem reconhecer a cena em miniatura. A fonte é registrada por @font-face no CSS. A ampliação do desenho usa renderização pixelada. O controle fino das cores fica em [style.css](../style.css), nos campos de palco de [catalogo.js](../catalogo.js) e nas funções de desenho.
-
-[Identidade visual e fichas dos jogos](../../README.md#identidade-visual)
-
-## Pracinha
-
-[Peteca](peteca.svg) · [Gato na Sombra](sombra.svg)
-
-Essas duas miniaturas são SVGs na mesma grade de 96 × 96 usada nas partidas, com retângulos inteiros e crispEdges. Execute `node scripts/gerar-miniaturas.mjs` na raiz para atualizar os arquivos a partir de pracinha.js. Assim, a seleção apresenta os próprios sprites jogáveis.
-
-
-## Nova capa
-
-![Capa aprovada](../artes/capas/miudezas-tijuca.png)
-
-A abertura usa a [capa Tijuca](../artes/capas/README.md). Este diretório mantém os recursos das partidas e o cenário anterior como legado.
-
-## Ícone atual
-
-A janela original `janela.png` continua ativa na barra superior, com uma cópia documentada em [artes/marca](../artes/marca/README.md). O favicon atual é o [ícone verde aprovado](../artes/marca/miudezas-icone-verde.png), documentado na [marca](../artes/marca/README.md).
-
-## Ícones da seleção
-
-A pasta [icones](icones/README.md) contém os dez símbolos aprovados para Rádio de Pilha, Três Petelecos, Pisca no Mato, Luz de Varanda, Maré Miúda, Último Fio e Rastro de Prata. Os PNGs de cenas desta pasta continuam disponíveis para introduções e resultados. Os demais jogos ainda utilizam suas miniaturas originais na seleção.
-
-### Goteira, Pipa e Pão na Chapa: últimos ícones aprovados
-
-Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavização: balde com alça simples e pipa inclinada. São compartilhados pela seleção e pela pausa; não alteram cenas jogáveis, colisões, controles ou saves. Pão na Chapa usa a versão intermediária aprovada de 32 × 32 pixels, com pão francês e ovo baseados nos sprites reais.
+Nenhum arquivo foi movido ou duplicado nesta organização documental. [Catálogo de design](../../docs/design/README.md) · [Manual principal](../../README.md)

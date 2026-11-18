@@ -106,3 +106,7 @@ Os testes executam o motor e os controles públicos em automação. Isso não eq
 ### Lagartixa: três erros em todos os níveis
 
 `luz-erros.test.mjs` executa cada dificuldade: erro contado após um bote, entradas repetidas ignoradas durante a animação, derrota única no terceiro erro, estado congelado após terminar, reinício, vitória com dois erros e prazo preservado. Também confirma que Sem Parar continua sem limite de tempo. As entradas usam os métodos reais do jogo; não substituem teste de toque em aparelho físico.
+
+### Auditoria documental
+
+O teste da lagartixa também verifica se o catálogo informa o terceiro erro em qualquer modo, mantendo o prazo autoral. A reorganização documental confere links e âncoras locais, referências de imagens, decodificação de PNGs e XML dos SVGs; imagens armazenadas não são apresentadas como capturas novas. Essa auditoria não substitui teste visual do Markdown renderizado pelo GitHub.

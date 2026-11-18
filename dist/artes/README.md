@@ -8,10 +8,14 @@
 
 A revisão das fachadas remove apenas as janelas que ocupavam o espaço de portas existentes. O mesmo arquivo é usado na abertura e nas imagens dos READMEs.
 
-## Organização
+## Inventário e usos atuais
 
-- `capas/`: composição aprovada exibida na abertura.
-- [Recursos do jogo](../arte/README.md): miniaturas, ícone, fonte e cenário legado. Mantidos nos caminhos existentes para não afetar as partidas.
+| Subpasta | Arquivos de imagem | Uso no aplicativo |
+|---|---|---|
+| [capas/](capas/README.md) | `miudezas-tijuca.png` | Abertura, pela função de início em [app.js](../app.js). |
+| [marca/](marca/README.md) | `miudezas-logo.png`, `miudezas-icone-verde.png`, `janela-original.png` | Logotipo da barra, favicon e pequena janela da barra, respectivamente, em [index.html](../index.html). |
+
+São **quatro PNGs** nesta árvore. Os READMEs apenas os referenciam, sem criar versões adicionais. [Recursos do jogo](../arte/README.md) documenta as miniaturas, os dez ícones, a fonte e o legado nos caminhos originais. [Design e arte em código](../../docs/design/README.md) explica os desenhos Canvas e ícones inline que não existem como arquivos de imagem.
 
 [Manual principal](../../README.md)
 

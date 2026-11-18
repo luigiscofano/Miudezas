@@ -12,9 +12,19 @@
 
 **Autor:** Luigi Scofano de Araujo · [Jogar no GitHub Pages](https://luigiscofano.github.io/Miudezas/) · [Licença MIT](LICENSE)
 
-[Executar](#executar) · [Modos e telas](#modos-e-telas) · [Identidade visual](#identidade-visual) · [Jogos e level design](#jogos-e-level-design) · [Arquitetura](#arquitetura) · [Dados e som](#dados-e-som) · [Manutenção e testes](#manutenção-e-testes) · [Referências](#referências)
+[Começar](#executar) · [Modos e telas](#modos-e-telas) · [Identidade e artes](#identidade-visual) · [Os dez jogos](#jogos-e-level-design) · [Geração de fases](#geração-e-validação-de-fases) · [Arquitetura](#arquitetura) · [Dados e backup](#dados-e-som) · [Qualidade](#manutenção-e-testes) · [Publicação](#publicação-no-github-pages) · [Guias](#mapa-da-documentação)
 
 ---
+
+## Estado atual em uma leitura
+
+- **10 jogos e 30 fases autorais:** Sossegado, Animado e Puxado continuam disponíveis.
+- **6 modos Sem Parar:** recordes pessoais persistentes, sem cronômetro final.
+- **3 modos Caminho Novo:** fases reproduzíveis, solução validada e reinício na mesma semente.
+- **Novidades consolidadas:** Maré com cinco famílias e faixas avançadas, Gude com terrenos variados e níveis recalibrados, Rastro com percursos abertos e irregulares, Pipa com aves em V e colisão por pixels, lagartixa com três erros em todos os níveis.
+- **Dados locais:** preferência de som, Volta no Bairro e recordes exportáveis. Não há conta, sincronização, ranking online ou sistema de medalhas implementado.
+
+> Este README descreve a implementação atual. Imagens de marca são artes; as PNGs dos jogos são miniaturas armazenadas, não capturas novas da versão publicada. Os ícones atuais aparecem ao lado de cada ficha.
 
 ## Executar
 
@@ -67,17 +77,13 @@ São **seis jogos com Sem Parar e três com Caminho Novo**, além do Rádio com 
 | Três Petelecos | Caminho Novo | Percurso validado com a física e os controles de lançamento reais. |
 | Pisca no Mato | Sem Parar | Maior sequência concluída; errar encerra. |
 
-No **Rastro de Prata**, Caminho Novo combina a família estreita já existente com uma família mais aberta: áreas de escolha, bifurcações e praças aumentam as alternativas, mas o rastro exige planejamento. A família aberta mantém solução certificada e rejeita atalhos curtos; ambas continuam disponíveis no gerador. Uma família irregular adicional exige pelo menos 26 movimentos, três ilhas de pedras e planejamento da ordem das folhas: apenas uma a três das seis ordens possíveis são executáveis sem cruzar o rastro. O solver verifica essas restrições antes da apresentação.
-
-Caminho Novo toma a dificuldade **Puxado** como referência de desafio, mantendo as fases autorais como uma opção separada. Os geradores usam sementes reproduzíveis, tentativas limitadas e configurações de reserva validadas. A prova de solução é executada antes da entrega da fase, não presumida apenas pela aparência do mapa. Consulte [Quintal](docs/jogos/quintal/README.md), [Esquina](docs/jogos/esquina/README.md) e [Varanda](docs/jogos/varanda/README.md) para regras, limites e verificações.
-
 **Uma volta de exemplo.** Escolha Animado, jogue Goteira e avance. O próximo cartão é Maré Miúda no mesmo nível. Fechar o navegador nesse cartão permite retomar na segunda parada. Se sair no meio da partida, ela recomeça naquela parada. O avanço registra um resultado por jogo.
 
 ### Controles diretos e alternativa acessível
 
 O gesto principal atua sobre o objeto do jogo: em **Rastro de Prata**, comece no caracol e trace pelas casas vizinhas; em **Três Petelecos**, comece sobre a bolinha, puxe e solte para lançar. Começar fora desses objetos não inicia um arrasto válido. Interrupções como `pointercancel` ou perda de foco cancelam o lançamento parcial: não equivalem a soltar voluntariamente a bolinha.
 
-Teclado e botões direcionais continuam sendo alternativas acessíveis; não é necessário dominar o arrasto para jogar. A restrição de gestos nativos (`touch-action`) fica limitada ao tabuleiro interativo, sem bloquear a rolagem da página inteira. Confira também foco visível, leitura das instruções e funcionamento em telas estreitas.
+Teclado e botões direcionais continuam sendo alternativas ao arrasto; não é necessário dominar o gesto para jogar. A restrição de gestos nativos (`touch-action`) fica limitada ao tabuleiro interativo, sem bloquear a rolagem da página inteira. Confira também foco visível, leitura das instruções e funcionamento em telas estreitas.
 
 **Comandos gerais.** Setas e WASD têm a mesma função nas partidas. Nos menus, use setas para navegar e Enter para selecionar. Esc volta ou pausa. No celular, os botões sob a cena complementam os gestos próprios de cada jogo. O computador solicita uma janela de 492 × 492 quando a área tem ao menos 700 px de largura e o dispositivo aponta com precisão. Se o navegador bloquear a abertura, o jogo segue na página.
 
@@ -93,6 +99,20 @@ O nome **Miudezas** reúne acontecimentos pequenos o bastante para caber numa ja
 | Silhueta | Asa curta e peito amarelo identificam o pássaro. Um retângulo de água sob a rachadura avisa onde a gota vai cair. Cada detalhe precisa continuar legível no tamanho da janela. |
 | Pequenas irregularidades | A alça do balde cai de lado, a antena do rádio dobra e as fachadas variam um pixel. A irregularidade pertence ao objeto. As áreas de toque e as regras continuam previsíveis. |
 | Sinais de jogo | O fio treme antes da rajada, o pão muda de cor e solta vapor, a luz do rádio indica sintonia. Sons curtos confirmam ações, enquanto o indicador escrito conserva a informação principal. |
+
+### Marca e organização das artes
+
+<img src="dist/artes/marca/miudezas-icone-verde.png" width="96" alt="Favicon verde com M"> <img src="dist/artes/marca/janela-original.png" width="64" alt="Janela original da barra">
+
+O logotipo escrito identifica o conjunto; o **M na janela verde** é o favicon; a **janela de quatro vidraças** permanece na barra. São arquivos distintos e não substituem os sprites das partidas.
+
+- [Capa](dist/artes/capas/README.md): composição completa, sem recortes ou título sobreposto.
+- [Marca](dist/artes/marca/README.md): logotipo, favicon e janela original.
+- [Ícones](dist/arte/icones/README.md): os dez símbolos aprovados usados na seleção e na pausa.
+- [Miniaturas, fonte e legado](dist/arte/README.md): inventário separado de material ativo e histórico.
+- [Arte em código](docs/design/README.md): animais, alimentos, objetos, cenários e ícones inline efetivamente desenhados pelos módulos.
+
+Os caminhos existentes foram mantidos para não quebrar o jogo. A organização é feita por índices e inventário, sem duplicar imagens. O [histórico visual](docs/evolucao-visual.md) preserva os detalhes das decisões anteriores.
 
 ### Paleta da interface
 
@@ -113,11 +133,11 @@ As cores de cada palco aparecem nas fichas abaixo. São as cores de enquadrament
 
 ## Jogos e level design
 
-Cada ficha mostra a miniatura usada pela galeria, o objetivo, os comandos e a diferença implementada entre os três níveis. Nos jogos de tempo, a dificuldade altera a margem de reação. Nos de percurso, ela altera o mapa. Nos de memória, amplia o que o jogador precisa reter.
+Cada ficha mostra o ícone atual e uma miniatura de cena já armazenada, o objetivo, os comandos e a diferença implementada entre os três níveis. Nos jogos de tempo, a dificuldade altera a margem de reação. Nos de percurso, ela altera o mapa. Nos de memória, amplia o que o jogador precisa reter.
 
 ### 01 · Goteira
 
-<img src="dist/arte/goteira.png" width="128" alt="Miniatura de Goteira na galeria">
+<img src="dist/arte/icones/goteira.svg" width="64" alt="Ícone atual"> <img src="dist/arte/goteira.png" width="192" alt="Miniatura armazenada de goteira">
 
 Pegue as gotas por um minuto. O balde comporta quatro. Encoste no ralo à esquerda para esvaziá-lo. **Comandos.** ← e → movem o balde. No celular, segure um lado da cena.
 
@@ -129,12 +149,14 @@ A gota espera 0,55 s na rachadura. O balde guarda quatro: a quinta transborda pa
 
 Palco `#172244` · [Implementação de Goteira](dist/quintal.js)
 
+---
+
 ### 02 · Maré Miúda
 
-O caranguejo jogável usa a arte aprovada em pixel art: pinças simétricas, olhos definidos e destaque discreto na carapaça, dentro da célula original. A mudança é exclusivamente visual; regras, fases e saves permanecem iguais.
+O caranguejo jogável usa a arte aprovada em pixel art: pinças simétricas, olhos definidos e destaque discreto na carapaça, dentro da célula original. A arte ocupa a mesma célula lógica usada pelas regras.
 
 
-<img src="dist/arte/mare.png" width="128" alt="Miniatura de Maré Miúda na galeria">
+<img src="dist/arte/icones/mare.svg" width="64" alt="Ícone atual"> <img src="dist/arte/mare.png" width="192" alt="Miniatura armazenada de mare">
 
 Leve o caranguejo até a concha. A maré muda a cada três passos. Se ela cobrir seus pés, você volta à areia. **Comandos.** Use as quatro direções ou deslize o dedo na cena.
 
@@ -142,13 +164,15 @@ Leve o caranguejo até a concha. A maré muda a cada três passos. Se ela cobrir
 |---|---|---|
 | **Enseada** · Mapa 8 × 8 com banco raso contínuo | **Dois baixios** · Mapa 8 × 8 com dois baixios separados | **Canal estreito** · Mapa 8 × 8 com passagens rasas estreitas |
 
-Apenas um passo válido avança a maré. No terceiro, se a água subir sobre uma casa rasa, o caranguejo retorna à última casa firme. Um passo lateral na areia pode preparar o momento da travessia. Em Caminho Novo, a versão histórica do Puxado fornece a referência dos geradores: 17 comandos mínimos e três comandos de custo da maré. O Puxado atual usa o mapa escolhido da semente 1428316038, com o siri na última linha, quatro baixios indispensáveis e solução mínima de 21 comandos. Os mapas das famílias anteriores exigem 17 a 27 comandos, dois baixios indispensáveis e pedras cuja remoção encurtaria a solução. A família adicional de enseadas irregulares exige 23–27 comandos, custo de maré de pelo menos cinco passos e três baixios indispensáveis, com percursos quebrados e origens/destinos variados. Uma terceira família de arquipélagos adiciona ilhas interligadas e ramificações reais, exigindo 23–27 comandos e pelo menos sete passos extras por causa da maré. Misturadas às anteriores, duas faixas avançadas acrescentam planejamento: **muito difícil**, com cinco baixios indispensáveis e 12–17 comandos extras de preparação da maré; **muitíssimo difícil**, com seis baixios indispensáveis e pelo menos 18 comandos extras. Ambas exigem áreas alcançáveis de escolha e praças secas para preparar travessias, além de pedras que bloqueiam atalhos. São estimativas estruturais de dificuldade, não uma avaliação humana universal. As famílias anteriores continuam disponíveis; as enseadas irregulares e os arquipélagos conservam suas sementes. A busca considera o ciclo da maré e a última areia segura. [Critérios completos](docs/jogos/quintal/README.md#maré-miúda-prova-executável-de-solução).
+Apenas um passo válido avança a maré. No terceiro, se a água subir sobre uma casa rasa, o caranguejo retorna à última casa firme. Circular na areia permite preparar uma travessia. O Puxado atual usa o mapa escolhido da semente **1428316038**, com o siri na última linha (coluna 4), quatro baixios indispensáveis e solução mínima de 21 comandos. Caminho Novo combina cinco famílias; veja os critérios na [seção de geração](#geração-e-validação-de-fases).
 
 Palco `#205E60` · [Implementação de Maré Miúda](dist/quintal.js)
 
+---
+
 ### 03 · Último Fio
 
-<img src="dist/arte/fio.png" width="128" alt="Miniatura de Último Fio na galeria">
+<img src="dist/arte/icones/fio.svg" width="64" alt="Ícone atual"> <img src="dist/arte/fio.png" width="192" alt="Miniatura armazenada de fio">
 
 Pegue cinco mariposas. Quando um fio tremer, pule para outro antes da rajada. **Comandos.** ← e → dão pulinhos. ↑ e ↓ trocam de fio. No celular, deslize.
 
@@ -158,11 +182,15 @@ Pegue cinco mariposas. Quando um fio tremer, pule para outro antes da rajada. **
 
 Os três fios dividem a altura em linhas e cada uma tem dez posições. A mariposa indica o destino, mas o tremor muda a prioridade. Estar no fio ameaçado no fim do aviso encerra a rodada.
 
+Em **Sem Parar**, as mariposas são repostas continuamente e cada captura soma um ponto; a rajada continua sendo a condição de derrota.
+
 Palco `#E9A17E` · [Implementação de Último Fio](dist/quintal.js)
+
+---
 
 ### 04 · Pipa de Laje
 
-<img src="dist/arte/pipa.png" width="128" alt="Miniatura de Pipa de Laje na galeria">
+<img src="dist/arte/icones/pipa.svg" width="64" alt="Ícone atual"> <img src="dist/arte/pipa.png" width="192" alt="Miniatura armazenada de pipa">
 
 Chegue à última laje com a rabiola inteira. Passe entre os postes e os pássaros. **Comandos.** ↑ solta linha e ↓ recolhe. No celular, segure a parte de cima ou de baixo.
 
@@ -170,13 +198,15 @@ Chegue à última laje com a rabiola inteira. Passe entre os postes e os pássar
 |---|---|---|
 | **Laje vizinha** · 4 obstáculos, cenário a 14 px/s | **Fim da rua** · 5 obstáculos, 17 px/s | **Outro quarteirão** · 6 obstáculos, 20 px/s |
 
-Postes limitam a passagem por baixo e pássaros ocupam a parte alta. Casas estreitas, janelas altas, telhas e morros compõem o cenário carioca, sem colisão com elementos decorativos. A pipa responde gradualmente e o vento varia. Nas fases Sossegado, Animado e Puxado, aberturas altas e baixas se alternam, exigindo subir e descer. As margens diminuem de 8 para 7 e 6 pixels e a velocidade cresce; ficar numa única altura não resolve a fase. Uma colisão prende a rabiola. O modo Sem Parar mantém sua configuração anterior.
+Postes limitam a passagem por baixo e pássaros ocupam a parte alta. Casas estreitas, janelas altas, telhas e morros compõem o cenário carioca, sem colisão com elementos decorativos. A pipa responde gradualmente e o vento varia. Nas fases Sossegado, Animado e Puxado, aberturas altas e baixas se alternam, exigindo subir e descer. As margens diminuem de 8 para 7 e 6 pixels e a velocidade cresce; ficar numa única altura não resolve a fase. Uma colisão prende a rabiola. Em Sem Parar, os obstáculos continuam sendo repostos e a pontuação conta passagens até colidir. O bando em V tem uma ponta inferior e pares de aves nos dois lados; a colisão usa os pixels das aves, não um retângulo preenchendo o espaço entre elas.
 
 Palco `#60C3BD` · [Implementação de Pipa de Laje](dist/quintal.js)
 
+---
+
 ### 05 · Rádio de Pilha
 
-<img src="dist/arte/radio.png" width="128" alt="Miniatura de Rádio de Pilha na galeria">
+<img src="dist/arte/icones/radio.svg" width="64" alt="Ícone atual"> <img src="dist/arte/radio.png" width="192" alt="Miniatura armazenada de radio">
 
 Encontre três estações antes que a pilha acabe. Quando a luz firmar, pare para ouvir. **Comandos.** ← e → ajustam o ponteiro. No celular, arraste pelo mostrador.
 
@@ -188,11 +218,13 @@ As estações ficam em 18%, 54% e 83% do mostrador. Pare por 0,58 s na faixa. Ca
 
 Palco `#4F2A48` · [Implementação de Rádio de Pilha](dist/esquina.js)
 
+---
+
 ### 06 · Pão na Chapa
 
-<img src="dist/arte/pao.png" width="128" alt="Miniatura de Pão na Chapa na galeria">
+<img src="dist/arte/icones/pao.svg" width="64" alt="Ícone atual"> <img src="dist/arte/pao.png" width="192" alt="Miniatura armazenada de pao">
 
-Use **espátula no ovo** e **pinça no pão**. Selecione o utensílio por clique/toque ou pelas teclas **1 e 2**, depois clique/toque no alimento. **← e →** continuam recolhendo o lado correspondente com o utensílio selecionado. Os botões informam alimento, posição e ponto, além dos sinais em pixel art.
+Use **espátula no ovo** e **pinça no pão**. Selecione o utensílio por clique/toque ou pelas teclas **1 e 2**, depois clique/toque no alimento. **← e →** continuam recolhendo o lado correspondente com o utensílio selecionado. Os botões mostram alimento e lado; os rótulos acessíveis também informam o ponto. Cores e fumaça indicam o preparo na cena, sem quadradinhos de estado adicionais.
 
 | Ritmo | Meta | Preparo do pão / ovo | No ponto | Tostado (última chance) |
 |---|---|---|---|---|
@@ -213,9 +245,11 @@ Há sempre um ovo e um pão, com relógios e identidades próprios. O pão inici
 Palco `#A25843` · [Implementação de Pão na Chapa](dist/esquina.js)
 
 
+---
+
 ### 07 · Rastro de Prata
 
-<img src="dist/arte/rastro.png" width="128" alt="Miniatura de Rastro de Prata na galeria">
+<img src="dist/arte/icones/rastro.svg" width="64" alt="Ícone atual"> <img src="dist/arte/rastro.png" width="192" alt="Miniatura armazenada de rastro">
 
 Pegue três folhas e entre no vaso. Seu rastro bloqueia o caminho. Volte pela última casa para desfazer o passo. **Comandos.** Use as quatro direções como alternativa ou inicie no caracol e trace o percurso pelas casas vizinhas com mouse ou toque.
 
@@ -227,9 +261,11 @@ O caminho ocupa as casas percorridas. Refazer o último passo desfaz também a c
 
 Palco `#C18E86` · [Implementação de Rastro de Prata](dist/esquina.js)
 
+---
+
 ### 08 · Luz de Varanda
 
-<img src="dist/arte/luz.png" width="128" alt="Miniatura de Luz de Varanda na galeria">
+<img src="dist/arte/icones/luz.svg" width="64" alt="Ícone atual"> <img src="dist/arte/luz.png" width="192" alt="Miniatura armazenada de luz">
 
 Espere a lagartixa apontar para um mosquito e dê o bote. Alcance a meta antes de a lâmpada apagar. **Comandos.** Aperte uma seta ou toque na cena para dar o bote.
 
@@ -241,9 +277,11 @@ A cabeça da lagartixa varre um arco. O jogador decide o instante do bote. Em n�
 
 Palco `#30234B` · [Implementação de Luz de Varanda](dist/varanda.js)
 
+---
+
 ### 09 · Três Petelecos
 
-<img src="dist/arte/gude.png" width="128" alt="Miniatura de Três Petelecos na galeria">
+<img src="dist/arte/icones/gude.svg" width="64" alt="Ícone atual"> <img src="dist/arte/gude.png" width="192" alt="Miniatura armazenada de gude">
 
 Acerte o buraco em até três petelecos. Quanto mais tempo segurar a direção, mais longe a bolinha vai. **Comandos.** Segure uma seta e solte. Com mouse ou toque, inicie na bolinha, puxe para trás e solte; cancelar o gesto não lança.
 
@@ -251,14 +289,16 @@ Acerte o buraco em até três petelecos. Quanto mais tempo segurar a direção, 
 |---|---|---|
 | **Terra batida** · Três pedras, curva ampla e um tiro de reserva | **Entre pedras** · Quatro pedras, retorno em três tiros | **Caminho torto** · Cinco pedras, três tiros em percurso escalonado |
 
-As três fases autorais têm agora progressão própria: Sossegado traz três pedras e uma solução de dois tiros com um de reserva; Animado usa quatro pedras e três tiros de forças diferentes; Puxado usa cinco pedras e um percurso escalonado de três tiros. Inícios e destinos variam por dificuldade, mantendo os mesmos IDs e saves. No Caminho Novo, posição inicial, alvo, disposição das pedras e família do percurso variam: há cotovelos, travessias e retornos, com dois ou três tiros e três a sete pedras independentes. O percurso é sorteado antes da distribuição de obstáculos, em vez de repetir duas plantas fixas rotacionadas; também há inícios e destinos na região interna do tabuleiro. Uma família adicional traz três tiros e cinco a oito pedras alongadas: além da solução com tolerâncias, exige sensibilidade à força em pelo menos quatro de seis perturbações amplas. Dois terços das sementes conservam os mapas anteriores. O validador usa a origem real de cada fase e testa a mesma física com teclado e toque; a variação não se limita a mover o buraco alguns pixels. Segurar define alcance no teclado e puxar define direção e alcance no toque. As pedras e limites desviam a trajetória. O buraco precisa ser alcançado até o terceiro tiro. Caminho Novo compara seu desafio com Puxado e valida uma solução executável na física real. [Critérios e limitações](docs/jogos/varanda/README.md).
+As fases autorais têm posições iniciais, alvos e obstáculos próprios. Sossegado tem solução em dois tiros e um de reserva; Animado e Puxado têm percursos certificados de três tiros. No Caminho Novo, variam origem, destino, quantidade e posição das pedras, trajeto e força. Há cotovelos, travessias, retornos e passagens escalonadas. As pedras e limites desviam a trajetória. A validação executa os lançamentos na física real do jogo, incluindo tolerância de entrada; não presume que um caminho desenhado seja jogável. [Critérios e limitações](docs/jogos/varanda/README.md).
 
 Palco `#BE7749` · [Implementação de Três Petelecos](dist/varanda.js)
 
 
+---
+
 ### 10 · Pisca no Mato
 
-<img src="dist/arte/pisca.png" width="128" alt="Miniatura de Pisca no Mato na galeria">
+<img src="dist/arte/icones/pisca.svg" width="64" alt="Ícone atual"> <img src="dist/arte/pisca.png" width="192" alt="Miniatura armazenada de pisca">
 
 Observe os vaga-lumes e repita as piscadas na ordem. A cada acerto a sequência ganha uma luz. **Comandos.** ← acende o da esquerda e → o da direita. No celular, toque no vaga-lume.
 
@@ -268,10 +308,37 @@ Observe os vaga-lumes e repita as piscadas na ordem. A cada acerto a sequência 
 
 Uma piscada é acrescentada após cada sequência correta. O vaga-lume esquerdo soa a 392 Hz e o direito a 587 Hz. O jogador responde depois da demonstração. Trocar a ordem encerra a partida.
 
+Em **Sem Parar**, a sequência continua crescendo e a pontuação é a maior sequência completamente respondida, não respostas parciais.
+
 Palco `#1A393B` · [Implementação de Pisca no Mato](dist/varanda.js)
 
+## Geração e validação de fases
 
+Os três geradores usam sementes, orçamento finito de tentativas e reservas validadas. Repetir conserva a fase; “Nova fase” troca a semente. As fases fixas não dependem do sorteio. A dificuldade é estimada por restrições verificáveis, não uma garantia subjetiva de dificuldade para toda pessoa.
 
+### Maré Miúda: travessia e sincronização
+
+| Família | Critérios principais |
+|---|---|
+| Original | 17–27 comandos, custo de maré ≥3, pelo menos dois baixios indispensáveis e pedras relevantes. |
+| Enseadas irregulares | 23–27 comandos, custo de maré ≥5, três baixios indispensáveis; corredores quebrados e posições variadas. |
+| Arquipélagos | 23–27 comandos, custo de maré ≥7, três baixios indispensáveis; ilhas, pontes e escolhas locais. |
+| Muito difícil | 30–48 comandos, custo de maré 12–17, cinco travessias indispensáveis, áreas de escolha e praças secas. |
+| Muitíssimo difícil | 38–60 comandos, custo de maré ≥18, seis travessias indispensáveis e os mesmos critérios espaciais. |
+
+A busca considera **posição, fase da maré e última areia segura**. “Custo da maré” é a diferença entre soluções mínimas com e sem a mecânica; bloquear um baixio indispensável torna a concha inalcançável. As faixas avançadas se misturam em aproximadamente 9% das sementes e não removem as famílias anteriores. Limites de 48, 96 ou 64 candidatos, conforme a família, evitam geração ilimitada. [Critérios completos, sementes e reservas](docs/jogos/quintal/README.md).
+
+### Rastro de Prata: ordem e ocupação do caminho
+
+Famílias estreita, aberta e irregular convivem. Áreas abertas trazem bifurcações e praças; o caminho ocupado impede tratar o problema como simples conectividade. A família irregular exige pelo menos 26 movimentos, três ilhas de pedras e apenas uma a três ordens viáveis das seis permutações das folhas. O solver testa o rastro e rejeita atalhos curtos. Gestos rápidos atravessam células intermediárias em ordem, usando o mesmo validador dos comandos de teclado. [Validação e limites de busca](docs/jogos/esquina/README.md).
+
+### Três Petelecos: direção, força e física
+
+O gerador cria o trajeto antes de distribuir pedras independentes: dois ou três tiros, três a sete pedras e posições internas ou próximas das bordas. Um subconjunto acrescenta três tiros e cinco a oito pedras alongadas, exigindo sensibilidade a variações amplas de força. Não é apenas uma rotação de duas plantas fixas.
+
+O certificado usa o **mesmo motor do jogo**, a 30, 60 e 120 atualizações por segundo, com variações de ±15 ms no teclado e ±0,25 pixel lógico no arrasto. Também rejeita mapas resolvíveis por uma mira direta trivial. Isso prova a existência de uma sequência executável dentro das tolerâncias testadas, não a vitória com qualquer lançamento ou compatibilidade com todos os dispositivos. [Geometria, desempenho e testes](docs/jogos/varanda/README.md).
+
+---
 
 ## Arquitetura
 
@@ -287,7 +354,13 @@ flowchart TD
   F --> Q["quintal.js"]
   F --> E["esquina.js"]
   F --> V["varanda.js"]
+  A --> R["recordes.js"]
+  A --> P["progresso.js"]
+  Q --> B["pipa-aves.js"]
   I --> L["localStorage"]
+  X["backup.html"] --> Y["backup.js"]
+  Y --> R
+  Y --> L
 ```
 
 | Arquivo ou pasta | Responsabilidade |
@@ -300,12 +373,26 @@ flowchart TD
 | [quintal.js](dist/quintal.js) | Goteira, Maré Miúda, Último Fio e Pipa de Laje. |
 | [esquina.js](dist/esquina.js) | Rádio de Pilha, Pão na Chapa, Rastro de Prata. |
 | [varanda.js](dist/varanda.js) | Luz de Varanda, Três Petelecos, Pisca no Mato. |
+| [pipa-aves.js](dist/pipa-aves.js) | Sprite das aves, formação do bando em V e colisão coerente com seus pixels. |
+| [progresso.js](dist/progresso.js) | Migração da Volta por IDs, preservando correspondência após remoção de jogos. |
+| [recordes.js](dist/recordes.js) | Validação de recordes, IDs permitidos e atualização apenas ao superar o melhor resultado. |
+| [backup.js](dist/backup.js) e [backup.html](dist/backup.html) | Exportação/importação explícita, validação e restauração dos dados locais. |
 | [pracinha.js](dist/pracinha.js) | Código legado fora do catálogo e sem entrada pelo aplicativo. |
-| [scripts/](scripts/README.md) | Geração de miniaturas a partir dos desenhos jogáveis. |
+| [scripts/](scripts/README.md) | Ferramenta histórica que gera somente os SVGs dos jogos retirados da Pracinha. Não regenera todas as artes. |
 | [tests/](tests/README.md) | Verificação automática das regras, entradas e progressão. |
-| [arte/](dist/arte/README.md) | Fonte, ícone, capa e 10 miniaturas. Os sprites durante as partidas são desenhados pelos módulos de jogo. |
+| [arte/](dist/arte/README.md) | Fonte, dez miniaturas, ícones atuais e recursos legados identificados. |
+| [artes/](dist/artes/README.md) | Capa e marca oficiais, organizadas sem mover caminhos usados pela aplicação. |
 | [docs/](docs/README.md) | Guias de publicação e regras/validação dos modos de cada módulo. |
 | [.openai/](.openai/README.md) | Manifesto da instalação hospedada de referência. O servidor local só precisa de dist/. |
+
+### Decisões e limites técnicos
+
+- **Sem framework e sem build:** HTML, CSS e módulos ECMAScript nativos; nenhuma dependência de execução baixada de CDN.
+- **Responsabilidades separadas:** navegação e entrada em `app.js`; regras e desenho em cada fábrica; persistência validada em módulos próprios.
+- **Estado por instância:** repetir cria uma partida limpa; pausar conserva a instância e cancela entradas parciais. Fábricas não escrevem diretamente em `localStorage`.
+- **Desenho independente da lógica:** sprites são blocos e linhas em Canvas; mapas e colisões não dependem de imagens PNG. O módulo das aves compartilha geometria entre desenho e colisão.
+- **Custos controlados:** buscas têm limites e fallback; geração não roda por quadro. `requestAnimationFrame` e `ResizeObserver` cuidam do ciclo e do tamanho apresentado.
+- **Limites assumidos:** dados locais editáveis, sem servidor de autenticação, anti-cheat ou ranking confiável. Não há promessa de desempenho igual em todos os celulares.
 
 ### Contrato de um minigame
 
@@ -349,6 +436,7 @@ console.log(rodada.hud());
 | Chave local | Conteúdo | Momento de gravação |
 |---|---|---|
 | miudezas.v1.som | Booleano. O padrão é desligado. | Ao alternar o som na barra superior. |
+| miudezas.v1.recordes | Melhores pontuações dos seis jogos Sem Parar, por ID. | Ao superar o recorde durante a partida e ao concluir. |
 | miudezas.v1.volta | Objeto com nivel, ids e resultados booleanos, migrado por IDs. | No começo da volta e ao avançar de parada. Ao completar a última, o valor passa a null. |
 
 Os seis recordes de Sem Parar, incluindo Luz de Varanda (`luz`), ficam em `miudezas.v1.recordes`, por ID de jogo, separados da volta e dos resultados autorais. O backup versão 2 inclui esse campo e aceita arquivos anteriores. Importar um backup antigo não deve apagar recordes já existentes. Os dados são locais ao navegador: limpar armazenamento ou trocar de dispositivo pode removê-los; use exportação/importação explícita. Não há conta, sincronização ou ranking inviolável.
@@ -377,9 +465,31 @@ O áudio usa um oscilador de onda quadrada com envelope curto. O contexto de áu
 | Completar o percurso, inclusive com uma tentativa perdida | O resumo distingue vitórias e tentativas nas 10 miniaturas. |
 | Em telefone, tocar no pão, deslizar no tabuleiro e arrastar o dial | Cada gesto atua na cena correspondente e os botões também ficam disponíveis. |
 
-Execute `node --test tests/*.test.mjs` para verificar catálogo, migração dos resultados, paginação, conclusão das 10 paradas, modos adicionais, geração reproduzível e regras de derrota/vitória. Os testes de Pracinha são de código legado, não indicam jogos disponíveis.
+Na auditoria documental após o PR #51, a suíte recebeu também uma verificação do texto das regras da lagartixa. Execute `node --test tests/*.test.mjs` para verificar catálogo, migração dos resultados, paginação, conclusão das 10 paradas, modos adicionais, geração reproduzível e regras de derrota/vitória. Os testes de Pracinha são de código legado, não indicam jogos disponíveis.
 
 O teste rápido de sintaxe pode ser feito com Node recente, por exemplo `node --check dist/app.js`. Os cenários acima verificam comportamento e interação. O repositório inclui os testes automáticos e este roteiro de verificação manual.
+
+## Publicação no GitHub Pages
+
+**Site público:** [luigiscofano.github.io/Miudezas](https://luigiscofano.github.io/Miudezas/). O site não depende de o computador do autor estar ligado. O conteúdo servido é `dist/`, sem compilação ou backend.
+
+O [workflow](.github/workflows/pages.yml) executa os testes e publica automaticamente após um push/merge em `main`; também permite `workflow_dispatch`. Uma alteração só deve ser anunciada como publicada após conferir a execução e a versão pública. [Histórico de execuções](https://github.com/luigiscofano/Miudezas/actions) · [Guia de publicação e reversão](docs/github-pages.md).
+
+Para transferir progresso de outra origem, exporte pela página de backup naquela origem e importe na [página de backup do Pages](https://luigiscofano.github.io/Miudezas/backup.html). Domínios e navegadores não compartilham armazenamento automaticamente. A ferramenta valida schema e dados; backup versão 1 continua aceito, sem apagar recordes atuais ausentes no arquivo antigo. Não substitui conta ou sincronização.
+
+## Mapa da documentação
+
+| Guia | Conteúdo |
+|---|---|
+| [Índice técnico](docs/README.md) | Acesso aos manuais e organização do projeto. |
+| [Acervo de artes](dist/artes/README.md) | Capa, marca, ligação com ícones e miniaturas. |
+| [Design e arte em código](docs/design/README.md) | Origem, uso e manutenção dos assets e sprites reais. |
+| [Histórico visual](docs/evolucao-visual.md) | Decisões aprovadas e revisões anteriores, separadas do estado atual. |
+| [Quintal](docs/jogos/quintal/README.md) | Goteira, Maré, Fio e Pipa. |
+| [Esquina](docs/jogos/esquina/README.md) | Rádio, Pão e Rastro. |
+| [Varanda](docs/jogos/varanda/README.md) | Lagartixa, Gude e Pisca. |
+| [Dados](docs/dados/README.md) | Persistência, validação e compatibilidade de backup. |
+| [Testes](tests/README.md) | Comandos, cobertura e roteiro manual. |
 
 ## Referências
 
@@ -392,102 +502,3 @@ O teste rápido de sintaxe pode ser feito com Node recente, por exemplo `node --
 - [MDN — Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
 
 **Créditos.** © 2026 Luigi Scofano de Araujo. [Texto da licença](LICENSE)
-
-
-## Artes do jogo e capa aprovada
-
-A [pasta de artes](dist/artes/README.md) reúne a documentação da nova capa e aponta para os demais recursos visuais. A [capa Tijuca](dist/artes/capas/miudezas-tijuca.png) é o arquivo aprovado, preservado sem recortes: título com iluminação em blocos de pixels, bem-te-vi com nota musical, pipa sobre os telhados e referência escultórica ao Ritual do Vento. A referência é uma interpretação artística, não uma reprodução documental do monumento. As janelas sobrepostas às portas das casas verde, laranja e amarela foram removidas da capa, mantendo as portas e as demais janelas. A revisão não altera jogos, layout, controles ou progresso.
-
-A aplicação exibe a composição inteira com `object-fit: contain`, sem esticar a imagem nem sobrepor outro título. O título textual continua disponível para tecnologias assistivas. A alteração não modifica catálogo, regras, controles ou progresso salvo. A antiga paisagem `dist/arte/bairro.png` permanece apenas como recurso legado, sem uso na abertura.
-
-### Logotipo e ícone
-
-![Ícone verde aprovado](dist/artes/marca/miudezas-icone-verde.png)
-
-A [documentação da marca](dist/artes/marca/README.md) apresenta o logotipo principal, a janela verde e suas aplicações. Os PNGs são recortes fiéis da prancha aprovada, não redesenhos. A marca aparece na barra dos menus e o nome do jogo continua visível durante cada partida.
-
-### Janela original da interface
-
-<img src="dist/artes/marca/janela-original.png" alt="Janela original de quatro vidraças" width="64" height="64">
-
-A janela original permanece ao lado da marca na barra superior. O ícone verde aprovado continua sendo o favicon. Veja [arquivos e aplicações](dist/artes/marca/README.md).
-
-## GitHub Pages e transferência de progresso
-
-A migração preserva os arquivos do jogo e acrescenta um workflow manual de publicação. Consulte o [guia completo de GitHub Pages](docs/github-pages.md) para ativação, verificação, reversão e transferência de progresso. A publicação foi confirmada em **17 de dezmbro de 2026**: [abrir Miudezas](https://luigiscofano.github.io/Miudezas/). O [workflow de publicação](https://github.com/luigiscofano/Miudezas/actions/runs/44140728469) terminou com sucesso.
-
-O progresso não atravessa domínios automaticamente. Use a [página de backup no endereço antigo](https://miudezas-de-luigi.luigiscofano.chatgpt.site/backup.html) para exportar e a [página de backup no GitHub Pages](https://luigiscofano.github.io/Miudezas/backup.html) para importar. O armazenamento antigo permanece intacto. Essa ferramenta é independente da interface dos jogos.
-
-## Catálogo atual e compatibilidade
-
-Peteca e Gato na Sombra foram retirados. Os dez jogos ativos, na ordem da Volta no Bairro, são Goteira, Maré Miúda, Último Fio, Pipa de Laje, Rádio de Pilha, Pão na Chapa, Rastro de Prata, Luz de Varanda, Três Petelecos e Pisca no Mato. IDs históricos continuam reconhecidos pela migração de saves; vitórias não são transferidas para outro jogo. Links numéricos dos jogos removidos retornam à galeria. Código/arte legados não são importados pelo aplicativo.
-
-### Refinamento visual: quintal
-
-Goteira, Último Fio e Pipa de Laje: detalhes discretos no cenário, sem alterar a jogabilidade. A arte aprovada de Maré já estava incorporada. Consulte o [guia visual e técnico](docs/jogos/quintal/README.md#acabamento-visual-aprovado).
-
-### Refinamento visual: esquina
-
-Rádio de Pilha e Pão na Chapa: acabamento discreto em pixels, preservando todos os controles e objetivos. Consulte o [guia visual e técnico](docs/jogos/esquina/README.md#acabamento-visual-aprovado).
-
-### Refinamento visual: varanda
-
-Luz de Varanda e Três Petelecos: luz, texturas e sprites refinados sem mudar obstáculos ou física. Consulte o [guia visual e técnico](docs/jogos/varanda/README.md#acabamento-visual-aprovado).
-
-### Visual de Pisca e Rastro
-
-Pisca no Mato mantém o primeiro visual dos vaga-lumes preservado no GitHub (`9cc7bbb`) e da vegetação lateral, restaurado a pedido do autor. Sem Parar, recordes e sequência continuam inalterados. Rastro de Prata apresenta três folhas finas com silhuetas distintas, na mesma paleta e escala. São mudanças de desenho: regras, controles, mapas e saves permanecem iguais.
-
-### Segundo refinamento aprovado: Maré e Rastro
-
-Maré Miúda recebeu espuma costeira, areia discreta, baixios destacados, pedras facetadas e concha preenchida. Rastro de Prata recebeu apenas brilho nas bordas dos ladrilhos, preservando as folhas finas B. Este lote não modifica os outros oito jogos, incluindo o visual restaurado de Pisca.
-
-## Ícones aprovados na seleção
-
-Os dez jogos usam seus ícones em pixel art nos cartões de **Escolha um jogo**. Todos os dez jogos agora possuem ícone aprovado. A mudança é só de apresentação: introduções, resultados, partidas, controles e dados salvos continuam iguais.
-
-| Rádio de Pilha | Três Petelecos | Pisca no Mato |
-|---|---|---|
-| ![Ícone Rádio de Pilha](dist/arte/icones/radio.svg) | ![Ícone Três Petelecos](dist/arte/icones/gude.svg) | ![Ícone Pisca no Mato](dist/arte/icones/pisca.svg) |
-
-[Arquivos, proporções e manutenção dos ícones](dist/arte/icones/README.md).
-
-### Destino mais visível em Rastro de Prata
-
-O vaso foi ampliado de 8 × 7 para 11 × 10 pixels, conservando a paleta e o estilo do desenho. Ele permanece dentro de uma única casa, inclusive nos tabuleiros de 7 × 7, sem alterar destino, colisões, caminhos ou progresso.
-
-### Luz de Varanda: opção A aprovada
-
-![Ícone aprovado de Luz de Varanda](dist/arte/icones/luz.svg)
-
-O cartão usa a opção A com apenas a perna esquerda afastada do corpo, conforme aprovação. Cauda, rosto com piscadinha e luz foram preservados. É uma imagem estática; não foi introduzida nova animação. A lagartixa e a iluminação dentro da partida não mudam.
-
-
-### Pão francês aprovado
-
-Pão na Chapa usa a versão aprovada baseada na referência enviada: pão francês alongado, com dois cortes diagonais e cores chapadas. O sprite tem 13 × 16 pixels, desenhado em escala 2 na chapa. As quatro paletas mostram antes do ponto, no ponto, tostado e queimado, preservando a fumaça. Ovo, utensílios, áreas de toque, tempos, metas, reposições e alternância de lados não mudam. Os testes de identidade verificam o novo desenho em ambos os lados; a suíte mantém os testes dos três níveis, vitória, queima e três erros.
-
-### Ícones de Maré Miúda, Último Fio e Rastro de Prata
-
-![Maré Miúda](dist/arte/icones/mare.svg) ![Último Fio](dist/arte/icones/fio.svg) ![Rastro de Prata](dist/arte/icones/rastro.svg)
-
-Os três ícones aprovados usam os sprites dos respectivos jogos como referência. O caracol não inclui folha no ícone; as folhas coletáveis dentro da partida permanecem intactas. O conjunto completo dos dez ícones está aprovado.
-
-
-### Tela de pausa coesa
-
-A pausa usa a mesma imagem da seleção: ícone aprovado quando disponível e miniatura original nos demais jogos. A imagem é contida sem recorte. “Continuar” e “Voltar às fases” permanecem na primeira linha; “Voltar ao menu” ocupa a segunda linha, centralizado e com a mesma largura dos demais botões. O ajuste é exclusivo da pausa e mantém navegação, progresso e controles. O teste de navegação verifica a arte e as três ações dos dez jogos.
-
-### Goteira, Pipa e Pão na Chapa: últimos ícones aprovados
-
-Os dois ícones usam a grade aprovada de 24 × 24 pixels, ampliada sem suavização: balde com alça simples e pipa inclinada. São compartilhados pela seleção e pela pausa; não alteram cenas jogáveis, colisões, controles ou saves. Pão na Chapa usa a versão intermediária aprovada de 32 × 32 pixels, com pão francês e ovo baseados nos sprites reais.
-
-![Goteira](dist/arte/icones/goteira.svg) ![Pipa](dist/arte/icones/pipa.svg) ![Pão na Chapa](dist/arte/icones/pao.svg)
-
-### Porta da lojinha na capa
-
-A entrada sob o toldo listrado usa verde discreto e maçaneta clara para se distinguir da fachada escura e da vitrine âmbar. A porta chega à calçada, sem parecer uma extensão solta da fachada. A revisão é apenas na imagem: proporção, controles, regras e dados dos jogos permanecem inalterados.
-
-### Pipa de Laje: passarinhos em V
-
-O obstáculo aéreo usa a formação aprovada: uma ponta inferior e pares de aves subindo pelos dois lados, com quantidade proporcional à altura. A colisão segue os pixels das aves, não preenche os espaços vazios do V. Postes, cenário, controles, dificuldade e progresso são preservados. [Regras, implementação e testes](docs/jogos/quintal/README.md#pipa-bando-em-v-aprovado).
