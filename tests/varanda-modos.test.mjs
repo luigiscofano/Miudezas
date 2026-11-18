@@ -19,12 +19,35 @@ test('Pisca clássico preserva as três metas autorais',()=>{
  for(let r=0;r<level+2;r++){aguardarResposta(jogo);for(const dir of jogo.snapshot().sequencia)jogo.press(dir);}
  jogo.update(1);assert.equal(a.resultados[0].ok,true);}
 });
-test('Gude valida 400 sementes usando controles, colisões e física reais',()=>{
+// Quantiza a ocupação em 6×6 e normaliza as oito simetrias. Jitter e espelhos
+// não bastam para passar o teste de variedade estrutural dos obstáculos.
+function assinaturaGeometrica(terreno){
+ const variantes=[];
+ for(let o=0;o<8;o++){
+  const grade=Array(36).fill(0);
+  for(const [x,y,w,h] of terreno.pedras)for(let px=x;px<x+w;px++)for(let py=y;py<y+h;py++){
+   let a=px,b=py;if(o>=4)a=95-a;
+   for(let n=0;n<o%4;n++)[a,b]=[95-b,a];
+   grade[Math.floor(b/16)*6+Math.floor(a/16)]=1;
+  }
+  variantes.push(grade.join(''));
+ }
+ return variantes.sort()[0];
+}
+test('Gude valida 500 sementes usando controles, colisões e física reais',()=>{
+ const normalizados=new Set();let iniciosInternos=0,alvosInternos=0;
  const layouts=new Set(),origens=new Set(),quadrantes=new Set(),rotas=new Set(),familias=new Set(),orientacoes=new Set(),quantidades=new Set();
- for(let seed=0;seed<400;seed++){
+ for(let seed=0;seed<500;seed++){
   const terreno=criarTerrenoGude(seed);assert.ok(validarTerrenoGude(terreno));
   assert.deepEqual(criarTerrenoGude(seed),terreno);
   layouts.add(JSON.stringify([terreno.inicio,terreno.alvo,terreno.pedras]));
+  normalizados.add(assinaturaGeometrica(terreno));
+  if(terreno.inicio.every(v=>v>=28&&v<=68))iniciosInternos++;
+  if(terreno.alvo.every(v=>v>=28&&v<=68))alvosInternos++;
+  if(terreno.familia!=='seguranca')for(let i=0;i<terreno.pedras.length;i++)for(let k=i+1;k<terreno.pedras.length;k++){
+   const [x,y,w,h]=terreno.pedras[i],[a,b,c,d]=terreno.pedras[k];
+   assert.ok(x+w+5<=a||a+c+5<=x||y+h+5<=b||b+d+5<=y,'pedras separadas, não fragmentos de uma parede');
+  }
   origens.add(terreno.inicio.join(','));quadrantes.add(terreno.inicio.map(v=>v<48?0:1).join(','));
   rotas.add(terreno.solucao.map(p=>p.direcao).join(','));familias.add(terreno.familia);
   orientacoes.add(terreno.orientacao);quantidades.add(terreno.pedras.length);
@@ -39,9 +62,9 @@ test('Gude valida 400 sementes usando controles, colisões e física reais',()=>
   }
   assert.equal(a.resultados.length,1);assert.equal(a.resultados[0].ok,true);jogo.draw(quadro);
  }
- assert.ok(layouts.size>390);assert.ok(origens.size>200);assert.equal(quadrantes.size,4);
- assert.equal(rotas.size,16);assert.equal(orientacoes.size,8);
- assert.deepEqual([...familias].sort(),['retorno','travessia']);assert.deepEqual([...quantidades].sort(),[2,3,4]);
+ assert.ok(layouts.size>490);assert.ok(origens.size>400);assert.ok(normalizados.size>300);assert.ok(iniciosInternos>200);assert.ok(alvosInternos>50);assert.equal(quadrantes.size,4);
+ assert.equal(rotas.size,24);assert.equal(orientacoes.size,8);
+ assert.deepEqual([...familias].sort(),['cotovelo','retorno','travessia']);assert.deepEqual([...quantidades].sort(),[3,4,5,6,7]);
 });
 test('Gude reinício reconstrói mapa; dificuldades clássicas mantêm alvos',()=>{
  for(const level of [1,2,3])assert.deepEqual(varanda.gude(level,api()).snapshot().terreno.alvo,[[77,20],[78,19],[78,18]][level-1]);

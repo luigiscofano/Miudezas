@@ -251,28 +251,47 @@ export function criarTerrenoGude(seed=1) {
   mistura=Math.imul(mistura^(mistura>>>15),0x735a2d97);
   const random=aleatorioComSemente(mistura^(mistura>>>15));
   const inteiro=(a,b)=>a+Math.floor(random()*(b-a+1));
-  const familia=inteiro(0,1)===0?'travessia':'retorno',orientacao=inteiro(0,7);
-  for(let tentativa=0;tentativa<32;tentativa++) {
-    const sx=inteiro(18,25),sy=inteiro(70,78),ty=inteiro(25,34);
-    let pontos,pedras;
-    if(familia==='travessia') {
-      const virada=inteiro(40,50),final=inteiro(75,82);
-      pontos=[[sx,sy],[virada,sy],[virada,ty],[final,ty]];
-      pedras=[[virada+8,ty+11,inteiro(14,18),inteiro(15,19)],
-        [inteiro(7,12),inteiro(30,40),14,13]];
-    }else{
-      const virada=inteiro(73,80),final=inteiro(24,37);
-      pontos=[[sx,sy],[virada,sy],[virada,ty],[final,ty]];
-      // A parede central exige contornar pelo lado oposto e voltar ao alvo.
-      pedras=[[sx-5,ty+11,virada-sx-9,sy-ty-23],[7,8,12,13]];
+  const orientacao=inteiro(0,7);
+  // Primeiro sorteamos um percurso; as pedras são amostradas independentemente.
+  // Não há mais duas plantas fixas nem uma parede repartida para simular variedade.
+  for(let tentativa=0;tentativa<64;tentativa++) {
+    const interno=inteiro(0,1)===1;
+    const inicio=[inteiro(interno?29:13,interno?67:83),inteiro(interno?29:13,interno?67:83)];
+    const pontos=[inicio],trechos=inteiro(2,3);
+    let eixo=inteiro(0,1),invalido=false;
+    for(let n=0;n<trechos;n++){
+      const anterior=pontos.at(-1),proximo=[...anterior];
+      const candidatos=[];
+      for(let valor=13;valor<=83;valor++){
+        const delta=valor-anterior[eixo];
+        // A puxada oposta precisa caber no canvas, inclusive com erro de toque.
+        const puxada=anterior[eixo]-delta/3.6;
+        if(Math.abs(delta)>=18&&puxada>=2&&puxada<=94)candidatos.push(valor);
+      }
+      if(!candidatos.length){invalido=true;break;}
+      proximo[eixo]=candidatos[inteiro(0,candidatos.length-1)];
+      pontos.push(proximo);eixo=1-eixo;
     }
-    // Fragmenta uma barreira com diferentes volumes, mantendo o corredor certificado.
-    const quantidade=inteiro(2,4);
-    while(pedras.length<quantidade){
-      const [x,y,w,h]=pedras.shift();
-      if(w>=h)pedras.push([x,y,Math.floor(w/2),h],[x+Math.floor(w/2)+1,y,w-Math.floor(w/2)-1,h]);
-      else pedras.push([x,y,w,Math.floor(h/2)],[x,y+Math.floor(h/2)+1,w,h-Math.floor(h/2)-1]);
+    if(invalido||Math.hypot(...pontos.at(-1).map((v,i)=>v-inicio[i]))<25)continue;
+    const pedras=[],quantidade=inteiro(3,7);
+    function livreDoPercurso([x,y,w,h]){
+      for(let n=1;n<pontos.length;n++){
+        const a=pontos[n-1],b=pontos[n];
+        // Folga maior que o raio protege os gestos com pequenas imprecisões.
+        if(Math.max(a[0],b[0])>=x-6&&Math.min(a[0],b[0])<=x+w+6&&
+           Math.max(a[1],b[1])>=y-6&&Math.min(a[1],b[1])<=y+h+6)return false;
+      }
+      return !pedras.some(([a,b,c,d])=>x<a+c+5&&x+w>a-5&&y<b+d+5&&y+h>b-5);
     }
+    for(let amostra=0;amostra<120&&pedras.length<quantidade;amostra++){
+      const w=inteiro(8,19),h=inteiro(8,19);
+      const pedra=[inteiro(5,91-w),inteiro(5,91-h),w,h];
+      if(livreDoPercurso(pedra))pedras.push(pedra);
+    }
+    if(pedras.length<quantidade)continue;
+    const primeira=pontos[1].map((v,i)=>v-pontos[0][i]);
+    const ultima=pontos.at(-1).map((v,i)=>v-pontos.at(-2)[i]);
+    const familia=trechos===2?'cotovelo':primeira[0]*ultima[0]+primeira[1]*ultima[1]>0?'travessia':'retorno';
     const terreno=orientarTerrenoGude(pontos,pedras,orientacao,seed,familia);
     if(validarTerrenoGude(terreno))return terreno;
   }
