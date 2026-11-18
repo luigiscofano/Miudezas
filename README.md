@@ -190,7 +190,7 @@ Pegue as gotas por um minuto. O balde comporta quatro. Encoste no ralo à esquer
 
 | Sossegado | Animado | Puxado |
 |---|---|---|
-| **Chuva fina** · Intervalo de 1,85 s, queda a 27 px/s | **Chuva firme** · 1,52 s e 34 px/s | **Temporal** · 1,20 s e 40 px/s |
+| **Chuvisco** · Intervalo de 1,85 s, queda a 27 px/s | **Chuva firme** · 1,52 s e 34 px/s | **Temporal** · 1,20 s e 40 px/s |
 
 A gota espera 0,55 s na rachadura. O balde guarda quatro: a quinta transborda para o chão sem aumentar o conteúdo. Gotas não recolhidas também molham o piso, uma contagem por gota. Os limites são **12, 9 e 6 gotas no chão**, respectivamente; ao atingir o limite, aparece **“O chão alagou!”** e a partida termina. Ir ao ralo libera capacidade. Nas fases autorais, sobreviver aos 60 s e captar pelo menos uma gota conta como vitória. Em **Sem Parar**, o limite é 8 gotas no chão e não há encerramento por tempo.
 
@@ -233,7 +233,7 @@ Pegue cinco mariposas. Quando um fio tremer, pule para outro antes da rajada. **
 
 | Sossegado | Animado | Puxado |
 |---|---|---|
-| **Brisa** · Fio avisa com 1,65 s | **Vento de tarde** · Aviso de 1,25 s | **Ventania** · Aviso de 0,92 s |
+| **Brisa** · Fio avisa com 1,65 s | **Ventania** · Aviso de 1,25 s | **Vendavau** · Aviso de 0,92 s |
 
 Os três fios dividem a altura em linhas e cada uma tem dez posições. A mariposa indica o destino, mas o tremor muda a prioridade. Estar no fio ameaçado no fim do aviso encerra a rodada.
 
