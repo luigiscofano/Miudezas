@@ -366,28 +366,42 @@ export function buscarAtalhoRastro(mapa, limite = 21, orcamento = 30000) {
   const folhas = [...casas].flatMap((c, i) => c === 'L' ? [i] : []);
   const adjacencias = Array.from(casas, (_, i) => vizinhosRastro(i, lado).filter(v => casas[v.posicao] !== '#'));
   const distancia = (a, b) => Math.abs(a % lado - b % lado) + Math.abs(Math.floor(a / lado) - Math.floor(b / lado));
+  // Há somente oito subconjuntos de folhas. Memorizar o limite inferior
+  // evita recalcular suas permutações em cada estado, sem podar novos caminhos.
+  const combinacoes = 1 << folhas.length;
+  const limites = new Int16Array(casas.length * combinacoes).fill(-1);
+  const folhaNaCasa = new Uint8Array(casas.length);
+  folhas.forEach((posicao, i) => { folhaNaCasa[posicao] = 1 << i; });
   function minimoRestante(posicao, faltam) {
-    if (!faltam.length) return distancia(posicao, fim);
-    return Math.min(...faltam.map(alvo => distancia(posicao, alvo) + minimoRestante(alvo, faltam.filter(i => i !== alvo))));
+    const chave = posicao * combinacoes + faltam;
+    if (limites[chave] !== -1) return limites[chave];
+    let minimo = faltam ? Infinity : distancia(posicao, fim);
+    for (let i = 0; i < folhas.length; i++) {
+      const bit = 1 << i;
+      if (faltam & bit) minimo = Math.min(minimo, distancia(posicao, folhas[i]) + minimoRestante(folhas[i], faltam ^ bit));
+    }
+    limites[chave] = minimo;
+    return minimo;
   }
-  const usadas = new Set([inicio]);
+  const usadas = new Uint8Array(casas.length);
+  usadas[inicio] = 1;
   let nos = 0, esgotado = false;
   function visitar(posicao, faltam, passos) {
     if (++nos > orcamento) { esgotado = true; return false; }
     if (passos + minimoRestante(posicao, faltam) > limite) return false;
-    if (posicao === fim) return !faltam.length;
+    if (posicao === fim) return faltam === 0;
     for (const vizinho of adjacencias[posicao]) {
       const proxima = vizinho.posicao;
-      if (usadas.has(proxima) || (proxima === fim && faltam.length)) continue;
-      usadas.add(proxima);
-      const achou = visitar(proxima, faltam.filter(i => i !== proxima), passos + 1);
-      usadas.delete(proxima);
+      if (usadas[proxima] || (proxima === fim && faltam)) continue;
+      usadas[proxima] = 1;
+      const achou = visitar(proxima, faltam & ~folhaNaCasa[proxima], passos + 1);
+      usadas[proxima] = 0;
       if (achou) return true;
       if (esgotado) return false;
     }
     return false;
   }
-  const encontrado = visitar(inicio, folhas, 0);
+  const encontrado = visitar(inicio, combinacoes - 1, 0);
   return {encontrado, conclusivo: !esgotado, nos};
 }
 
