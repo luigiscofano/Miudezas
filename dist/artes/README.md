@@ -26,3 +26,7 @@ A revisão das fachadas remove apenas as janelas que ocupavam o espaço de porta
 <img src="marca/janela-original.png" alt="Ícone original de janela" width="96" height="96">
 
 A janela de quatro vidraças foi preservada e restaurada no canto esquerdo da barra. O [manual da marca](marca/README.md) distingue essa aplicação do favicon verde e do logotipo principal.
+
+### Porta da lojinha na capa
+
+A entrada sob o toldo listrado usa verde discreto e maçaneta clara para se distinguir da fachada escura e da vitrine âmbar. A porta chega à calçada, sem parecer uma extensão solta da fachada. A revisão é apenas na imagem: proporção, controles, regras e dados dos jogos permanecem inalterados.
