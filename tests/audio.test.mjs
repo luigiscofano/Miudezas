@@ -66,3 +66,7 @@ test('Mudança de volume cancela rampa antiga antes de agendar novo ganho',async
  musica.eventos=[];musica.cancelAndHoldAtTime=()=>musica.eventos.push(['hold']);
  a.som.volumes(.3,.5);assert.deepEqual(musica.eventos,[['hold'],['target',.3]]);
 });
+test('Player inicia com música 10% e efeitos 25% antes de qualquer ajuste',async()=>{
+ const a=ambiente();await a.som.ativar();
+ assert.equal(a.ganhos[1].gain.value,.25);assert.equal(a.ganhos[2].gain.value,.10);
+});
