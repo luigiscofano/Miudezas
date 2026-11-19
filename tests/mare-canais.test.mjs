@@ -116,17 +116,18 @@ test('validação rejeita ausência de maré, pedras irrelevantes e estreito dis
   assert.equal(validarCanaisMare(reservasMareCanais['canais-ramificados'][0], 'estreito-duplo'), null);
 });
 
-test('gerador legado conserva as 269 sementes de regressão anteriores', () => {
-  const hash = createHash('sha256');
+test('gerador legado conserva 269 mapas e certifica o limite da maré', () => {
+  const hash = createHash('sha256'), mapas = createHash('sha256');
   let count = 0;
   for (let seed = 0; seed < 300; seed++) {
     const map = gerarMareLegada(seed);
     if (!map.family && [17,19,23,29,31].some(divisor => seed % divisor === 0)) continue;
-    hash.update(JSON.stringify(map)); count++;
+    hash.update(JSON.stringify(map)); mapas.update(JSON.stringify(map.grid)); count++;
   }
   assert.equal(count, 269);
-  // Calculado sobre o commit 37e7d3c, antes de introduzir os canais.
-  assert.equal(hash.digest('hex'), 'f6766af43331eaed4630ac2dd92bc98b2b3358fd3a729c0c5b046c078b8c6dfa');
+  // Mesmos 269 mapas anteriores; 11 certificados evitam agora a terceira ocorrência.
+  assert.equal(mapas.digest('hex'), 'd110a04f21268c37684474eb1ab1107b4df9ffa7f483a419d81a48cd97653201');
+  assert.equal(hash.digest('hex'), 'b32b6f2bfefa8ed6c1e12fe41f07c085d6ded10ec7832da6f3101b42a85fc1b4');
   assert.equal(gerarMare(1428316038).family, 'enseada-irregular');
 });
 

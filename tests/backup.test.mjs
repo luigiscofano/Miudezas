@@ -7,7 +7,7 @@ test('rejeita dados estranhos sem alterar destino',()=>{for(const texto of ['{}'
 test('backup vazio é válido e não inventa progresso',()=>{const b=validarBackup(JSON.stringify(criarBackup(memoria())));assert.equal(b.dados[chaves[1]],null);});
 test('schema 2 exporta recordes; importar preserva o maior valor',()=>{
  const source=memoria(),target=memoria();source.setItem(chaves[2],JSON.stringify({pipa:8,pisca:12}));target.setItem(chaves[2],JSON.stringify({pipa:10,fio:4}));
- const backup=validarBackup(JSON.stringify(criarBackup(source)));assert.equal(backup.versao,3);importarBackup(target,backup);
+ const backup=validarBackup(JSON.stringify(criarBackup(source)));assert.equal(backup.versao,4);importarBackup(target,backup);
  assert.deepEqual(JSON.parse(target.getItem(chaves[2])),{pipa:10,fio:4,pisca:12});
 });
 test('schema 1 sem recordes não apaga recordes existentes',()=>{
@@ -41,4 +41,11 @@ test('volumes viajam no schema 3 e backup antigo não os apaga',()=>{
  importarBackup(b,{aplicacao:'Miudezas',versao:2,dados:{[chaves[0]]:'false',[chaves[1]]:null,[chaves[2]]:null}});
  assert.equal(b.getItem(chaves[3]),'35');
  const ruim=criarBackup(a);ruim.dados[chaves[3]]='101';assert.throws(()=>validarBackup(JSON.stringify(ruim)));
+});
+
+test('Backup 4 guarda trilha; versões antigas preservam escolha e validam valores',()=>{
+ const a=memoria();a.setItem(chaves[5],'"tarde-tijuca"');const b=criarBackup(a);assert.equal(b.versao,4);
+ const destino=memoria();importarBackup(destino,b);assert.equal(destino.getItem(chaves[5]),'"tarde-tijuca"');
+ b.versao=3;delete b.dados[chaves[5]];importarBackup(destino,b);assert.equal(destino.getItem(chaves[5]),'"tarde-tijuca"');
+ b.versao=4;b.dados[chaves[5]]='"desconhecida"';assert.throws(()=>validarBackup(JSON.stringify(b)),/Trilha/);
 });

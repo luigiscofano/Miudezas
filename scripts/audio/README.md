@@ -1,5 +1,14 @@
 # Síntese reproduzível
 
+## Bossa de Janela e Tarde na Tijuca
+
+Bossa de Janela é o padrão em Configurações. Tarde na Tijuca conserva os nove temas anteriores e seus arquivos, sem alterar os efeitos. A escolha e os volumes persistem localmente e no backup; o botão de som continua independente. A primeira interação habilitada inicia a música, e a navegação não reinicia a faixa. Cada opção guarda sua posição durante a sessão.
+
+A Bossa usa o loop exato V9: 16 compassos em 4/4, 82 BPM, 46,829274 s, estéreo PCM de 16 bits / 44,1 kHz transportado em FLAC sem perdas. Não recebeu o tratamento de borda aplicado aos temas antigos. Fole, violão e baixo são síntese original, não gravações de músicos. Os arquivos e efeitos anteriores permanecem byte a byte.
+
+O fonte da Bossa está em [bossa-janela/compor.py](bossa-janela/compor.py); instruções de reprodução e hashes em [bossa-janela/README.md](bossa-janela/README.md). Os scripts anteriores abaixo continuam reproduzindo Tarde na Tijuca.
+
+
 `compor.py` é a composição **Interpretação Mais Natural**: nove ciclos originais. `efeitos_8bit.py` gera os nove efeitos 8-bit opção B. `efeitos_acusticos.py` é um fonte legado e não produz os efeitos atuais. Comentários explicam o fraseado e a síntese. Nenhum sample externo ou credencial.
 
 Requer Python 3, NumPy, SciPy e ffmpeg. Opcionalmente Matplotlib para figuras. Instale as dependências no seu ambiente Python isolado. Da raiz:

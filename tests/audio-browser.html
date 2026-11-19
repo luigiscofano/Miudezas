@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><title>Verificação local Web Audio</title>
+<h1>Verificação real de áudio · somente desenvolvimento</h1>
+<div id="principal"><iframe title="Player A" src="?player=A" width="450" height="300"></iframe><iframe title="Player B" src="?player=B" width="450" height="300"></iframe></div>
+<div id="player" hidden><button id="ligar">Ativar</button><button id="trocar">Trocar trilha</button><button id="mutar">Silenciar</button><button id="efeito">Efeito</button><button id="zero">Volume zero</button><pre id="estado"></pre></div>
+<script type="module">
+import {criarAudio} from '../dist/audio.js';
+const nome=new URLSearchParams(location.search).get('player');
+if(nome){document.querySelector('#principal').hidden=true;document.querySelector('#player').hidden=false;
+const fontes=[];let ctx=null,opcao='bossa-janela',zero=false;
+const audio=criarAudio({contexto:()=>{ctx=new AudioContext();const criar=ctx.createBufferSource.bind(ctx);ctx.createBufferSource=()=>{const fonte=criar();const dados={ativa:false,loop:false,segundos:0};fontes.push(dados);const start=fonte.start.bind(fonte),stop=fonte.stop.bind(fonte);fonte.start=(...args)=>{dados.ativa=true;dados.loop=fonte.loop;dados.segundos=fonte.buffer?.duration;return start(...args)};fonte.stop=(...args)=>{dados.ativa=false;return stop(...args)};fonte.addEventListener('ended',()=>dados.ativa=false);return fonte};return ctx}});
+document.querySelector('#ligar').onclick=()=>audio.ativar();document.querySelector('#trocar').onclick=()=>{opcao=opcao==='bossa-janela'?'tarde-tijuca':'bossa-janela';audio.escolher(opcao)};document.querySelector('#mutar').onclick=()=>audio.ativar(false);document.querySelector('#efeito').onclick=()=>audio.efeito('coleta');document.querySelector('#zero').onclick=()=>{zero=!zero;audio.volumes(zero?0:.1,.05)};
+setInterval(()=>document.querySelector('#estado').textContent=JSON.stringify({player:nome,opcao,volumeZero:zero,contexto:ctx?.state,musicasAtivas:fontes.filter(f=>f.ativa&&f.loop).length,efeitosAtivos:fontes.filter(f=>f.ativa&&!f.loop).length,ultimaDuracao:fontes.filter(f=>f.loop).at(-1)?.segundos},null,2),100);
+}
+</script>
