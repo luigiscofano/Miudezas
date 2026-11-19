@@ -159,12 +159,14 @@ const shores = [
   // Mapa escolhido pela imagem da semente 1428316038; siri começa na última linha.
   ['.=.~~~~#','C~.~~~~#','#~.~~~~~','..=~~~~~','.~~#~~~~','=#~.~~~~','..#.~~~~','#.=S#~~~']
 ];
-// Busca no estado completo: posição, fase da maré e última areia segura.
-export function resolverMare(grid) {
+const limiteMare = 3;
+// Busca inclui as ocorrências da maré; a terceira não pode fazer parte da solução.
+export function resolverMare(grid) { return buscarMare(grid, false); }
+function buscarMare(grid, limitar) {
   let start;
   grid.forEach((r,y)=>{if(r.includes('S')) start=[r.indexOf('S'),y];});
   if (!start) return null;
-  const queue=[{x:start[0],y:start[1],phase:0,sx:start[0],sy:start[1],path:[]}], seen=new Set();
+  const queue=[{x:start[0],y:start[1],phase:0,sx:start[0],sy:start[1],levadas:0,path:[]}], seen=new Map();
   for(let head=0;head<queue.length && head<24576;head++) {
     const at=queue[head];
     for(const [dir,[dx,dy]] of Object.entries(delta)) {
@@ -172,10 +174,13 @@ export function resolverMare(grid) {
       if(!cell || cell==='~' || cell==='#' || (cell==='=' && at.phase>=3)) continue;
       const phase=(at.phase+1)%6, sx=cell==='='?at.sx:x, sy=cell==='='?at.sy:y;
       const path=[...at.path,dir];
-      if(cell==='C') return path;
+      if(cell==='C') return at.levadas<limiteMare ? path : buscarMare(grid, true);
+      const levadas=at.levadas+(phase===3 && cell==='=' ? 1 : 0);
+      if(limitar && levadas>=limiteMare) continue;
       if(phase===3 && cell==='=') {x=sx;y=sy;}
       const key=[x,y,phase,sx,sy].join(',');
-      if(!seen.has(key)){seen.add(key);queue.push({x,y,phase,sx,sy,path});}
+      // Preserva certificados antigos válidos; só a busca restrita reabre estados com menos ocorrências.
+      if(!seen.has(key)||(limitar && levadas<seen.get(key))){seen.set(key,levadas);queue.push({x,y,phase,sx,sy,levadas,path});}
     }
   }
   return null;
@@ -576,7 +581,7 @@ function mare(level, api, options = {}) {
   let x = 0, y = 0, sandX = 0, sandY = 0;
   grid.forEach((row, j) => { if (row.includes('S')) { x = row.indexOf('S'); y = j; } });
   sandX = x; sandY = y;
-  let steps = 0, high = false, flash = 0, clock = 0, done = false, facing = false;
+  let steps = 0, high = false, flash = 0, clock = 0, done = false, facing = false, levadas = 0;
   function move(dir) {
     if (done || !delta[dir]) return;
     const nx = x + delta[dir][0], ny = y + delta[dir][1];
@@ -590,11 +595,18 @@ function mare(level, api, options = {}) {
     }
     if (steps % 3 === 0) {
       high = !high; api.tone(high ? 190 : 320, 0.06);
-      if (high && cell === '=') { x = sandX; y = sandY; flash = 0.45; }
+      if (high && cell === '=') {
+        levadas++;
+        // Encerra antes de devolver o controle: novas entradas não duplicam a derrota.
+        if (levadas === limiteMare) {
+          done = true; api.finish(false, 'A maré te levou! Três vezes na mesma tentativa.'); return;
+        }
+        x = sandX; y = sandY; flash = 0.45;
+      }
     }
   }
   return {
-    snapshot() { return {grid: [...grid], x, y, steps, high, done, seed: generated?.seed}; },
+    snapshot() { return {grid: [...grid], x, y, steps, high, done, levadas, limiteMare, seed: generated?.seed}; },
     press: move, release() {},
     update(dt) { clock += dt; flash = Math.max(0, flash - dt); },
     draw(ctx) {
@@ -636,7 +648,7 @@ function mare(level, api, options = {}) {
       }
       sprite(ctx, crab, {r:flash > 0 ? '#fff5da' : '#cd4c3e', w:'#fff4c9', k:'#323b43', h:'#ec8162'}, x * 12, y * 12 + 2, facing);
     },
-    hud() { return (high ? 'Maré alta' : 'Maré baixa') + ' · Muda em ' + (3 - steps % 3) + (steps % 3 === 2 ? ' passo' : ' passos'); }
+    hud() { return (high ? 'Maré alta' : 'Maré baixa') + ' · Muda em ' + (3 - steps % 3) + (steps % 3 === 2 ? ' passo' : ' passos') + ' · Maré levou ' + levadas + '/' + limiteMare; }
   };
 }
 
