@@ -34,6 +34,7 @@ export function criarConfiguracoes({ler,salvar,aoMudar=()=>{},aoAbrir=()=>{},doc
     criar('p',null,'Miudezas reúne dez jogos de bairro em uma pequena janela. Cenas do cotidiano brasileiro viram desafios curtos de atenção, memória, coordenação e planejamento.'),
     criar('p',null,'Meus dois pais viveram a vida toda na Tijuca. Foi nesse bairro e nas minhas memórias de família que busquei inspiração para a identidade visual de Miudezas. Trouxe temas do cotidiano brasileiro para criar um jogo confortável e aconchegante, como essas lembranças.'),
     criar('p',null,'Entre essas memórias está a obra Balões ou Ritual do Vento, do escultor Gabriel Fonseca, que eu sempre via ao ir para a casa da minha avó na Tijuca. Suas formas e cores aparecem reinterpretadas em pixel art na capa, junto das casas, dos morros, da pipa e do bem-te-vi.'),
+    criar('p',null,'Na imagem de abertura, dez janelinhas se espalham pelas casas do bairro. Cada uma representa um dos dez jogos de janela do Miudezas. É um detalhe pra descobrir aos poucos: de fora, a gente vê a vizinhança inteira; ao abrir uma janela, encontra uma brincadeira desse mesmo bairro.'),
     criar('p',null,'Quis transformar essas pequenas cenas em um lugar para desacelerar, explorar e brincar. A arte em pixels e a música suave acompanham esse sentimento de acolhimento.'),
     criar('p',null,'© 2026 Luigi Scofano de Araujo'),
     criar('p',null,'Progresso e preferências ficam neste navegador. Use o backup para guardar seus dados; não há conta nem sincronização automática.')

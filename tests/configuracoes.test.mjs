@@ -1,3 +1,4 @@
+import {readFileSync} from 'node:fs';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {normalizarVolume,lerVolumes,criarConfiguracoes} from '../dist/configuracoes.js';
@@ -49,4 +50,13 @@ test('Novos padrões não sobrescrevem volumes salvos, inclusive zero e antigos 
     const salvos={volumeMusica:musica,volumeEfeitos:efeitos};
     assert.deepEqual(lerVolumes((chave,padrao)=>salvos[chave]??padrao),{musica,efeitos});
   }
+});
+
+
+test('Parágrafo aprovado das dez janelinhas aparece uma vez e coincide com o README',()=>{
+ const aprovado='Na imagem de abertura, dez janelinhas se espalham pelas casas do bairro. Cada uma representa um dos dez jogos de janela do Miudezas. É um detalhe pra descobrir aos poucos: de fora, a gente vê a vizinhança inteira; ao abrir uma janela, encontra uma brincadeira desse mesmo bairro.';
+ const a=ambiente();criarConfiguracoes({documento:a.documento,ler:(k,p)=>p,salvar(){}});
+ assert.equal(a.elementos.filter(e=>e.tag==='p'&&e.textContent===aprovado).length,1);
+ const readme=readFileSync(new URL('../README.md',import.meta.url),'utf8');
+ assert.ok(readme.includes('> '+aprovado));
 });
