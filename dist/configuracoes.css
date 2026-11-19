@@ -11,3 +11,6 @@
 .settings-dialog input:focus-visible,.settings-dialog summary:focus-visible{outline:3px solid #ad522f;outline-offset:2px}.settings-close:hover,.settings-reset:hover{background:#ead8b1}
 @media(pointer:coarse){.bar-actions #settings{min-width:38px}}
 @media(max-height:465px){.settings-dialog{padding:12px}.settings-head{margin-bottom:8px}.settings-volumes{margin-top:10px;gap:6px}}
+
+/* A seleção nativa conserva teclado, leitor de tela e seletor móvel do sistema. */
+.settings-volume select{width:100%;max-width:100%;font:inherit;color:inherit;background:var(--paper,#f8edcf);border:1px solid currentColor;padding:.45rem;margin-top:.35rem}

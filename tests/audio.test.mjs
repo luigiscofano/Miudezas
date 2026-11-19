@@ -3,10 +3,10 @@ import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import {criarAudio,TRILHAS,EFEITOS} from '../dist/audio.js';
-function ambiente({falha=false,adiar=false}={}){
+function ambiente({falha=false,adiar=false,buffer=null}={}){
  const fontes=[],pedidos=[],pendentes=[],ganhos=[];let criados=0;
  const param=()=>({value:1,eventos:[],setValueAtTime(v){this.value=v;this.eventos.push(['set',v]);},linearRampToValueAtTime(v){this.value=v;this.eventos.push(['ramp',v]);},exponentialRampToValueAtTime(v){this.value=v;},setTargetAtTime(v){this.value=v;this.eventos.push(['target',v]);},cancelScheduledValues(){this.eventos.push(['cancel']);}});
- const ctx={state:'suspended',currentTime:1,destination:{},resume:async()=>{ctx.state='running';},suspend:async()=>{ctx.state='suspended';},decodeAudioData:async x=>({x,duration:20}),createGain:()=>{const g={gain:param(),connect(){},disconnect(){}};ganhos.push(g);return g;},createBufferSource:()=>{const f={connect(){},disconnect(){},start(...args){this.started=true;this.startArgs=args;},stop(t){this.stopped=true;if(!t)this.onended?.();}};fontes.push(f);return f;},createOscillator(){const f=this.createBufferSource();f.frequency={};return f;}};
+ const ctx={state:'suspended',currentTime:1,destination:{},resume:async()=>{ctx.state='running';},suspend:async()=>{ctx.state='suspended';},decodeAudioData:async x=>buffer??({x,duration:20}),createGain:()=>{const g={gain:param(),connect(){},disconnect(){}};ganhos.push(g);return g;},createBufferSource:()=>{const f={connect(){},disconnect(){},start(...args){this.started=true;this.startArgs=args;},stop(t){this.stopped=true;if(!t)this.onended?.();}};fontes.push(f);return f;},createOscillator(){const f=this.createBufferSource();f.frequency={};return f;}};
  const som=criarAudio({contexto:()=>{criados++;return ctx;},buscar:url=>{pedidos.push(url.pathname);const resposta={ok:!falha,arrayBuffer:async()=>new ArrayBuffer(8)};return adiar?new Promise(r=>pendentes.push(()=>r(resposta))):Promise.resolve(resposta);}});
  return {som,ctx,fontes,pedidos,pendentes,ganhos,get criados(){return criados;}};
 }
@@ -43,7 +43,7 @@ test('Sinais essenciais conservam frequência e efeitos respeitam limite de voze
 });
 test('Navegar entre todas as telas mantém uma única faixa e download',async()=>{
  const a=ambiente();await a.som.ativar();for(const t of TRILHAS){a.som.mudar(t);await limpar();}
- a.som.mudar('inicio');await limpar();assert.equal(a.pedidos.filter(p=>p.endsWith('/inicio.flac')).length,1);
+ a.som.mudar('inicio');await limpar();assert.equal(a.pedidos.filter(p=>p.endsWith('/bossa-janela.flac')).length,1);
 });
 
 test('Vitória/derrota/recorde não são bloqueados pelo acerto do mesmo quadro',async()=>{
@@ -94,4 +94,37 @@ test('Navegação rápida durante carregamento inicial cria somente uma fonte mu
  for(const t of TRILHAS)a.som.mudar(t);
  a.pendentes.forEach(f=>f());await p;await limpar();
  assert.equal(a.fontes.length,1);assert.equal(a.pedidos.length,1);
+});
+
+test('Bossa padrão, troca preserva posição de cada opção e efeitos ativos',async()=>{
+ const a=ambiente();await a.som.ativar();assert.ok(a.pedidos[0].endsWith('/bossa-janela.flac'));
+ await a.som.efeito('coleta');const efeito=a.fontes.at(-1);a.ctx.currentTime=6;
+ a.som.escolher('tarde-tijuca');await limpar();assert.ok(a.pedidos.at(-1).endsWith('/inicio.flac'));assert.ok(!efeito.stopped);
+ a.ctx.currentTime=9;a.som.escolher('bossa-janela');await limpar();assert.deepEqual(a.fontes.at(-1).startArgs,[0,5]);
+ a.som.escolher('tarde-tijuca');await limpar();assert.deepEqual(a.fontes.at(-1).startArgs,[0,3]);
+ assert.equal(a.fontes.filter(f=>f.loop&&!f.stopped).length,1);
+});
+test('Troca durante download descarta faixa obsoleta; mute e zero não são desfeitos',async()=>{
+ const a=ambiente({adiar:true});const p=a.som.ativar();await limpar();a.som.escolher('tarde-tijuca');await limpar();
+ a.pendentes.forEach(f=>f());await p;await limpar();assert.equal(a.fontes.length,1);
+ a.som.volumes(0,0);a.som.escolher('bossa-janela');await limpar();assert.equal(a.ganhos.at(-1).gain.value,0);
+ await a.som.ativar(false);const n=a.fontes.length;a.som.escolher('tarde-tijuca');await limpar();assert.equal(a.fontes.length,n);
+});
+test('Desligar durante troca invalida ambos os downloads',async()=>{
+ const a=ambiente({adiar:true});const p=a.som.ativar();await limpar();a.som.escolher('tarde-tijuca');await limpar();
+ await a.som.ativar(false);a.pendentes.forEach(f=>f());await p;await limpar();assert.equal(a.fontes.length,0);
+});
+
+test('Bossa conserva PCM decodificado; só temas antigos recebem a borda legada',async()=>{
+ const canal=Float32Array.from({length:20},()=>.25),buffer={duration:20,sampleRate:1000,length:20,numberOfChannels:1,getChannelData:()=>canal};
+ const a=ambiente({buffer});await a.som.ativar();assert.ok(canal.every(x=>x===.25));
+ a.som.escolher('tarde-tijuca');await limpar();assert.equal(canal[0],0);assert.equal(canal.at(-1),0);
+});
+
+test('Resume tardio após ocultar e voltar não rouba áudio nem concede autoplay',async()=>{
+ const a=ambiente();let liberar;
+ a.ctx.resume=()=>new Promise(resolve=>{liberar=()=>{a.ctx.state='running';resolve();};});
+ const p=a.som.ativar();a.som.visibilidade(false);a.som.visibilidade(true);liberar();await p;
+ assert.equal(a.pedidos.length,0);assert.equal(a.fontes.length,0);
+ await a.som.ativar();assert.equal(a.fontes.length,1);
 });

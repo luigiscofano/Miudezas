@@ -60,3 +60,21 @@ test('Parágrafo aprovado das dez janelinhas aparece uma vez e coincide com o RE
  const readme=readFileSync(new URL('../README.md',import.meta.url),'utf8');
  assert.ok(readme.includes('> '+aprovado));
 });
+
+test('Escolha acessível persiste sem mudar volumes; instalações antigas recebem Bossa',()=>{
+ for(const salva of [undefined,'bossa-janela','tarde-tijuca','invalida']){
+  const a=ambiente(),escolhas=[],gravacoes=[];
+  criarConfiguracoes({documento:a.documento,ler:(k,p)=>k==='trilha'?salva:p,salvar:(...v)=>gravacoes.push(v),aoEscolher:v=>escolhas.push(v)});
+  const select=a.encontrar('settings-trilha');assert.equal(select.value,salva==='tarde-tijuca'?salva:'bossa-janela');
+  assert.ok(a.elementos.some(e=>e.tag==='label'&&e.htmlFor===select.id));
+  select.value='tarde-tijuca';select.events.change();assert.deepEqual(gravacoes,[['trilha','tarde-tijuca']]);
+  assert.equal(escolhas.at(-1),'tarde-tijuca');assert.equal(a.encontrar('settings-musica').value,'10');
+ }
+});
+
+test('Preferências de outra janela atualizam painel sem sobrescrever armazenamento',()=>{
+ const a=ambiente(),salvos={},escolhas=[];let gravacoes=0;
+ const c=criarConfiguracoes({documento:a.documento,ler:(k,p)=>salvos[k]??p,salvar:()=>gravacoes++,aoEscolher:v=>escolhas.push(v)});
+ Object.assign(salvos,{trilha:'tarde-tijuca',volumeMusica:0,volumeEfeitos:19});c.sincronizar();
+ assert.equal(a.encontrar('settings-trilha').value,'tarde-tijuca');assert.deepEqual(c.volumes,{musica:0,efeitos:19});assert.equal(gravacoes,0);assert.equal(escolhas.at(-1),'tarde-tijuca');
+});

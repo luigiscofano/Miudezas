@@ -1,3 +1,4 @@
+import {OPCOES_TRILHA,normalizarTrilha} from './audio.js';
 /** Preferências adicionais não alteram a chave legada que liga/desliga todo o som. */
 export const VOLUMES_PADRAO = Object.freeze({musica:10, efeitos:5});
 export const CHAVES_VOLUME = Object.freeze({musica:'volumeMusica', efeitos:'volumeEfeitos'});
@@ -7,7 +8,7 @@ export function normalizarVolume(valor,padrao){
 export function lerVolumes(ler){
   return Object.fromEntries(Object.entries(VOLUMES_PADRAO).map(([tipo,padrao])=>[tipo,normalizarVolume(ler(CHAVES_VOLUME[tipo],padrao),padrao)]));
 }
-export function criarConfiguracoes({ler,salvar,aoMudar=()=>{},aoAbrir=()=>{},documento=document}={}){
+export function criarConfiguracoes({ler,salvar,aoMudar=()=>{},aoEscolher=()=>{},aoAbrir=()=>{},documento=document}={}){
   if(documento.querySelector('#configuracoes'))throw new Error('Configurações já inicializadas');
   let volumes=lerVolumes(ler);
   const criar=(tag,classe,texto)=>{const e=documento.createElement(tag);if(classe)e.className=classe;if(texto)e.textContent=texto;return e;};
@@ -18,6 +19,15 @@ export function criarConfiguracoes({ler,salvar,aoMudar=()=>{},aoAbrir=()=>{},doc
   const cabecalho=criar('div','settings-head');const titulo=criar('h2',null,'Configurações');titulo.id='settings-title';
   const fechar=criar('button','settings-close','×');fechar.type='button';fechar.setAttribute('aria-label','Fechar configurações');cabecalho.append(titulo,fechar);
   const explicacao=criar('p','settings-help','Ajuste a música e os efeitos separadamente. O botão de som da barra continua ligando ou silenciando tudo.');explicacao.id='settings-sound-help';
+  const grupoTrilha=criar('div','settings-volume'),rotuloTrilha=criar('label',null,'Trilha sonora');
+  rotuloTrilha.htmlFor='settings-trilha';
+  const seletor=criar('select');seletor.id='settings-trilha';
+  for(const [valor,nome] of Object.entries(OPCOES_TRILHA)){
+    const opcao=criar('option',null,nome);opcao.value=valor;seletor.append(opcao);
+  }
+  seletor.value=normalizarTrilha(ler('trilha','bossa-janela'));
+  seletor.addEventListener('change',()=>{const valor=normalizarTrilha(seletor.value);salvar('trilha',valor);aoEscolher(valor);});
+  grupoTrilha.append(rotuloTrilha,seletor);aoEscolher(seletor.value);
   const controles=new Map(),bloco=criar('div','settings-volumes');
   for(const [tipo,nome] of [['musica','Música'],['efeitos','Efeitos sonoros']]){
     const grupo=criar('div','settings-volume'),label=criar('label',null,nome);label.htmlFor='settings-'+tipo;
@@ -39,11 +49,12 @@ export function criarConfiguracoes({ler,salvar,aoMudar=()=>{},aoAbrir=()=>{},doc
     criar('p',null,'© 2026 Luigi Scofano de Araujo'),
     criar('p',null,'Progresso e preferências ficam neste navegador. Use o backup para guardar seus dados; não há conta nem sincronização automática.')
   );
-  sobre.append(sumario,texto);dialogo.append(cabecalho,explicacao,bloco,restaurar,sobre);
+  sobre.append(sumario,texto);dialogo.append(cabecalho,explicacao,grupoTrilha,bloco,restaurar,sobre);
   const barra=documento.querySelector('.bar-actions');if(!barra)throw new Error('Barra de ações não encontrada');barra.append(botao);documento.body.append(dialogo);
-  botao.addEventListener('click',()=>{if(dialogo.open)return;aoAbrir();dialogo.showModal();fechar.focus();});fechar.addEventListener('click',()=>dialogo.close());
+  botao.addEventListener('click',()=>{if(dialogo.open)return;sincronizar();aoAbrir();dialogo.showModal();fechar.focus();});fechar.addEventListener('click',()=>dialogo.close());
   // Setas, WASD e Escape não alcançam os controles do jogo atrás da janela modal.
   for(const evento of ['keydown','keyup'])dialogo.addEventListener(evento,e=>{e.stopPropagation();if(evento==='keydown'&&e.key==='Escape'){e.preventDefault();dialogo.close();}});
   dialogo.addEventListener('close',()=>botao.focus());atualizar();aoMudar({...volumes});
-  return {get volumes(){return {...volumes};},fechar:()=>dialogo.close()};
+  function sincronizar(){volumes=lerVolumes(ler);seletor.value=normalizarTrilha(ler('trilha','bossa-janela'));atualizar();aoMudar({...volumes});aoEscolher(seletor.value);}
+  return {sincronizar,get volumes(){return {...volumes};},fechar:()=>dialogo.close()};
 }

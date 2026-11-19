@@ -20,7 +20,7 @@ let tela='inicio',modo='avulso',nivel=1,selecionado=0,pagina=0,volta=null,partid
 let quadro=0,observador=null,tempoAnterior=0,comSom=ler('som',false)===true;
 const trilha=criarAudio();
 let janelaExterna=null;
-criarConfiguracoes({ler,salvar,aoMudar:({musica,efeitos})=>trilha.volumes(musica/100,efeitos/100),aoAbrir:()=>{if(tela==='preparando')voltarAsFases();else if(tela==='jogo')pausar();}});
+const configuracoes=criarConfiguracoes({ler,salvar,aoEscolher:valor=>trilha.escolher(valor),aoMudar:({musica,efeitos})=>trilha.volumes(musica/100,efeitos/100),aoAbrir:()=>{if(tela==='preparando')voltarAsFases();else if(tela==='jogo')pausar();}});
 let recordeCelebrado=false;
 let limparCena=null,limparEnquadramento=null,geracaoGude=null;
 const segurando=new Map();
@@ -57,6 +57,12 @@ function tom(hz,seg=.06){
   void trilha.efeito(hz<200?'erro':atual().id==='rastro'?'coleta':'acerto');
 }
 somBotao.onclick=()=>{comSom=!comSom;salvar('som',comSom);somUI();ativarAudio();};
+// Outra janela pode alterar preferências; sincronizar não concede autoplay.
+window.addEventListener('storage',e=>{
+  if(!['miudezas.v1.trilha','miudezas.v1.volumeMusica','miudezas.v1.volumeEfeitos','miudezas.v1.som',null].includes(e.key))return;
+  configuracoes?.sincronizar();comSom=ler('som',false)===true;somUI();
+  if(!comSom)void trilha.ativar(false);
+});
 // A preferência é conservada, mas o navegador só inicia áudio após interação.
 document.addEventListener('pointerdown',ativarAudio,{passive:true});
 document.addEventListener('keydown',ativarAudio);

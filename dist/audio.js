@@ -1,16 +1,23 @@
+import {criarExclusividade} from './audio-exclusivo.js';
 /** Trilhas, carregadas sob demanda; nenhuma rede/áudio antes do gesto. */
 export const TRILHAS = Object.freeze(['inicio','galeria','nivel','jogo','pausa','roteiro','parada','resultado','resumo']);
+export const OPCOES_TRILHA = Object.freeze({'bossa-janela':'Bossa de Janela','tarde-tijuca':'Tarde na Tijuca'});
+export const normalizarTrilha = valor => Object.hasOwn(OPCOES_TRILHA,valor)?valor:'bossa-janela';
 export const EFEITOS = Object.freeze(['selecionar','confirmar','voltar','acerto','erro','coleta','recorde','vitoria','derrota']);
 
-export function criarAudio({contexto=()=>new (globalThis.AudioContext||globalThis.webkitAudioContext)(), buscar=(url)=>fetch(url)}={}) {
+export function criarAudio({contexto=()=>new (globalThis.AudioContext||globalThis.webkitAudioContext)(), buscar=(url)=>fetch(url),exclusividade=criarExclusividade}={}) {
   let ctx=null, master=null, fxBus=null, musica=null, habilitado=false, visivel=true, tela='inicio', jogo='', revisao=0,ciclo=0;
   const cache=new Map(), carregando=new Map(), fontes=new Set();
   let ultimoEfeito=-Infinity,volumeMusica=.10,volumeEfeitos=.05,geracaoEfeitos=0,prioridadePendente=0;
   const efeitosAtivos=new Map();
-  let temaContinuo=null,posicaoMusical=0;
-  const ativo=()=>habilitado&&visivel&&ctx?.state==='running';
+  let temaContinuo=null,posicaoMusical=0,escolha='bossa-janela';
+  const posicoes=new Map();
+  let licenca=false;
+  const dono=exclusividade({aoCeder:()=>{parar();}});
+  const ativo=()=>licenca&&habilitado&&visivel&&ctx?.state==='running';
   function encerrar(fonte){try{fonte.stop();}catch{} fontes.delete(fonte);}
   function parar(){
+    licenca=false;dono.ceder();
     // Guardar a posição congela a música durante mute/aba oculta, sem voltar à introdução.
     if(musica)posicaoMusical=(musica.offset+Math.max(0,ctx.currentTime-musica.inicio))%musica.duracao;
     revisao++;ciclo++;geracaoEfeitos++;prioridadePendente=0;for(const fonte of fontes)encerrar(fonte);efeitosAtivos.clear();musica=null;}
@@ -32,7 +39,7 @@ export function criarAudio({contexto=()=>new (globalThis.AudioContext||globalThi
       const resposta=await buscar(url);
       if(!resposta.ok)throw new Error('Arquivo de áudio indisponível');
       const buffer=await ctx.decodeAudioData(await resposta.arrayBuffer());
-      if(chave.startsWith('musicas/')&&buffer.getChannelData){
+      if(chave.startsWith('musicas/')&&chave!=='musicas/bossa-janela.flac'&&buffer.getChannelData){
         // Quatro milissegundos de borda evitam clique na emenda sem mudar o compasso.
         const n=Math.min(Math.round(buffer.sampleRate*.004),Math.floor(buffer.length/2));
         for(let c=0;c<buffer.numberOfChannels;c++){
@@ -53,7 +60,7 @@ export function criarAudio({contexto=()=>new (globalThis.AudioContext||globalThi
     if(!ativo()||musica)return;
     // A primeira tela sonorizada escolhe o tema; navegar não troca nem reinicia a faixa.
     temaContinuo??=tela;
-    const versao=++revisao, destino=temaContinuo;
+    const versao=++revisao, destino=escolha==='bossa-janela'?'bossa-janela':temaContinuo;
     try{
       const buffer=await carregar('musicas/'+destino+'.flac');
       if(!ativo()||versao!==revisao)return;
@@ -69,12 +76,16 @@ export function criarAudio({contexto=()=>new (globalThis.AudioContext||globalThi
     habilitado=valor;
     if(!valor){parar();if(master)master.gain.value=0;return;}
     if(!visivel)return;
+    const versao=ciclo;
     try{
       if(!ctx){ctx=contexto();master=ctx.createGain();master.connect(ctx.destination);fxBus=ctx.createGain();fxBus.gain.value=volumeEfeitos;fxBus.connect(master);}
       master.gain.value=1;
       // Chamado diretamente por toque/clique/tecla, nunca pelo carregamento da página.
       if(ctx.state!=='running')await ctx.resume();
-      if(!ativo())return;
+      if(versao!==ciclo||!habilitado||!visivel)return;
+      const concedida=await dono.obter();
+      if(!concedida||versao!==ciclo||!habilitado||!visivel)return;
+      licenca=true;
       await tocarTela();
     }catch{ /* Preferência fica salva; outro gesto pode tentar novamente. */ }
   }
@@ -124,5 +135,17 @@ export function criarAudio({contexto=()=>new (globalThis.AudioContext||globalThi
     if(fxBus)ajustarGanho(fxBus.gain,volumeEfeitos,.02);
     if(musica)ajustarGanho(musica.ganho.gain,volume(),.04);
   }
-  return {ativar,mudar,visibilidade,efeito,sinal,parar,volumes};
+  function escolher(valor){
+    const nova=normalizarTrilha(valor);
+    if(nova===escolha)return;
+    // Trocar música invalida downloads antigos sem interromper efeitos em andamento.
+    if(musica){
+      posicaoMusical=(musica.offset+Math.max(0,ctx.currentTime-musica.inicio))%musica.duracao;
+      encerrar(musica.fonte);musica=null;
+    }
+    revisao++;posicoes.set(escolha,posicaoMusical);escolha=nova;
+    posicaoMusical=posicoes.get(escolha)??0;
+    void tocarTela();
+  }
+  return {ativar,mudar,visibilidade,efeito,sinal,parar,volumes,escolher};
 }

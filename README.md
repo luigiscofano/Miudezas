@@ -703,7 +703,19 @@ console.log(rodada.hud());
 <details>
 <summary>Expandir trilha sonora e configurações</summary>
 
-A identidade sonora, **Interpretação Mais Natural**, reúne nove músicas relaxantes com síncopes brasileiras e nove efeitos 8-bit discretos (opção B). Cada tipo de tela tem seu tema. A música combina cordas dedilhadas e percussão delicada; os efeitos usam pulsos curtos de videogame, sem cordas ou acordes; os mapas abaixo documentam eventos reais do compositor, não uma transcrição inventada.
+**Bossa de Janela** é a trilha padrão: fole suave, violão dedilhado e baixo em um loop original de 16 compassos, a 82 BPM (46,829 s). O arquivo FLAC conserva exatamente as amostras PCM da V9, sem nova normalização, compressão dinâmica ou mudança de arranjo. Os timbres são sintetizados, sem gravações de instrumentistas. A escolha **Tarde na Tijuca** mantém integralmente as nove músicas anteriores, com cordas dedilhadas e percussão delicada: a primeira tela sonorizada escolhe seu tema e a navegação mantém essa faixa. Os nove efeitos 8-bit (opção B) permanecem independentes e inalterados.
+
+![Bossa de Janela: envelope das amostras dos dois canais](docs/audio/bossa-janela-onda.png)
+
+![Bossa de Janela: espectrograma da média estéreo](docs/audio/bossa-janela-espectrograma.png)
+
+![Bossa de Janela: mapa dos eventos tonais do compositor](docs/audio/bossa-janela-notas.png)
+
+O mapa usa os eventos reais de fole, corda e baixo; não inclui percussão, reflexões de ambiente nem caudas além da duração de cada evento. O espectrograma representa energia por frequência, não identifica notas automaticamente.
+
+![Bossa de Janela: estrutura de 16 compassos e retorno do loop](docs/audio/bossa-janela-loop.png)
+
+**Tarde na Tijuca — Interpretação Mais Natural.** As visualizações anteriores continuam abaixo, com os nove temas e os efeitos; os mapas documentam eventos reais do compositor, não uma transcrição inventada.
 
 ![Formas de onda das nove músicas](docs/audio/ondas-musicas.png)
 
@@ -717,7 +729,7 @@ A identidade sonora, **Interpretação Mais Natural**, reúne nove músicas rela
 
 O aviso **© 2026 Luigi Scofano de Araujo** aparece no rodapé inicial e no Sobre, sem alterar a licença do repositório. O Sobre cita a obra e o artista em texto, sem link externo; a fonte de pesquisa está registrada na seção de identidade visual deste README.
 
-A **engrenagem** abre Configurações: música e efeitos têm controles independentes (padrões 10% e 5%), botão para restaurar os volumes e **Sobre o projeto**. O botão de som continua silenciando tudo e mantém a preferência anterior. O som começa somente após interação; ocultar a aba o suspende. Pisca e Rádio preservam suas pistas sonoras, com música de fundo atenuada. Configurações pausam a partida; fechar não retoma o jogo involuntariamente.
+A **engrenagem** abre Configurações: escolha da trilha, música e efeitos têm controles independentes (padrões 10% e 5%), botão para restaurar os volumes e **Sobre o projeto**. O botão de som continua silenciando tudo e mantém a preferência anterior. O som começa somente após interação; ocultar a aba o suspende. Pisca e Rádio preservam suas pistas sonoras, com música de fundo atenuada. Configurações pausam a partida; fechar não retoma o jogo involuntariamente.
 
 ---
 
@@ -733,6 +745,7 @@ A engrenagem permanece na barra superior do início, catálogo, seletor, partida
 
 | Controle | Comportamento |
 |---|---|
+| Trilha sonora | Alterna Bossa de Janela (padrão) e Tarde na Tijuca, salvando a escolha. |
 | Música | Ajusta somente a trilha, de 0 a 100%. Padrão: **10%**. |
 | Efeitos sonoros | Ajusta os efeitos, de 0 a 100%. Padrão: **5%**. |
 | Restaurar volumes padrão | Retorna os dois controles a 10% e 5%; não apaga progresso ou recordes. |
@@ -740,9 +753,9 @@ A engrenagem permanece na barra superior do início, catálogo, seletor, partida
 | Sobre o projeto | Expande o texto de apresentação, memórias, referência artística e aviso de armazenamento local. |
 | Fechar | Fecha o painel; se a partida foi pausada, ela não reinicia sozinha. |
 
-As preferências são locais a este navegador. Os padrões não sobrescrevem valores que a pessoa já salvou. A implementação está em [configuracoes.js](dist/configuracoes.js), com o áudio em [audio.js](dist/audio.js).
+As preferências são locais a este navegador. Instalações novas e antigas sem uma escolha de trilha recebem Bossa de Janela; os volumes e o botão de som já salvos são preservados. A escolha viaja no backup de versão 4; importar backups anteriores mantém a escolha existente. Trocar de trilha guarda a posição de cada opção na sessão; navegar não reinicia a música. Entre abas, a última interação assume o áudio por canal de comunicação e trava exclusiva quando disponíveis; a janela externa continua tendo prioridade sobre a página que a abriu. A implementação está em [configuracoes.js](dist/configuracoes.js), com o áudio em [audio.js](dist/audio.js).
 
-![Painel real de Configurações, com música em 10%, efeitos em 5% e botão para restaurar padrões](docs/imagens/telas/configuracoes.jpg)
+![Captura local de Configurações com Bossa de Janela, música em 10% e efeitos em 5%](docs/audio/configuracoes-trilhas.jpg)
 
 ### Texto do Sobre
 
@@ -785,7 +798,7 @@ Estas duas capturas mostram partes do mesmo painel rolável, sem montagem. A [re
 | miudezas.v1.recordes | Melhores pontuações dos seis jogos Sem Parar, por ID. | Ao superar o recorde durante a partida e ao concluir. |
 | miudezas.v1.volta | Objeto com nivel, ids e resultados booleanos, migrado por IDs. | No começo da volta e ao avançar de parada. Ao completar a última, o valor passa a null. |
 
-Os seis recordes de Sem Parar, incluindo Luz de Varanda (`luz`), ficam em `miudezas.v1.recordes`, por ID de jogo, separados da volta e dos resultados autorais. O backup versão 3 inclui esse campo e aceita arquivos anteriores. Importar um backup antigo não deve apagar recordes já existentes. Os dados são locais ao navegador: limpar armazenamento ou trocar de dispositivo pode removê-los; use exportação/importação explícita. Não há conta, sincronização ou ranking inviolável.
+Os seis recordes de Sem Parar, incluindo Luz de Varanda (`luz`), ficam em `miudezas.v1.recordes`, por ID de jogo, separados da volta e dos resultados autorais. O backup versão 4 inclui esse campo e aceita arquivos anteriores. Importar um backup antigo não deve apagar recordes já existentes. Os dados são locais ao navegador: limpar armazenamento ou trocar de dispositivo pode removê-los; use exportação/importação explícita. Não há conta, sincronização ou ranking inviolável.
 
 Com `{"nivel":2,"resultados":[true,false]}`, a próxima parada é Último Fio em Animado. O resultado mais recente só entra no histórico ao escolher avançar. Repetir permite substituir a tentativa antes desse registro. A retomada depende da origem e do navegador. Outra cópia do site tem seu próprio histórico. Se o armazenamento estiver indisponível, a rodada segue em memória.
 
