@@ -133,7 +133,7 @@ function criarPartida(terrenoValidado=null){
   if(atual().id==='gude'&&tipoPartida==='generated'&&!terrenoValidado){
     mudar('preparando');partida=null;
     area.innerHTML=paginaHTML(topo('Preparando caminho')+'<p class="body-copy" role="status">Preparando uma fase com solução…</p><div class="actions">'+btn('voltar-fases','Voltar às fases','action secondary')+'</div>');
-    pfooter('Três Petelecos','Fase '+semente);
+    pfooter('Três Petelecos',nomeModo());
     const tarefa=solicitarTerrenoGude(semente);geracaoGude=tarefa;
     tarefa.promise.then(terreno=>{
       // Uma resposta atrasada não pode substituir outra fase nem reabrir o jogo.
@@ -237,7 +237,7 @@ function mostrarJogo(){
       recordes=registrarRecorde(recordes,j.id,pontos);salvar('recordes',recordes);
       if(!recordeCelebrado){recordeCelebrado=true;void trilha.efeito('recorde');}
     }
-    const h=esta.hud()+(tipoPartida==='endless'?' · Pontos '+pontos+' · Recorde '+(recordes[j.id]||0):tipoPartida==='generated'?' · Fase '+semente:'');if(hud.textContent!==h)hud.textContent=h;
+    const h=esta.hud()+(tipoPartida==='endless'?' · Pontos '+pontos+' · Recorde '+(recordes[j.id]||0):'');if(hud.textContent!==h)hud.textContent=h;
     if(chapa){
       const estado=esta.snapshot(), pontos=['cru','no ponto','tostado','queimado'];
       for(const b of area.querySelectorAll('[data-tool]')) b.setAttribute('aria-pressed',String(b.dataset.tool===estado.utensilio));

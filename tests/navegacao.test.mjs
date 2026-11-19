@@ -288,3 +288,30 @@ test('Bloqueio e erro de abertura conservam áudio; erro de foco não duplica tr
  const n=navegador();n.executar('globalThis.visivel=true;trilha.visibilidade=v=>visivel=v;window.open=()=>({closed:false,focus(){throw Error("foco")}})');
  assert.equal(n.executar("abrirJanela('galeria')"),true);assert.equal(n.executar('visivel'),false);
 });
+
+test('Caminho Novo omite número visível nos três jogos e conserva a semente no reinício',async()=>{
+ for(const id of ['rastro','mare','gude']){
+  const indice=catalogo.findIndex(j=>j.id===id),n=navegador(null,`?janela=1&tela=nivel&jogo=${indice}&tipo=generated&semente=987654321`);
+  const semNumero=()=>{
+   const texto=n.html()+n.elemento('#foot').innerHTML+n.elemento('.game-hud').textContent;
+   assert.doesNotMatch(texto,/987654321|Fase \d/);
+   assert.equal(n.executar('semente'),987654321);
+  };
+  n.executar('criarPartida()');semNumero();await Promise.resolve();semNumero();
+  assert.match(n.html(),/Caminho Novo/);assert.equal(n.elemento('.game-hud').textContent,'Jogando');
+  n.executar('pausar()');semNumero();n.executar('mostrarJogo()');semNumero();
+  n.executar("finalizar(false,'Tentativa')");semNumero();
+  n.executar("acao({dataset:{do:'repetir'}})");semNumero();await Promise.resolve();semNumero();
+  assert.equal(n.chamadas.length,2);
+  for(const chamada of n.chamadas){assert.equal(chamada.seed,987654321);assert.equal(chamada.mode,'generated');}
+  assert.deepEqual(n.gravacoes,[]);
+ }
+});
+
+test('Ocultar identificador gerado não filtra números de outros modos ou indicadores',()=>{
+ const n=navegador();
+ n.executar("tipoPartida='classic';criarPartida();partida.hud=()=> 'Fase 2 · 3 passos';mostrarJogo()");
+ assert.equal(n.elemento('.game-hud').textContent,'Fase 2 · 3 passos');
+ n.executar("tipoPartida='endless';mostrarJogo()");
+ assert.equal(n.elemento('.game-hud').textContent,'Fase 2 · 3 passos · Pontos 0 · Recorde 0');
+});

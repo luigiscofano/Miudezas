@@ -18,7 +18,7 @@ Esta é a raiz que o servidor entrega ao navegador. Para executar a partir desta
 | [pracinha.js](pracinha.js) | Código legado de Peteca/Gato, não importado pelo aplicativo. |
 | [arte/](arte/README.md) | Imagens do menu e fonte local. |
 
-Uma fábrica recebe o nível de 1 a 3, uma API com callbacks de som e conclusão e opções `{mode, seed}`. Os modos são `classic`, `endless` e `generated`; uma semente identifica a fase para reinício reproduzível. O método `score()` fornece a pontuação quando existe modo por recorde. Ela devolve controles, atualização, desenho e indicador. A interface central transforma eventos de teclado e toque no mesmo vocabulário. Para uma alteração de regra, revise a fábrica e o texto correspondente no catálogo. Para uma alteração de arte, confira a miniatura e o desenho da partida separadamente.
+Uma fábrica recebe o nível de 1 a 3, uma API com callbacks de som e conclusão e opções `{mode, seed}`. Os modos são `classic`, `endless` e `generated`; uma semente identifica a fase para reinício reproduzível. No modo Caminho Novo, esse identificador fica interno: a preparação e o indicador da partida não exibem o número da fase. Nome do modo, contadores do jogo, fases autorais e Sem Parar permanecem inalterados. O método `score()` fornece a pontuação quando existe modo por recorde. Ela devolve controles, atualização, desenho e indicador. A interface central transforma eventos de teclado e toque no mesmo vocabulário. Para uma alteração de regra, revise a fábrica e o texto correspondente no catálogo. Para uma alteração de arte, confira a miniatura e o desenho da partida separadamente.
 
 [Manual completo do projeto](../README.md)
 
