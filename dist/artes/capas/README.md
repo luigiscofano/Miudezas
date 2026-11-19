@@ -21,3 +21,9 @@ A função de abertura em [app.js](../../app.js) aponta diretamente para este PN
 ### Porta da lojinha na capa
 
 A entrada sob o toldo listrado usa verde discreto e maçaneta clara para se distinguir da fachada escura e da vitrine âmbar. A porta chega à calçada, sem parecer uma extensão solta da fachada. A revisão é apenas na imagem: proporção, controles, regras e dados dos jogos permanecem inalterados.
+
+### Duas janelas na primeira casa laranja
+
+A casa sob o bem-te-vi agora tem duas janelas largas, mantendo altura, tons escuros e iluminação clara do desenho original. A edição fica exclusivamente no retângulo `x=148..305, y=670..737` do PNG de 1672 × 941. Telhado, pássaro, porta, calçada e demais casas conservam todos os pixels originais. O PNG é a única cópia ativa da capa; os READMEs o referenciam diretamente.
+
+A comparação com a arte do commit `c19148ec82b5b161dc409ca9205b98fa36ac0419` confirmou **zero pixels alterados fora da região** (1.562.608 pixels externos preservados). Para reproduzir, extraia a capa anterior com `git show` e execute `python3 scripts/verificar-janelas-capa.py antes.png dist/artes/capas/miudezas-tijuca.png` a partir da raiz; requer Pillow. A verificação compara RGBA decodificado, não os bytes comprimidos do PNG.
