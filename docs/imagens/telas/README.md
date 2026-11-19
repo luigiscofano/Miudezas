@@ -29,13 +29,15 @@ As três imagens adicionais registram o painel real. `configuracoes.jpg` mostra 
 |---|---|
 | [configuracoes.jpg](configuracoes.jpg) | Música, efeitos, restaurar padrões e acesso ao Sobre. |
 | [sobre.jpg](sobre.jpg) | Apresentação e memórias familiares. |
-| [sobre-continuacao.jpg](sobre-continuacao.jpg) | Referência artística, copyright e armazenamento local. |
+| [sobre-continuacao.jpg](sobre-continuacao.jpg) | Referência artística, parágrafo das dez janelinhas, copyright e armazenamento local. |
 
 A captura usa valores restaurados somente no navegador de teste. A atualização documental não modifica as preferências de visitantes. Texto e comportamento foram conferidos em [configuracoes.js](../../../dist/configuracoes.js); o [README principal](../../../README.md#configurações-e-sobre-o-projeto) transcreve o Sobre e explica os controles.
 
 ---
 
-A abertura foi recapturada da versão publicada no commit `3f99adfa02325b7db2ed423255afd73f8f17f4a7`, após recarga sem cache. Mantém o recorte de 502 × 502, a janela inteira e o cursor fora da imagem. As outras capturas continuam sendo as de 18/11. Os READMEs principal, de `dist`, de `docs`, das artes e da capa já referenciam o PNG canônico atualizado e não precisaram duplicá-lo.
+A abertura foi recapturada da versão publicada no commit `3f99adfa02325b7db2ed423255afd73f8f17f4a7`, após recarga sem cache. Mantém o recorte de 502 × 502, a janela inteira e o cursor fora da imagem. As demais capturas de navegação e a vista fechada das configurações continuam sendo as de 18/11. Os READMEs principal, de `dist`, de `docs`, das artes e da capa já referenciam o PNG canônico atualizado e não precisaram duplicá-lo.
+
+As duas vistas do Sobre foram atualizadas em 19/11/2026 com o seletor de Bossa de Janela e o parágrafo das dez janelinhas. Foram capturadas em Chromium local via Playwright, a partir dos arquivos do commit publicado `8563ad8433bc4cc3596ab67d456f5f787061e2a7`: os recursos carregados foram conferidos byte a byte contra o Pages com validação TLS. O acesso direto pelo navegador de captura estava indisponível neste ambiente; não foi desativada a validação de certificados. Ambas mantêm o enquadramento de 430 × 741, sem cursor nem dados pessoais de sessão. A primeira mostra o seletor e os volumes; a continuação mostra o parágrafo completo e o rodapé. Somente a margem externa foi recortada, sem retoques no painel.
 
 ## Como atualizar
 
