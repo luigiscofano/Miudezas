@@ -1,12 +1,26 @@
 # Identidade sonora do Miudezas
 
+## Bossa de Janela e Tarde na Tijuca
+
+Bossa de Janela é o padrão em Configurações. Tarde na Tijuca conserva os nove temas anteriores e seus arquivos, sem alterar os efeitos. A escolha e os volumes persistem localmente e no backup; o botão de som continua independente. A primeira interação habilitada inicia a música, e a navegação não reinicia a faixa. Cada opção guarda sua posição durante a sessão.
+
+A Bossa usa o loop exato V9: 16 compassos em 4/4, 82 BPM, 46,829274 s, estéreo PCM de 16 bits / 44,1 kHz transportado em FLAC sem perdas. Não recebeu o tratamento de borda aplicado aos temas antigos. Fole, violão e baixo são síntese original, não gravações de músicos. Os arquivos e efeitos anteriores permanecem byte a byte.
+
+![Forma de onda da Bossa](bossa-janela-onda.png)
+![Espectrograma da média estéreo](bossa-janela-espectrograma.png)
+![Eventos tonais do compositor](bossa-janela-notas.png)
+![Estrutura e retorno do loop](bossa-janela-loop.png)
+
+Os envelopes mostram os picos reais por blocos de 10 ms; o espectrograma usa janelas de 2048 amostras e não transcreve notas. O mapa vem de [eventos do compositor](bossa-janela-eventos.json), com altura MIDI, início e duração de fole, corda e baixo; percussão e ambiente não são representados. A estrutura identifica o motivo inicial e sua sequência, sem sugerir um tema B independente. As visualizações seguintes documentam **Tarde na Tijuca**, mantendo a análise anterior.
+
+
 A trilha combina leveza de videogame, harmonia com sétimas e nonas, síncopes brasileiras, cordas dedilhadas sintetizadas e percussão delicada inspirada em madeira, ganzá e platinelas. O objetivo é acompanhar o bairro e seus jogos sem transformar a experiência em uma sequência de alarmes.
 
 A direção musical é **Interpretação Mais Natural**. Os efeitos pertencem à **8-bit opção B**. As imagens desta pasta documentam os arquivos dessa direção, e não as alternativas anteriores.
 
 ---
 
-## Música por tipo de tela
+## Tarde na Tijuca: música por tipo de tela
 
 | Tela | Tema | Andamento | Duração do ciclo |
 |---|---|---:|---:|
@@ -114,8 +128,16 @@ O manifesto guarda hashes SHA-256 dos dois fontes e dos 18 WAV utilizados. Isso 
 
 ## Reprodução no jogo
 
-[Player e limites](../../dist/audio/README.md) · [Recriar os arquivos](../../scripts/audio/README.md). As músicas de produção contêm o ganho de apresentação +2 dB e compressão FLAC sem perdas; efeitos usam os WAV 8-bit opção B. O controle de volume é independente do mute e viaja no backup versão 3, compatível com versões anteriores.
+[Player e limites](../../dist/audio/README.md) · [Recriar os arquivos](../../scripts/audio/README.md). Os nove temas de Tarde na Tijuca contêm o ganho de apresentação +2 dB e compressão FLAC sem perdas; efeitos usam os WAV 8-bit opção B. O controle de volume é independente do mute e viaja no backup versão 4, compatível com versões anteriores.
 
 ### Continuidade musical
 
-A música acompanha a navegação sem reiniciar: o tema escolhido na primeira ativação do som permanece durante a sessão, inclusive em pausa, configurações e resultados. As nove composições continuam disponíveis como temas de entrada. Silenciar ou ocultar a aba guarda o ponto da faixa para a próxima interação; recarregar a página começa uma nova sessão. As pistas sonoras dos jogos e os volumes independentes são preservados.
+A música acompanha a navegação sem reiniciar: em Tarde na Tijuca, o tema escolhido na primeira ativação do som permanece durante a sessão, inclusive em pausa, configurações e resultados. As nove composições continuam disponíveis como temas de entrada. Silenciar ou ocultar a aba guarda o ponto da faixa para a próxima interação; recarregar a página começa uma nova sessão. As pistas sonoras dos jogos e os volumes independentes são preservados.
+
+## Verificação do seletor
+
+A captura `configuracoes-trilhas.jpg` foi obtida da versão local em Chromium, sem edição da interface; não documenta uma publicação no Pages. Testes automatizados: `node --test tests/audio*.test.mjs tests/configuracoes.test.mjs tests/backup.test.mjs tests/navegacao.test.mjs`.
+
+Para repetir a verificação com Web Audio real, sirva a raiz do repositório e abra `tests/audio-browser.html`. Ative A, depois B: apenas um deve mostrar `musicasAtivas: 1`. Troque B para Tarde na Tijuca, use volume zero e o botão Efeito, e reative A. O painel usa buffers realmente decodificados e conta fontes reais; não é um teste de qualidade auditiva nem de dispositivo físico. No Chromium utilizado, Bossa decodificou para 46,829274 s e o tema inicial de Tarde para 25,945941 s.
+
+A interface também foi verificada em viewport de 390 × 844 via iframe local (dimensões móveis, sem simular hardware ou toque). DevTools estava bloqueado pela política do ambiente; não houve teste em Safari/iOS ou celular físico.

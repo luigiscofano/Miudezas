@@ -1,5 +1,7 @@
 # Dados, recordes e compatibilidade
 
+O backup versão **4** acrescenta `miudezas.v1.trilha`: `bossa-janela` ou `tarde-tijuca`. Sem escolha salva, a trilha padrão é Bossa de Janela; som e volumes existentes permanecem intactos. Versões 1–3 continuam aceitas e não apagam a escolha atual. Valores desconhecidos são rejeitados antes de gravar.
+
 O backup versão **3** acrescenta volumes independentes `miudezas.v1.volumeMusica` e `miudezas.v1.volumeEfeitos` (inteiros 0–100, padrões10/5). Versões 1 e 2 continuam aceitas; importar arquivo antigo não apaga os volumes atuais. O mute legado permanece em `miudezas.v1.som`. Valores inválidos são rejeitados antes de alterar dados.
 
 
