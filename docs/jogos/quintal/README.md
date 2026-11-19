@@ -31,7 +31,11 @@ As cinco posições de mariposas se repetem, sem vitória automática na quinta.
 
 ## Maré Miúda: prova executável de solução
 
-A família original, que recebe uma das dez faixas da distribuição atual, usa um PRNG determinístico e tenta no máximo 48 candidatos. A família adicional é descrita abaixo. Para cada candidato, uma busca em largura considera **posição, número de passos módulo seis e última posição segura em areia**. Ela reproduz as regras reais: bloquear baixios na maré alta, alterar a maré a cada três passos, retornar à última areia se a subida ocorrer sobre um baixio e reconhecer a concha antes da mudança de maré.
+A regressão de 269 sementes legadas mantém exatamente os mesmos mapas; 11 certificados foram substituídos por rotas válidas que evitam a terceira ocorrência. A busca tenta preservar o certificado anterior e, se ele excede o limite, busca uma alternativa considerando as ocorrências.
+
+Em Sossegado, Animado, Puxado e Caminho Novo, a terceira vez que o caranguejo é levado pela maré encerra a tentativa com “A maré te levou!”. As duas primeiras mantêm a recuperação na última areia. O HUD exibe as ocorrências sobre o limite de três. Reiniciar zera esse contador local; no Caminho Novo, a mesma semente recria o mapa. Na Volta no Bairro, a derrota usa o resultado normal da parada, registrado uma única vez ao avançar.
+
+A família original, que recebe uma das dez faixas da distribuição atual, usa um PRNG determinístico e tenta no máximo 48 candidatos. A família adicional é descrita abaixo. Para cada candidato, uma busca em largura considera **posição, número de passos módulo seis, última posição segura em areia e ocorrências de ser levado pela maré**. Ela reproduz as regras reais: bloquear baixios na maré alta, alterar a maré a cada três passos, retornar à última areia nas duas primeiras subidas sobre um baixio, rejeitar a terceira ocorrência e reconhecer a concha antes da mudança de maré.
 
 A referência histórica da geração é o mapa anterior de **Puxado**, mantido separado das fases fixas: solução mínima de 17 comandos, contra 14 sem maré, e dois baixios individualmente indispensáveis. Cada mapa deve exigir **17 a 27 comandos**, custo adicional da maré de **pelo menos três comandos** e **dois baixios obrigatórios** (bloquear qualquer um impede chegar à concha). Além disso, remover as pedras precisa reduzir o caminho mínimo: pedras meramente decorativas não satisfazem esse critério. Essas verificações rejeitam atalhos secos e mapas solucionáveis sem lidar com o ciclo da maré.
 

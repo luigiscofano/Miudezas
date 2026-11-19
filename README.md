@@ -360,13 +360,13 @@ O caranguejo jogável usa a arte em pixel art: pinças simétricas, olhos defini
 
 <img src="docs/imagens/jogos/mare.svg" width="288" alt="Cena atual do jogo mare, renderizada pelo motor no nível Puxado, sem cursor">
 
-Leve o caranguejo até a concha. A maré muda a cada três passos. Se ela cobrir seus pés, você volta à areia. **Comandos.** Use as quatro direções ou deslize o dedo na cena.
+Leve o caranguejo até a concha. A maré muda a cada três passos. Se ela levar você, as duas primeiras vezes devolvem à areia; a terceira encerra a tentativa em qualquer modo. **Comandos.** Use as quatro direções ou deslize o dedo na cena.
 
 | Sossegado | Animado | Puxado |
 |---|---|---|
 | **Enseada** · Mapa 8 × 8 com banco raso contínuo | **Dois baixios** · Mapa 8 × 8 com dois baixios separados | **Canal estreito** · Mapa 8 × 8 com passagens rasas estreitas |
 
-Apenas um passo válido avança a maré. No terceiro, se a água subir sobre uma casa rasa, o caranguejo retorna à última casa firme. Circular na areia permite preparar uma travessia. O Puxado atual usa o mapa escolhido da semente **1428316038**, com o siri na última linha (coluna 4), quatro baixios indispensáveis e solução mínima de 21 comandos. Caminho Novo combina dez famílias; veja os critérios na [seção de geração](#geração-e-validação-de-fases).
+Apenas um passo válido avança a maré. No terceiro passo, se a água subir sobre uma casa rasa, conta uma vez como levado pela maré. Nas duas primeiras ocorrências o caranguejo retorna à última casa firme; na terceira, perde com “A maré te levou!”. O HUD mostra “Maré levou 0/3”. O limite vale em Sossegado, Animado, Puxado e Caminho Novo. Reiniciar zera o contador e, no Caminho Novo, conserva a semente da fase. Circular na areia permite preparar uma travessia. O Puxado atual usa o mapa escolhido da semente **1428316038**, com o siri na última linha (coluna 4), quatro baixios indispensáveis e solução mínima de 21 comandos. Caminho Novo combina dez famílias; veja os critérios na [seção de geração](#geração-e-validação-de-fases).
 
 Palco `#205E60` · [Implementação de Maré Miúda](dist/quintal.js)
 

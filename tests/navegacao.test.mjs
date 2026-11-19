@@ -1,3 +1,5 @@
+import {quintal as jogosQuintal} from '../dist/quintal.js';
+import {caminhoParaMare} from './mare-apoio.mjs';
 import {criarAudio} from '../dist/audio.js';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
@@ -314,4 +316,24 @@ test('Ocultar identificador gerado não filtra números de outros modos ou indic
  assert.equal(n.elemento('.game-hud').textContent,'Fase 2 · 3 passos');
  n.executar("tipoPartida='endless';mostrarJogo()");
  assert.equal(n.elemento('.game-hud').textContent,'Fase 2 · 3 passos · Pontos 0 · Recorde 0');
+});
+
+
+test('Maré real: derrota única na Volta e reinício gerado preserva mapa',()=>{
+ const n=navegador({nivel:1,ids:catalogo.map(j=>j.id),resultados:[true]},undefined,{mare:jogosQuintal.mare});
+ n.executar("acao({dataset:{do:'retomar'}});acao({dataset:{do:'partir'}})");
+ for(let i=0;i<3;i++){
+  const path=caminhoParaMare(JSON.parse(n.executar('JSON.stringify(partida.snapshot())')));
+  for(const dir of path)n.executar(`partida.press(${JSON.stringify(dir)})`);
+ }
+ assert.match(n.html(),/A maré te levou!/);
+ assert.equal(n.executar('ultimo.venceu'),false);
+ n.executar("acao({dataset:{do:'avancar'}});acao({dataset:{do:'avancar'}})");
+ assert.deepEqual(JSON.parse(n.executar('JSON.stringify(volta.resultados)')),[true,false]);
+ n.executar("modo='avulso';selecionado=1;tipoPartida='generated';nivel=3;semente=2;criarPartida()");
+ const initial=n.executar('JSON.stringify(partida.snapshot())');
+ for(const dir of caminhoParaMare(JSON.parse(initial)))n.executar(`partida.press(${JSON.stringify(dir)})`);
+ assert.equal(n.executar('partida.snapshot().levadas'),1);
+ n.executar("pausar();acao({dataset:{do:'repetir'}})");
+ assert.equal(n.executar('JSON.stringify(partida.snapshot())'),initial);
 });
