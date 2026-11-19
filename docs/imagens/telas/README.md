@@ -2,7 +2,7 @@
 
 ## Origem
 
-Capturadas em **18 de novembro de 2026**, navegando pela versão pública em [GitHub Pages](https://luigiscofano.github.io/Miudezas/), em navegador Chromium de computador. Foram usados os controles reais da aplicação; não são simulações, montagens ou imagens geradas.
+Capturadas em **18 de novembro de 2026**, com a abertura atualizada em **19 de novembro de 2026**, navegando pela versão pública em [GitHub Pages](https://luigiscofano.github.io/Miudezas/), em navegador Chromium de computador. Foram usados os controles reais da aplicação; não são simulações, montagens ou imagens geradas.
 
 As seis capturas de navegação contêm a janela completa da aplicação, com a engrenagem visível: título, conteúdo, controles e rodapé. O recorte remove somente a margem vazia externa do navegador. O ponteiro foi mantido fora da região capturada. As imagens preservam a apresentação efetivamente exibida, sem retoques.
 
@@ -12,7 +12,7 @@ As seis capturas de navegação contêm a janela completa da aplicação, com a 
 
 | Arquivo | Tela e estado |
 |---|---|
-| [inicio.jpg](inicio.jpg) | Menu inicial com capa, Jogo avulso e Volta no Bairro. |
+| [inicio.jpg](inicio.jpg) | Menu inicial atualizado em 19/11/2026: capa com duas janelas largas na casa laranja, Jogo avulso e Volta no Bairro. |
 | [selecao-jogos.jpg](selecao-jogos.jpg) | Primeira página do catálogo, com seis jogos e seus ícones. |
 | [selecao-niveis.jpg](selecao-niveis.jpg) | Maré Miúda: Sossegado, Animado, Puxado e Caminho Novo. |
 | [partida-mare.jpg](partida-mare.jpg) | Partida real de Maré Miúda, nível Puxado. |
@@ -34,6 +34,8 @@ As três imagens adicionais registram o painel real. `configuracoes.jpg` mostra 
 A captura usa valores restaurados somente no navegador de teste. A atualização documental não modifica as preferências de visitantes. Texto e comportamento foram conferidos em [configuracoes.js](../../../dist/configuracoes.js); o [README principal](../../../README.md#configurações-e-sobre-o-projeto) transcreve o Sobre e explica os controles.
 
 ---
+
+A abertura foi recapturada da versão publicada no commit `3f99adfa02325b7db2ed423255afd73f8f17f4a7`, após recarga sem cache. Mantém o recorte de 502 × 502, a janela inteira e o cursor fora da imagem. As outras capturas continuam sendo as de 18/11. Os READMEs principal, de `dist`, de `docs`, das artes e da capa já referenciam o PNG canônico atualizado e não precisaram duplicá-lo.
 
 ## Como atualizar
 
