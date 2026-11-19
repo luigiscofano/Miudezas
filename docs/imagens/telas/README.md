@@ -2,7 +2,7 @@
 
 ## Origem
 
-Capturadas em **18 de novembro de 2026**, com a abertura e as duas vistas do Sobre atualizadas em **19 de novembro de 2026**, navegando pela versão pública em [GitHub Pages](https://luigiscofano.github.io/Miudezas/), em navegador Chromium de computador. Foram usados os controles reais da aplicação; não são simulações, montagens ou imagens geradas.
+Capturadas em **18 de novembro de 2026**, com a abertura atualizada em **19 de novembro de 2026**, navegando pela versão pública em [GitHub Pages](https://luigiscofano.github.io/Miudezas/), em navegador Chromium de computador. Foram usados os controles reais da aplicação; não são simulações, montagens ou imagens geradas.
 
 As seis capturas de navegação contêm a janela completa da aplicação, com a engrenagem visível: título, conteúdo, controles e rodapé. O recorte remove somente a margem vazia externa do navegador. O ponteiro foi mantido fora da região capturada. As imagens preservam a apresentação efetivamente exibida, sem retoques.
 
@@ -37,7 +37,7 @@ A captura usa valores restaurados somente no navegador de teste. A atualização
 
 A abertura foi recapturada da versão publicada no commit `3f99adfa02325b7db2ed423255afd73f8f17f4a7`, após recarga sem cache. Mantém o recorte de 502 × 502, a janela inteira e o cursor fora da imagem. As demais capturas de navegação e a vista fechada das configurações continuam sendo as de 18/11. Os READMEs principal, de `dist`, de `docs`, das artes e da capa já referenciam o PNG canônico atualizado e não precisaram duplicá-lo.
 
-As duas vistas do Sobre foram recapturadas em 19/11/2026 do Pages publicado no commit `dc2fa8d42aacfb612b53994c301fd5c31f53e13d`, após a inclusão do parágrafo das dez janelinhas. Ambas mantêm o enquadramento de 430 × 741, sem cursor nem dados pessoais de sessão. A continuação mostra o parágrafo completo e o rodapé; somente a margem externa foi recortada, sem retoques no painel.
+As duas vistas do Sobre foram atualizadas em 19/11/2026 com o seletor de Bossa de Janela e o parágrafo das dez janelinhas. Foram capturadas em Chromium local via Playwright, a partir dos arquivos do commit publicado `8563ad8433bc4cc3596ab67d456f5f787061e2a7`: os recursos carregados foram conferidos byte a byte contra o Pages com validação TLS. O acesso direto pelo navegador de captura estava indisponível neste ambiente; não foi desativada a validação de certificados. Ambas mantêm o enquadramento de 430 × 741, sem cursor nem dados pessoais de sessão. A primeira mostra o seletor e os volumes; a continuação mostra o parágrafo completo e o rodapé. Somente a margem externa foi recortada, sem retoques no painel.
 
 ## Como atualizar
 
